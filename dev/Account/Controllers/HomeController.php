@@ -13,6 +13,10 @@ use Overfull\Pattern\MVC\Controller;
 * 
 */
 class HomeController extends Controller{
+	protected $otp = [
+		'layout' => 'home'
+	];
+	
 	public function index(){
 		return $this->render();
 	}

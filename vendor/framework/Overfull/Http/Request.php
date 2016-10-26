@@ -20,7 +20,7 @@ class Request extends BaseRequest{
 	*
 	* @return string $uri
 	*/
-	public static function uri(){
+	public function uri(){
 		// Return value
 		return $_SERVER['REQUEST_URI'];
 	}
@@ -32,9 +32,9 @@ class Request extends BaseRequest{
 	*
 	* @return string $uri
 	*/
-	public static function uriArray(){
+	public function uriArray(){
 		// Return value
-		$uris = explode('/', static::uri());
+		$uris = explode('/', $this->uri());
 		array_shift($uris);
 		
 		$uris = array_filter($uris, function($value) { return $value ? true : false; });
@@ -48,7 +48,7 @@ class Request extends BaseRequest{
 	 * @date 2016/02/27
 	 * @return boolean
 	 */
-	public static function isMethod( $rqs = false ){
+	public function isMethod( $rqs = false ){
 		if ( $rqs == false ) {
 			return false;
 		} else if ( is_array($rqs) ) {
@@ -73,7 +73,7 @@ class Request extends BaseRequest{
 	 * @date 2016/02/27
 	 * @return boolean
 	 */
-	public static function method(){
+	public function method(){
 		return  $_SERVER['REQUEST_METHOD'];
 	}
 
@@ -84,7 +84,7 @@ class Request extends BaseRequest{
 	 * @date 2016/02/27
 	 * @return string
 	 */
-	public static function subdomain(){
+	public function subdomain(){
 		$sub = explode(".",$_SERVER['HTTP_HOST']);
 
 		if(count($sub) == 3 && $sub[0] != 'www'){

@@ -53,7 +53,7 @@ class Route extends BaseObject{
 	*/
 	public function merge($prefix = ''){
 		// Get root
-		$this->uri = $this->setWebroot($this->configs, Bag::$request->uriArray());
+		$this->uri = $this->setWebroot($this->configs, Bag::request()->uriArray());
 		$this->url = explode('?', $this->uri)[0];
 
 		$matches = $this->setAttributes($prefix);
@@ -82,7 +82,7 @@ class Route extends BaseObject{
 		foreach ($this->configs['pages'] as $key => $value) {
 
 			if(is_numeric($key)){
-				if ( !Bag::$request->isMethod($value[1]) ) continue;
+				if ( !Bag::request()->isMethod($value[1]) ) continue;
 
 				$regex = $this->convertRegex($value[0]);
 

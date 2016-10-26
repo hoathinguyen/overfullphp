@@ -24,7 +24,7 @@ class ProfileController extends Controller{
 	public function login(){
 		// Check if request is post
 		if(Bag::request()->isMethod('post')){
-
+			
 		}
 
 		return $this->render();
