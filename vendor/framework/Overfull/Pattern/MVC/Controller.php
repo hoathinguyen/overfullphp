@@ -25,7 +25,7 @@ class Controller implements IController{
 	protected final function __getOtp(){
 		$otp = [
 			'layout' => !empty($this->otp['layout']) ? $this->otp['layout'] : false,
-			'helpers' => !empty($this->otp['layout']) ? $this->otp['layout'] : [],
+			'helpers' => !empty($this->otp['helpers']) ? $this->otp['helpers'] : [],
 			'handler' => !empty($this->otp['handler']) ? $this->otp['handler'] : null,
 			'root' => !empty($this->otp['root']) ? $this->otp['root'] : str_replace('Controller', '', Bag::$route->controller),
 			'content' => !empty($this->otp['content']) ? $this->otp['content'] : Bag::$route->method
@@ -41,11 +41,11 @@ class Controller implements IController{
 	 * @param mixed $data
 	 * @return array
 	 */
-	protected final function render($view = '', $data = []){
+	protected final function render($view = false, $data = []){
 		if(is_array($view)){
 			$this->otp['layout'] = $view[0];
 			$this->otp['content'] = $view[1];
-		} else {
+		} else if($view){
 			$this->otp['content'] = $view;
 		}
 		return [

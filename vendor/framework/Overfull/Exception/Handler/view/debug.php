@@ -12,11 +12,13 @@
 		<br/><b>File:</b> <?php echo $file; ?>
 		<br/><b>Line:</b> <?php echo $line; ?>
 	</div>
-	<?php if($isShowDetail === true) {?>
+	<?php if($isShowDetail === true && $lastErrors) {?>
 	<div style="padding: 10px; border: 1px solid #ddd; margin-top: 10px">
-		<b>Message:</b> <?php echo $message; ?>
-		<br/><b>File:</b> <?php echo $file; ?>
-		<br/><b>Line:</b> <?php echo $line; ?>
+	<?php foreach ($lastErrors as $key => $value) {?>	
+	
+		<div><?php echo $value; ?></div>
+	
+	<?php } ?>
 	</div>
 	<?php } ?>
 </body>

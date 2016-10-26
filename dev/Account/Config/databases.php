@@ -1,16 +1,16 @@
 <?php
 return [
-	'use' => 'default',
+	'use' => 'overfull',
 
 	'connections' => [
 
-		'default' => [
+		'overfull' => [
 			'user' => 'root',
 			'password' => '',
 			'port' => '',
 			'host' => 'localhost',
 			'type' => 'mysql', //pgsql
-			'dbname' => 'viewer',
+			'dbname' => 'overfull',
 			'encoding' => 'utf8'
 		],
 

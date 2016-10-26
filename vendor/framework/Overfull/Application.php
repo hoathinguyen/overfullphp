@@ -39,6 +39,9 @@ class Application extends BaseObject{
 	*/
 	public function run(){
 		try{
+			// Get route info
+			Bag::init();
+
 			if(!file_exists(ROOT.DS.$this->appRoot)){
 				throw new AppNotFoundException($this->appRoot);
 			}
@@ -47,24 +50,21 @@ class Application extends BaseObject{
 
 			// Get config
 			$this->getConfig();
-			
-			// Get route info
-			Bag::init();
 
 			// Get result in route
-			Bag::$route->merge();
+			Bag::route()->merge();
 
-			if(Bag::$route->response){
-				foreach (Bag::$route->response as $key => $value) {
+			if(Bag::route()->response){
+				foreach (Bag::route()->response as $key => $value) {
 					Bag::$response->{$key} = $value;
 				}
 			}
 
 			// Run pattern
-			Bag::$pattern->run();
+			Bag::pattern()->run();
 
 			// return result
-			Bag::$response->send();
+			Bag::response()->send();
 		} catch(AppNotFoundException $e){
 			ExceptionHandler::showExceptionObject($e);
 		} catch(ConfigFileNotFoundException $e){
@@ -86,7 +86,7 @@ class Application extends BaseObject{
 		// Get config for database
 		Config::set('databases', ROOT.DS.$this->appRoot.DS.'Config'.DS.'databases.php', true);
 		//Config::set('alias', ROOT.DS.$this->appRoot.DS.'config'.DS.'alias.php', true);
-		Config::set('modules', ROOT.DS.$this->appRoot.DS.'Config'.DS.'modules.php', true);
+		Config::set('using', ROOT.DS.$this->appRoot.DS.'Config'.DS.'using.php', true);
 		Config::set('core', ROOT.DS.$this->appRoot.DS.'Config'.DS.'core.php', true);
 		Config::set('debug', ROOT.DS.$this->appRoot.DS.'Config'.DS.'debug.php', true);
 		Config::set('routes', ROOT.DS.$this->appRoot.DS.'Config'.DS.'routes.php', true);
@@ -145,7 +145,15 @@ class Application extends BaseObject{
 		Config::set('app-config', ['app-root' => $this->appRoot,'for' => 'init', 'app-namespace' => $this->appNamespace]);
 	}
 
+	/*
+	* Get config method
+	* This method will be call config object and set value config to this config object.
+	*/
 	private function registerException(){
+		// error_reporting(E_ALL);
+		// ini_set('display_errors', TRUE);
+		// ini_set('display_startup_errors', TRUE);
+
 		@set_exception_handler(array('\Overfull\Exception\Handler\ExceptionHandler','exceptionHandler'));
 
 		@set_error_handler(array('\Overfull\Exception\Handler\ExceptionHandler','errorHandler'));

@@ -3,8 +3,8 @@
     	"psr-4": {
     		"Overfull\\": "vendor/framework/Overfull",
             "Dev\\": "dev",
-            "Weight": "weights",
-            "Package": "vendor/packages"
+            "Weights\\": "weights",
+            "Packages\\": "vendor/packages"
     	},
     	"classmap": [
     		"vendor/framework/Overfull"

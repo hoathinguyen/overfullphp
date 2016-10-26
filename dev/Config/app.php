@@ -26,13 +26,8 @@
 * ----------------------------------------------------
 */
 return [
-	// 'sub-folder' => [
-	// 	'php' => 'dev\php',
-	// 	'_default' => 'dev\php'
-	// ],
-
-	'sub-domain' => [
-		'php' => [
+	'sub-folder' => [
+		'sharing' => [
 			'root' => 'dev\Account',
 			'namespace' => 'Dev\Account'
 		],
@@ -40,6 +35,18 @@ return [
 		'_default' => [
 			'root' => 'dev\TestApp',
 			'namespace' => 'Dev\TestApp'
+		]
+	],
+
+	'sub-domain' => [
+		'sharing' => [
+			'root' => 'dev\Account',
+			'namespace' => 'Dev\Account'
 		],
+
+		'_default' => [
+			'root' => 'dev\TestApp',
+			'namespace' => 'Dev\TestApp'
+		]
 	]
 ];

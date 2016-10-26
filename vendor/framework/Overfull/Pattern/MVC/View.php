@@ -54,11 +54,11 @@ class View implements IView{
 	 */
 	protected function render($gift, $variables = []){
 		if(is_array($gift)){
-			if(isset($gift['otp']['helpers'])){
+			if(!empty($gift['otp']['helpers'])){
 				$this->helpers = $gift['otp']['helpers'];
 			}
 
-			if(isset($gift['data'])){
+			if(!empty($gift['data'])){
 				$this->variables = $gift['data'];
 			}
 
@@ -67,13 +67,11 @@ class View implements IView{
 
 			$this->content = $this->__readOtp([
 				'file' => $this->contentPath.DS.(!empty($gift['otp']['root']) ? $gift['otp']['root'].DS : '' ).$gift['otp']['content'],
-				'helpers' => $this->helpers,
 				'variables' => $this->variables]);
 
 			if($this->layout){
 				return $this->__readOtp([
 				'file' => $this->layoutPath.DS.$this->layout,
-				'helpers' => $this->helpers,
 				'variables' => $this->variables]);
 			}
 
@@ -82,7 +80,6 @@ class View implements IView{
 
 		return $this->__readOtp([
 			'file' => $this->contentPath.DS.$gift,
-			'helpers' => $this->helpers,
 			'variables' => $variables]);
 	}
 

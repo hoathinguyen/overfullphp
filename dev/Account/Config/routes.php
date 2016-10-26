@@ -8,7 +8,11 @@ return array(
 			'method' 		=> 'index',
 			'filter' 		=> [],
 			//'view'			=> 
-		)]
+		)],
+
+		// Set URL for profile
+		['login.html', 'any', 'controller=ProfileController;method=login'],
+		['register.html', 'any', 'controller=ProfileController;method=register']
 		// ['<:empty>', 'any', [
 		// 		'controller' => 'TestController',
 		// 		'method'	 => 'setting',
