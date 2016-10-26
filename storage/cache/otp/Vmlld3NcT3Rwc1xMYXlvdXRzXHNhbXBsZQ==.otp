@@ -1,0 +1,2 @@
+<?php use Dev\TestApp\Views\Helpers\TestHelper as TEST; ?>qưeqweqweqweqwe
+<?php echo $this->content(); ?>

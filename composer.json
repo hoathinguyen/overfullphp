@@ -1,0 +1,18 @@
+{
+    "autoload": {
+    	"psr-4": {
+    		"Overfull\\": "vendor/framework/Overfull",
+            "Dev\\": "dev",
+            "Weight": "weights",
+            "Package": "vendor/packages"
+    	},
+    	"classmap": [
+    		"vendor/framework/Overfull"
+    	],
+    	"files": [
+    		"vendor/framework/Overfull/Foundation/constants.php",
+            "vendor/framework/Overfull/Foundation/func.php",
+    		"vendor/framework/Overfull/Bag.php"
+    	]
+    }
+}

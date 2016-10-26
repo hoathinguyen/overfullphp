@@ -1,0 +1,4 @@
+#ignore composer file and folder
+vendor/composer
+vendor/autoload.php
+public/plugins
