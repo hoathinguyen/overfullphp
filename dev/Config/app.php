@@ -33,8 +33,8 @@ return [
 		],
 
 		'_default' => [
-			'root' => 'dev\TestApp',
-			'namespace' => 'Dev\TestApp'
+			'root' => 'dev\Account',
+			'namespace' => 'Dev\Account'
 		]
 	],
 
@@ -45,8 +45,8 @@ return [
 		],
 
 		'_default' => [
-			'root' => 'dev\TestApp',
-			'namespace' => 'Dev\TestApp'
+			'root' => 'dev\Account',
+			'namespace' => 'Dev\Account'
 		]
 	]
 ];
