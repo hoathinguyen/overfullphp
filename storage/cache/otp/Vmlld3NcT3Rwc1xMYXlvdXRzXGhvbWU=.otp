@@ -6,10 +6,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Popular php framework, framework phổ biến">
+    <meta name="author" content="PHP framework - overfull framework, special framework">
 
-    <title>Overfull framework</title>
+    <title>PHP framework - Overfull framework</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -50,7 +50,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="page-scroll" href="#about">Install</a>
+                        <a class="page-scroll" href="https://github.com/overfull/php-framework">Install</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#services">Docs</a>
@@ -68,34 +68,31 @@
         <!-- /.container-fluid -->
     </nav>
 
-    <header>
-        <div class="header-content">
-            <div class="header-content-inner">
-                <h1 id="homeHeading">Your Favorite Source of Free Bootstrap Themes</h1>
-                <hr>
-                <p>Start Bootstrap can help you build better websites using the Bootstrap CSS framework! Just download your template and start going, no strings attached!</p>
-                <a href="#about" class="btn btn-primary btn-xl page-scroll">Find Out More</a>
-            </div>
-        </div>
-    </header>
-
     <?php echo $this->content(); ?>
 
     <section id="contact">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Let's Get In Touch!</h2>
+                    <h2 class="section-heading">Liên hệ đến chúng tôi!</h2>
                     <hr class="primary">
-                    <p>Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
+                    <p>Chúng tôi chấp nhận mọi ý kiến đóng góp của các bạn, Vui lòng gửi đến các địa chỉ bên dưới!</p>
                 </div>
-                <div class="col-lg-4 col-lg-offset-2 text-center">
-                    <i class="fa fa-phone fa-3x sr-contact"></i>
-                    <p>123-456-6789</p>
+                <div class="col-lg-3 text-center">
+                    <i class="fa fa-phone fa-3x sr-contact" style="color: green"></i>
+                    <p>(+84) 1654 028 428</p>
                 </div>
-                <div class="col-lg-4 text-center">
-                    <i class="fa fa-envelope-o fa-3x sr-contact"></i>
-                    <p><a href="mailto:your-email@your-domain.com">feedback@startbootstrap.com</a></p>
+                <div class="col-lg-3 text-center">
+                    <i class="fa fa-envelope-o fa-3x sr-contact" style="color: #d85b00"></i>
+                    <p><a href="mailto:overfull.net@gmail.com">overfull.net@gmail.com</a></p>
+                </div>
+                <div class="col-lg-3 text-center">
+                    <i class="fa fa-facebook fa-3x sr-contact" style="color: #245b8a"></i>
+                    <p><a href="https://fb.com/overfull.net">fb.com/overfull.net</a></p>
+                </div>
+                <div class="col-lg-3 text-center">
+                    <i class="fa fa-youtube fa-3x sr-contact" style="color: #9c1616"></i>
+                    <p><a href="https://youtube.com/channel/UC7EzOQ7Fkiy953GND0KIrFA">youtube.com</a></p>
                 </div>
             </div>
         </div>
