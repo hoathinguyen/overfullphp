@@ -124,7 +124,7 @@ class Controller implements IController{
 
 		$this->beforeAction();
 
-		$this->data = $this->{$method}();
+		$this->data = $this->{$method}(Bag::route()->parameters);
 
 		$this->beforeRender();
 

@@ -40,13 +40,13 @@ return [
 
 	'sub-domain' => [
 		'sharing' => [
-			'root' => 'dev\Account',
-			'namespace' => 'Dev\Account'
+			'root' => 'dev\Home',
+			'namespace' => 'Dev\Home'
 		],
 
 		'_default' => [
-			'root' => 'dev\Account',
-			'namespace' => 'Dev\Account'
+			'root' => 'dev\Home',
+			'namespace' => 'Dev\Home'
 		]
 	]
 ];
