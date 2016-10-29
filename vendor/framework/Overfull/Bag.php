@@ -36,22 +36,26 @@ class Bag{
 
 	public static $mystore;
 
+	public static $config;
+
 	/**
 	* The main application will call this method before use it.
 	* This method will create some object in this app
 	*/
 	public static function init(){
-		static::$dbstore = new DbStore();
+		static::dbstore();
 		// Create request
-		static::$request = new Request();
+		static::request();
 		// Response
-		static::$response = new Response();
+		static::response();
 
-		static::$session = new BaseSession();
+		static::session();
 
-		static::$package = new PackageStore();
+		static::package();
 
-		static::$mystore = new MyStore();
+		static::mystore();
+
+		static::config();
 	}
 
 	/**
@@ -139,12 +143,24 @@ class Bag{
 	}
 
 	/**
+	 * Get MyStore
+	 * @return Config
+	 */
+	public static function config(){
+		if(!static::$config){
+			static::$config = new Config();
+		}
+
+		return static::$config;
+	}
+
+	/**
 	 * Get Route
 	 * @return Route
 	 */
 	public static function pattern(){
 		if(!static::$pattern){
-			$pattern = Config::get('core.pattern');
+			$pattern = static::config()->get('core.pattern');
 			if(!class_exists($pattern)){
 				$pattern = "\Overfull\Pattern\{$pattern}\PatternHandler";
 				if(!class_exists($pattern)){

@@ -5,7 +5,6 @@
 */
 namespace Overfull\Pattern\MVC;
 use Overfull\Pattern\MVC\Foundation\IModel;
-use Overfull\Configure\Config;
 use Bag;
 use Overfull\Exception\DatabaseConfigException;
 use Overfull\Database\DbContext;
@@ -35,7 +34,7 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
      * which is config in database.php
      */
 	function __construct( $use = false ){
-		$databases = Config::get('databases');
+		$databases = Bag::config()->get('databases');
 
 		if ( !$use ) {
 			if(!$this->connectionName){

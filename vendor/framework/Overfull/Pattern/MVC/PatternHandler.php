@@ -9,7 +9,6 @@ namespace Overfull\Pattern\MVC;
 
 use Overfull\Foundation\Base\BaseObject;
 use Bag;
-use Overfull\Configure\Config;
 use Overfull\Pattern\MVC\Exception\ControllerNotFoundException;
 use Overfull\Pattern\MVC\Exception\ViewNotFoundException;
 use Overfull\Http\Response\ResponseFormat;
@@ -27,7 +26,7 @@ class PatternHandler extends BaseObject{
 	 */
 	public function run(){
 		// Get app root
-		$appNamespace = Config::get('app-config.app-namespace');
+		$appNamespace = Bag::config()->get('app.namespace');
 
 		// Get controller name
 		$controller = Bag::$route->controller;

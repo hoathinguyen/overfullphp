@@ -8,13 +8,12 @@
 */
 namespace Overfull\Package;
 use Overfull\Foundation\Store;
-use Overfull\Configure\Config;
 use Overfull\Exception\PackageNotFoundException;
 use Bag;
 
 class PackageStore extends Store{
 	function __construct(){
-		$packages = Config::get('using.packages');
+		$packages = Bag::config()->get('using.packages');
 		if(!empty($packages)){
 			foreach ($packages as $key => $value) {
 				if(!class_exists($value['class'])){

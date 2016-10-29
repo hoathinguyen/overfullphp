@@ -12,7 +12,9 @@ return array(
 
 		// Set URL for profile
 		'docs' => [
-			['(.*).html', 'get', 'controller=DocsController;method=detail']
+			['<:empty>', 'get', 'controller=DocsController;method=index'],
+			['index.html', 'get', 'controller=DocsController;method=index'],
+			['detail.html', 'get', 'controller=DocsController;method=detail']
 		]
 	)
 );

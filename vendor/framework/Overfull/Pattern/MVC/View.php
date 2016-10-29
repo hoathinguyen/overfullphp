@@ -173,10 +173,10 @@ class View implements IView{
 
 			$storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($otp['file']).'.otp');
 
-			if ( !file_exists($storageFile) || Config::get('core.alway-build-otp')) {
-				$ext = Config::get('core.otp.ext');
+			if ( !file_exists($storageFile) || Bag::config()->get('core.alway-build-otp')) {
+				$ext = Bag::config()->get('core.otp.ext');
 				
-				$fullFile = PathUtil::getFull(Config::get('app-config.app-root').DS.PathUtil::convert($otp['file']).'.'.($ext ? $ext : 'php'));
+				$fullFile = PathUtil::getFull(Bag::config()->get('app.root').DS.PathUtil::convert($otp['file']).'.'.($ext ? $ext : 'php'));
 
 				// Get content of view
 				if ( !file_exists($fullFile) ) {
@@ -187,7 +187,7 @@ class View implements IView{
 
 				$namespace = "";
 
-				foreach ( Config::get('core.otp.helpers') as $key => $value) {
+				foreach ( Bag::config()->get('core.otp.helpers') as $key => $value) {
 					$namespace .= "use {$value} as {$key};";
 				}
 

@@ -11,7 +11,7 @@ use Overfull\Utility\ArrayUtil;
 use Overfull\Exception\ConfigFileNotFoundException;
 
 class Config extends BaseObject{
-	private static $configs = array();
+	private $configs = array();
 
 	/**
 	 * get value of config
@@ -19,9 +19,9 @@ class Config extends BaseObject{
 	 * @date 2016/05/21
 	 * @param string $name
 	 */
-	public static function get( $name = '' ){
+	public function get( $name = '' ){
 		try {
-			return ArrayUtil::access(self::$configs, $name);
+			return ArrayUtil::access($this->configs, $name);
 		}catch( Exception $e ){
 			throw new Exception($e->getMessage(), 102);
 		}
@@ -35,7 +35,7 @@ class Config extends BaseObject{
 	 * @param value $val
 	 * @param boolean $isPath
 	 */
-	public static function set( $name = false, $val = array() , $isPath = false){
+	public function set( $name = false, $val = array() , $isPath = false){
 		try {
 			if ( !$name ) {
 				return;
@@ -43,16 +43,26 @@ class Config extends BaseObject{
 
 			if($isPath){
 				if(file_exists($val)){
-					self::$configs[$name] = require($val);
+					$this->configs[$name] = require($val);
 				} else {
 					throw new ConfigFileNotFoundException($val);
 				}
 			} else {
-				self::$configs[$name] = $val;
+				$this->configs[$name] = $val;
 			}
 			
 		}catch( Exception $e ){
 			throw new Exception($e->getMessage(), 102);
 		}
+	}
+
+	/**
+	 * Delete config
+	 *
+	 * @param string $name
+	 * @return void
+	 */
+	public function delete($name){
+		unset($this->configs[$name]);
 	}
 }

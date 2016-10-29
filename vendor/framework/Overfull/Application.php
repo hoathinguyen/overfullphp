@@ -18,8 +18,8 @@ use Exception;
 use Overfull\Exception\Handler\ExceptionHandler;
 
 class Application extends BaseObject{
-	private $appRoot;
-	private $appNamespace;
+	private $root;
+	private $namespace;
 
 	/*
 	* Construct method
@@ -27,8 +27,8 @@ class Application extends BaseObject{
 	* @param string appRoot : root of project
 	*/
 	public function __construct($appRoot = 'dev\App', $appNamespace = 'Dev\App'){
-		$this->appRoot = $appRoot;
-		$this->appNamespace = $appNamespace;
+		$this->root = $appRoot;
+		$this->namespace = $appNamespace;
 		$this->getDirectionConfig();
 	}
 
@@ -42,8 +42,8 @@ class Application extends BaseObject{
 			// Get route info
 			Bag::init();
 
-			if(!file_exists(ROOT.DS.$this->appRoot)){
-				throw new AppNotFoundException($this->appRoot);
+			if(!file_exists(ROOT.DS.$this->root)){
+				throw new AppNotFoundException($this->root);
 			}
 
 			$this->registerException();
@@ -52,7 +52,7 @@ class Application extends BaseObject{
 			$this->getConfig();
 
 			// Get result in route
-			Bag::route()->merge();
+			Bag::route()->run();
 
 			if(Bag::route()->response){
 				foreach (Bag::route()->response as $key => $value) {
@@ -84,13 +84,13 @@ class Application extends BaseObject{
 	*/
 	private function getConfig(){
 		// Get config for database
-		Config::set('databases', ROOT.DS.$this->appRoot.DS.'Config'.DS.'databases.php', true);
-		//Config::set('alias', ROOT.DS.$this->appRoot.DS.'config'.DS.'alias.php', true);
-		Config::set('using', ROOT.DS.$this->appRoot.DS.'Config'.DS.'using.php', true);
-		Config::set('core', ROOT.DS.$this->appRoot.DS.'Config'.DS.'core.php', true);
-		Config::set('debug', ROOT.DS.$this->appRoot.DS.'Config'.DS.'debug.php', true);
-		Config::set('routes', ROOT.DS.$this->appRoot.DS.'Config'.DS.'routes.php', true);
-		Config::set('system', ROOT.DS.'vendor'.DS.'framework'.DS.'Overfull'.DS.'Configure'.DS.'system.php', true);
+		Bag::config()->set('databases', ROOT.DS.$this->root.DS.'Config'.DS.'databases.php', true);
+		//Bag::config()->set('alias', ROOT.DS.$this->root.DS.'config'.DS.'alias.php', true);
+		Bag::config()->set('using', ROOT.DS.$this->root.DS.'Config'.DS.'using.php', true);
+		Bag::config()->set('core', ROOT.DS.$this->root.DS.'Config'.DS.'core.php', true);
+		Bag::config()->set('debug', ROOT.DS.$this->root.DS.'Config'.DS.'debug.php', true);
+		Bag::config()->set('routes', ROOT.DS.$this->root.DS.'Config'.DS.'routes.php', true);
+		Bag::config()->set('system', ROOT.DS.'vendor'.DS.'framework'.DS.'Overfull'.DS.'Configure'.DS.'system.php', true);
 	}
 
 	/*
@@ -98,42 +98,70 @@ class Application extends BaseObject{
 	* This method will be call config object and set value config to this config object.
 	*/
 	private function getDirectionConfig(){
-		Config::set('app', ROOT.DS.'dev'.DS.'Config'.DS.'app.php', true);
+		Bag::config()->set('app-config', ROOT.DS.'dev'.DS.'Config'.DS.'app.php', true);
 
 		// Check if have config in app
-		if(!empty($app = Config::get('app'))){
+		if(!empty($app = Bag::config()->get('app-config'))){
 			// Check if is subdomain
-			$sub = explode(".",$_SERVER['HTTP_HOST']);
+			$sub = explode(".", Bag::request()->host());
 
 			// Check if have config in subdomain
 			if(count($sub) == 3 && $sub[0] != 'www'){
 				// Check exists setting
 				if(isset($app['sub-domain'][$sub[0]])){
-					$this->appRoot = $app['sub-domain'][$sub[0]]['root'];
-					$this->appNamespace = $app['sub-domain'][$sub[0]]['namespace'];
-					Config::set('app-config', ['app-root' => $this->appRoot,'for' => 'sub-domain', 'app-namespace' => $this->appNamespace]);
+					$this->root = $app['sub-domain'][$sub[0]]['root'];
+					$this->namespace = $app['sub-domain'][$sub[0]]['namespace'];
+					
+					Bag::config()->set('app', [
+						'root' => $this->root,
+						'for' => 'sub-domain',
+						'namespace' => $this->namespace,
+						'route' => ''
+					]);
 					return;
 				} else if(isset($app['sub-domain']['_default'])){
-					$this->appRoot = $app['sub-domain']['_default']['root'];
-					$this->appNamespace = $app['sub-domain']['_default']['namespace'];
-					Config::set('app-config', ['app-root' => $this->appRoot,'for' => 'sub-domain', 'app-namespace' => $this->appNamespace]);
+					$this->root = $app['sub-domain']['_default']['root'];
+					$this->namespace = $app['sub-domain']['_default']['namespace'];
+
+					Bag::config()->set('app', [
+						'root' => $this->root,
+						'for' => 'sub-domain',
+						'namespace' => $this->namespace,
+						'route' => ''
+					]);
 				}
 			}
 
 			// Check exists setting in subfolder
 			if(isset($app['sub-folder'])){
-				$folders = explode('/', $_SERVER['REQUEST_URI']);
+				$folders = Bag::request()->uriArray();
 
-				if(isset($app['sub-folder'][$folders[1]])){
-					$this->appRoot = $app['sub-folder'][$folders[1]]['root'];
-					$this->appNamespace = $app['sub-folder'][$folders[1]]['namespace'];
-					Config::set('app-config', ['app-root' => $this->appRoot,'for' => 'sub-folder', 'route-root' => $folders[1], 'app-namespace' => $this->appNamespace]);
+				$folderIndex = !empty($app['base']) && is_integer($app['base']) ? $app['base'] : 0;
+
+				if(isset($app['sub-folder'][isset($folders[$folderIndex]) ? $folders[$folderIndex] : ''])){
+					$this->root = $app['sub-folder'][$folders[$folderIndex]]['root'];
+					$this->namespace = $app['sub-folder'][$folders[$folderIndex]]['namespace'];
+
+					Bag::config()->set('app', [
+						'root' => $this->root,
+						'for' => 'sub-folder',
+						'route' => $folders[$folderIndex],
+						'namespace' => $this->namespace
+					]);
+
 					return;
-				} else if(!Config::get('app-config')){
+				} else if(!Bag::config()->get('app')){
 					if(isset($app['sub-folder']['_default'])){
-						$this->appRoot =  $app['sub-folder']['_default']['root'];
-						$this->appNamespace = $app['sub-folder']['_default']['namespace'];
-						Config::set('app-config', ['app-root' => $this->appRoot,'for' => 'sub-folder', 'app-namespace' => $this->appNamespace]);
+						$this->root =  $app['sub-folder']['_default']['root'];
+						$this->namespace = $app['sub-folder']['_default']['namespace'];
+
+						Bag::config()->set('app', [
+							'root' => $this->root,
+							'for' => 'sub-folder',
+							'namespace' => $this->namespace,
+							'route' => ''
+						]);
+
 						return;
 					}
 				} else {
@@ -142,7 +170,11 @@ class Application extends BaseObject{
 			}
 		}
 
-		Config::set('app-config', ['app-root' => $this->appRoot,'for' => 'init', 'app-namespace' => $this->appNamespace]);
+		Bag::config()->set('app', [
+			'root' => $this->root,
+			'for' => 'init', 
+			'namespace' => $this->namespace
+		]);
 	}
 
 	/*

@@ -1,23 +1,31 @@
 <?php
-/*___________________________________________________________________________
-* The route object class
-* This object handle some business about routing. You can rewrite url mapping
-* with your controller or filter ...
-* ___________________________________________________________________________
+/*----------------------------------------------------
+* Filename: Route.php
+* Author: Overfull.net
+* Date: 2016/10/25
+* Description: The route object
+* ----------------------------------------------------
 */
 namespace Overfull\Routing;
 use Overfull\Foundation\Base\BaseObject;
-use Overfull\Configure\Config;
-use Overfull\Http\Request;
 use Bag;
 use Overfull\Exception\PageNotFoundException;
 
 class Route extends BaseObject{
+	private $alias = [];
+
+	private $validAlias = null;
+
+	private $url = '';
+
+	private $uri = '';
+
+	private $attributes = [];
 	/**
 	* Regex keys
 	* This array contains all of key config on routes to parse to regex
 	*/
-    private $__regexKeys = [
+    private $regexKeys = [
     	'<:all>' => '(.*)',
     	'/' => '\/',
     	'?' => '\?',
@@ -26,146 +34,81 @@ class Route extends BaseObject{
     	'<:alphanumeric>' => '([a-zA-Z0-9]*)'
     ];
 
-    /**
-    * Attributes array
-    * This contains all of property after merge
-    */
-    private $__attributes = [];
-
-    /**
-    * Config array
-    */
-    private $configs = [];
-
-    private $uri = '';
-
-    private $url = '';
-
-    public function __construct($merge = false){
-    	$this->configs = Config::get('routes');
-    	if($merge){
-    		$this->merge();
-    	}
-    }
-
 	/**
-	* Merge route with url method
-	*/
-	public function merge($prefix = ''){
-		// Get root
-		$this->uri = $this->setWebroot($this->configs, Bag::request()->uriArray());
-		$this->url = explode('?', $this->uri)[0];
+	 * Run method
+	 *
+	 * @return void
+	 */
+	public function run(){
+		$configs = Bag::config()->get('routes');
+		Bag::config()->delete('routes');
 
-		$matches = $this->setAttributes($prefix);
-
-		$__attributes = $this->__attributes;
-		
-		unset($__attributes['webroot']);
-		if(!$__attributes){
+		// Check if have no data in pages
+		if(empty($configs['pages'])){
 			throw new PageNotFoundException();
 		}
 
-		$this->__attributes = $this->setValueForVariable($this->__attributes, $matches);
+		// Get root
+		$this->uri = $this->setWebroot($configs, Bag::request()->uriArray());
+		$this->url = explode('?', $this->uri)[0];
+
+		$this->setAlias($configs['pages']);
+
+		if($this->validAlias == null){
+			throw new PageNotFoundException();
+		}
+
+		$data = $this->validAlias->get();
+
+		$this->attributes = array_merge($data, $this->attributes);
 	}
 
 	/**
-	* Set attributes method
+	* Get webroot method
 	*
+	* @param array $pages
 	* @param string $prefix
+	* @return void
 	*/
-	private function setAttributes($prefix){
-		// Check if isset pages
-		if ( !array_key_exists('pages', $this->configs) ) return;
-
-		$__prefix = $prefix ? $prefix.'\/' : '';
-
-		foreach ($this->configs['pages'] as $key => $value) {
-
+	private function setAlias($pages, $prefix = ''){
+		foreach ($pages as $key => $value) {
 			if(is_numeric($key)){
-				if ( !Bag::request()->isMethod($value[1]) ) continue;
-
 				$regex = $this->convertRegex($value[0]);
 
 				if($regex){
-					$regex = $__prefix.$regex;
+					$regex = $prefix.$regex;
 				} else {
 					$regex = $prefix;
 				}
+					
+				$value['regex'] = $regex;
 
-				//Get match
-	        	if(preg_match('/^'.$regex.'$/', $this->uri, $matches) 
-	        		|| preg_match('/^'.$regex.'$/', $this->url, $matches)){
-	        		if ( is_object($value[2]) ) {
-	        			// Call merge by object
-						$this->mergeByObject($value[2], $value[0], $matches);
-					}else if( is_array($value[2]) ){
-						// Call merge by array
-						$this->mergeByArray($value[2], $matches);
-					}else{
-						// Call merge by array
-						$this->mergeByString($value[2], $matches);
-					}
-					return $matches;
-	        	}
+				$alias = new RouteAlias($value);
+
+				if(!empty($value['as'])){
+					$aliasName = (!empty($prefix) ? $prefix.'.' : '').$value['as'];
+					$this->alias[$aliasName] = $alias;
+				}
+
+				if($this->validAlias == null 
+					&& ($alias->isValid($this->uri)
+					|| $alias->isValid($this->url)) ){
+					$this->validAlias = $alias;
+				}
 			} else {
-				$this->configs['pages'] = $value;
-        		if($matches = $this->setAttributes($__prefix.$key)){
-        			return $matches;
-        		}
-        	}
-		}
-
-		return [];
-	}
-
-	/**
-	* mergeByObject
-	*/
-	private function mergeByObject($object, $urlRegex, $matches){
-		$result = $object($urlRegex, $matches);
-		
-		if( is_array($result) ){
-			// Call merge by array
-			$this->mergeByArray($result, $matches);
-		}else{
-			// Call merge by array
-			$this->mergeByString($result, $matches);
-		}
-	}
-
-	/**
-	* mergeByString
-	*/
-	private function mergeByString($str, $matches){
-		$couples = explode(';', $str);
-
-		foreach ($couples as $key => $value) {
-			$values = explode('=', $value);
-
-			$this->__attributes[$values[0]] = isset($values[1]) ? $values[1] : '';
-		}
-
-		// Set parameters
-		if (!isset($this->__attributes['parameters'])){
-			$this->__attributes['parameters'] = $matches;
-		}
-	}
-
-	/**
-	* mergeByArray
-	*/
-	private function mergeByArray($array, $matches){
-
-		foreach ($array as $key => $value) {
-			if(is_string($key)){
-				$this->__attributes[$key] = $value;
+				$this->setAlias($value, (!empty($prefix) ? $prefix.'.' : '').$key.'\/');
 			}
 		}
+	}
 
-		// Set parameters
-		if (!isset($this->__attributes['parameters'])){
-			$this->__attributes['parameters'] = $matches;
-		}
+	/**
+	* Get webroot method
+	*
+	* @param string $name
+	* @return RouteAlias
+	*/
+	public function getAlias($name){
+		return isset($this->alias[$name]) ? $this->alias[$name] : null;
 	}
 
 	/**
@@ -176,62 +119,47 @@ class Route extends BaseObject{
 	* @return string $url
 	*/
 	private function setWebroot($configs, $url){
-		$this->__attributes['webroot'] = '';
+		$appConfig = Bag::config()->get('app');
 
-		$subs = Config::get('app');
+		// Get baseFolder
+		$base = (int) Bag::config()->get('app.base');
+		$publicFolder = '';
 
-		if($folderRoute = Config::get('app-config.route-root')){
+		$root = ROOT;
+		for ($i = 1; $i <= $base; $i++) {
+			$publicFolder = '/'.basename($root).$publicFolder;
+			$root = dirname($root);
 			array_shift($url);
 		}
 
+		$this->attributes['webroot'] = $publicFolder;
+		$this->attributes['fileroot'] = $publicFolder;
+
+		// Get root name with config on global
+		if('sub-folder' == $appConfig['for']){
+			$this->attributes['webroot'] .= !empty($appConfig['route']) ? '/'.$appConfig['route'] : '';
+			array_shift($url);
+		}
+
+		//Get root with private setting
 		if ( !empty($configs['base']) && is_numeric($configs['base'])) {
 			for($i = 0; $i < $configs['base']; $i++){
-				$this->__attributes['webroot'] .= $url[0];
+				$this->attributes['webroot'] .= !empty($url[0]) ? '/'.$url[0] : '';
 				array_shift($url);
 			}
+		}
+
+		if(!$this->attributes['webroot']){
+			$this->attributes['webroot'] = '/';
+		}
+
+		if(!$this->attributes['fileroot']){
+			$this->attributes['fileroot'] = '/';
 		}
 
 		return implode('/', $url);
 	}
 
-	/**
-	*
-	*
-	*/
-	private function setValueForVariable($attributes, $matches){
-		//echo json_encode($attributes);
-		$__attributes = [];
-
-		foreach ($attributes as $key => $value) {
-			$_v = $value;
-
-			if(is_array($_v)){
-				$_v = $this->setValueForVariable($_v, $matches);
-
-				if(!is_numeric($key)){
-					foreach ($matches as $k => $v) {
-						$key = str_replace('{'.$k.'}', $v, $key);
-					}
-				}
-
-			} else {
-				if(is_numeric($key)){
-					foreach ($matches as $k => $v) {
-						$_v = str_replace('{'.$k.'}', $v, $_v);
-					}
-				} else {
-					foreach ($matches as $k => $v) {
-						$_v = str_replace('{'.$k.'}', $v, $_v);
-						$key = str_replace('{'.$k.'}', $v, $key);
-					}
-				}
-			}
-
-			$__attributes[$key] = $_v;
-		}
-
-		return $__attributes ? $__attributes : $attributes;
-	}
 
 	/**
 	* __get method
@@ -241,7 +169,7 @@ class Route extends BaseObject{
 	*/
 	public function __get($name){
 		//
-		return isset($this->__attributes[$name]) ? $this->__attributes[$name] : null;
+		return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
 	}
 
 	/**
@@ -252,7 +180,7 @@ class Route extends BaseObject{
 	*/
 	public function __set($name, $value){
 		//Nothing
-		$this->__attributes[$name] = $value;
+		$this->attributes[$name] = $value;
 	}
 
 	/**
@@ -262,7 +190,7 @@ class Route extends BaseObject{
 	* @return value
 	*/
 	private function convertRegex($str){
-		foreach ($this->__regexKeys as $key => $value) {
+		foreach ($this->regexKeys as $key => $value) {
 			$str = str_replace($key, $value, $str);
 		}
 

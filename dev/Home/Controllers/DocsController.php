@@ -8,7 +8,7 @@
 */
 namespace Dev\Home\Controllers;
 use Overfull\Pattern\MVC\Controller;
-
+use Bag;
 /**
 * 
 */
@@ -19,9 +19,10 @@ class DocsController extends Controller{
 	
 	public function index(){
 		return $this->render();
+		//echo \Overfull\Utility\URLUtil::asset('/css/test.css');
 	}
 
 	public function detail($parameters){
-		dd($parameters);
+		//dd($parameters);
 	}
 }

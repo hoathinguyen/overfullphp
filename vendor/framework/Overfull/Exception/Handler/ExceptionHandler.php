@@ -6,7 +6,6 @@
 */
 namespace Overfull\Exception\Handler;
 use Overfull\Foundation\Base\BaseObject;
-use Overfull\Configure\Config;
 use Bag;
 //use overfull\utility\PathUtil;
 
@@ -31,7 +30,7 @@ class ExceptionHandler extends BaseObject{
 
 	private static function showError($code, $message, $file, $line, $title, $lastErrors){
 		//ob_clean();
-		$isShowDetail = Config::get('debug.display-errors');
+		$isShowDetail = Bag::config()->get('debug.display-errors');
 		
 		ob_clean();
 		ob_start();

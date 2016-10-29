@@ -26,6 +26,23 @@ class Request extends BaseRequest{
 	}
 
 	/**
+	 * host method
+	 *
+	 * @return string
+	 */
+	public function host(){
+		return $_SERVER['HTTP_HOST'];
+	}
+
+	/**
+	 * schema method
+	 *
+	 * @return string
+	 */
+	public function schema(){
+		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+	}
+	/**
 	* UriArray method
 	* This method will be return uri of request
 	* @date 2016/05/21
