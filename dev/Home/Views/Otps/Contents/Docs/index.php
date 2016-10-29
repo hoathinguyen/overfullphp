@@ -75,7 +75,7 @@
     <section class="no-padding" id="portfolio">
         <div class="container-fluid">
             <div class="row no-gutter popup-gallery">
-                <div class="col-lg-4 col-sm-6">
+                <!-- <div class="col-lg-4 col-sm-6">
                     <a href="/stream" class="portfolio-box">
                         <img src="plugins/theme/img/portfolio/fullsize/1.jpg" class="img-responsive" alt="">
                         <div class="portfolio-box-caption">
@@ -119,7 +119,7 @@
                             </div>
                         </div>
                     </a>
-                </div>
+                </div> -->
                 <!-- <div class="col-lg-4 col-sm-6">
                     <a href="plugins/theme/img/portfolio/fullsize/4.jpg" class="portfolio-box">
                         <img src="plugins/theme/img/portfolio/thumbnails/4.jpg" class="img-responsive" alt="">

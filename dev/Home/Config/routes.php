@@ -15,6 +15,8 @@ return array(
 			['<:empty>', 'get', 'controller=DocsController;method=index'],
 			['index.html', 'get', 'controller=DocsController;method=index'],
 			['detail.html', 'get', 'controller=DocsController;method=detail']
-		]
+		],
+
+		['install.html', 'get', 'controller=DocsController;method=install']
 	)
 );

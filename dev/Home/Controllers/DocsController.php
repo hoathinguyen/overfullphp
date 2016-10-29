@@ -22,7 +22,8 @@ class DocsController extends Controller{
 		//echo \Overfull\Utility\URLUtil::asset('/css/test.css');
 	}
 
-	public function detail($parameters){
+	public function install(){
 		//dd($parameters);
+		return $this->render();
 	}
 }

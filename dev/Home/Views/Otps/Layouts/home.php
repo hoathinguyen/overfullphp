@@ -43,23 +43,23 @@
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
                 </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Overfull.net</a>
+                <a class="navbar-brand page-scroll" href="<?php echo URL::to('/') ?>">Overfull.net</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="page-scroll" href="https://github.com/overfull/php-framework">Install</a>
+                        <a class="page-scroll" href="<?php echo URL::to('/install.html') ?>">Install</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#services">Docs</a>
+                        <a class="page-scroll" href="<?php echo URL::to('/docs/index.html') ?>">Docs</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#portfolio">Packages</a>
+                        <a class="page-scroll" href="<?php echo URL::to('/packages/index.html') ?>">Packages</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#contact">Weights</a>
+                        <a class="page-scroll" href="<?php echo URL::to('/weights/index.html') ?>">Weights</a>
                     </li>
                 </ul>
             </div>
