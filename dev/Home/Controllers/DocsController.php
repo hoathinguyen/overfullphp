@@ -21,15 +21,27 @@ class DocsController extends Controller{
 	public function index(){
 		$version = Bag::route()->version;
 		$docBal = new DocBusiness();
-
 		$docList = $docBal->getDocListByVersion($version);
-		dd($docList);
+		// Get data
+		$content = $docBal->getDoc($version, 'Get started');
+		return $this->render('posts',
+			['menu' => $docList, 'version' => $version, 'doc' => $content]);
+	}
 
-		return $this->render();
+	public function posts($parameters){
+		$version = Bag::route()->version;
+		$docBal = new DocBusiness();
+		$docList = $docBal->getDocListByVersion($version);
+		// Get data
+		$content = $docBal->getDoc($version, $parameters[2]);
+		return $this->render(false,
+			['menu' => $docList, 'version' => $version, 'doc' => $content]);
 	}
 
 	public function install(){
-		//dd($parameters);
-		return $this->render();
+		$version = Bag::route()->version;
+		$docBal = new DocBusiness();
+		$files = $docBal->getFilesByCategory('framework');
+		return $this->render(false, ['files' => $files]);
 	}
 }

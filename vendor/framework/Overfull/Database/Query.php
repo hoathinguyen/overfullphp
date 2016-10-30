@@ -259,7 +259,7 @@ class Query implements \JsonSerializable{
 			if($isExecute){
 				$sql = $this->query($sql);
 				if(!$sql || count($sql) == 0){
-					$sql = null;
+					$sql = [];
 				}
 			}
 

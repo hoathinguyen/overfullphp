@@ -53,7 +53,7 @@
                         <a class="page-scroll" href="<?php echo URL::to('/install.html') ?>">Install</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="<?php echo URL::to('/docs/index.html') ?>">Docs</a>
+                        <a class="page-scroll" href="<?php echo URL::to('/docs/1.x/index.html') ?>">Docs</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="<?php echo URL::to('/packages/index.html') ?>">Packages</a>
@@ -69,34 +69,6 @@
     </nav>
 
     <?php echo $this->content(); ?>
-
-    <section id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Liên hệ đến chúng tôi!</h2>
-                    <hr class="primary">
-                    <p>Chúng tôi chấp nhận mọi ý kiến đóng góp của các bạn, Vui lòng gửi đến các địa chỉ bên dưới!</p>
-                </div>
-                <div class="col-lg-3 text-center">
-                    <i class="fa fa-phone fa-3x sr-contact" style="color: green"></i>
-                    <p>(+84) 1654 028 428</p>
-                </div>
-                <div class="col-lg-3 text-center">
-                    <i class="fa fa-envelope-o fa-3x sr-contact" style="color: #d85b00"></i>
-                    <p><a href="mailto:overfull.net@gmail.com">overfull.net@gmail.com</a></p>
-                </div>
-                <div class="col-lg-3 text-center">
-                    <i class="fa fa-facebook fa-3x sr-contact" style="color: #245b8a"></i>
-                    <p><a href="https://fb.com/overfull.net">fb.com/overfull.net</a></p>
-                </div>
-                <div class="col-lg-3 text-center">
-                    <i class="fa fa-youtube fa-3x sr-contact" style="color: #9c1616"></i>
-                    <p><a href="https://youtube.com/channel/UC7EzOQ7Fkiy953GND0KIrFA">youtube.com</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- jQuery -->
     <script src="<?php echo URL::asset('/plugins/jquery/jquery.min.js') ?>"></script>

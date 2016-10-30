@@ -7,33 +7,44 @@ CREATE TABLE IF NOT EXISTS locales
 	id 		INT PRIMARY KEY AUTO_INCREMENT,
 	name 	VARCHAR(50),
 	sign 	VARCHAR(10)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS versions
 (
 	id 				INT PRIMARY KEY AUTO_INCREMENT,
 	name			VARCHAR(10),
 	description		VARCHAR(255)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO versions(name,description) VALUES ('1.x', '');
+
+CREATE TABLE IF NOT EXISTS categories
+(
+	id 			INT PRIMARY KEY AUTO_INCREMENT,
+	name		VARCHAR(50)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO categories(name) VALUES ('framework'),('packages'),('weights');
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS docs
 (
 	id 				INT PRIMARY KEY AUTO_INCREMENT,
-	name 			VARCHAR(50),
-	category_id 	VARCHAR(255),
+	title 			VARCHAR(50),
+	category_id 	INT,
 	token			VARCHAR(255),
 	version_id		INT,
-	FOREIGN KEY (version_id) REFERENCES versions(id)
-);
+	content			TEXT,
+	icon			VARCHAR(255),
+	FOREIGN KEY (version_id) REFERENCES versions(id),
+	FOREIGN KEY (category_id) REFERENCES categories(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS doc_contents
+CREATE TABLE IF NOT EXISTS files
 (
-	id 			INT PRIMARY KEY AUTO_INCREMENT,
-	title		VARCHAR(50),
-	content		TEXT,
-	locale_id	INT,
-	doc_id		INT,
-	FOREIGN KEY (locale_id) REFERENCES locales(id),
-	FOREIGN KEY (doc_id) REFERENCES docs(id)
-);
+	id 				INT PRIMARY KEY AUTO_INCREMENT,
+	title			VARCHAR(50),
+	category_id 	INT,
+	version_id		INT,
+	FOREIGN KEY (version_id) REFERENCES versions(id),
+	FOREIGN KEY (category_id) REFERENCES categories(id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO files(title, category_id, version_id) VALUES ('Release 1.0.0', 1, 1);

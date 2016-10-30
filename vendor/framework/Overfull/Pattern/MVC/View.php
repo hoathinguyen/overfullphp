@@ -165,7 +165,7 @@ class View implements IView{
 	 */
 	protected final function __readOtp($otp){
 		try{
-			$content = '';
+			$____content = '';
 			// Create variable
 			foreach ($otp['variables'] as $key => $value) {
 				$$key = $value;
@@ -183,7 +183,7 @@ class View implements IView{
 					throw new FileNotFoundException($fullFile);
 				}
 
-				$content = file_get_contents($fullFile);
+				$____content = file_get_contents($fullFile);
 
 				$namespace = "";
 
@@ -195,16 +195,16 @@ class View implements IView{
 					$namespace .= "use {$value} as {$key};";
 				}
 
-				file_put_contents($storageFile, "<?php {$namespace} ?>".$content);
+				file_put_contents($storageFile, "<?php {$namespace} ?>".$____content);
 			}
 
 			ob_start();
 
 			require $storageFile;
 
-			$content = ob_get_clean();
+			$____content = ob_get_clean();
 
-			return $content;
+			return $____content;
 		} catch (Exception $e) {
 			//ob_end_clean();
 			throw $e;
