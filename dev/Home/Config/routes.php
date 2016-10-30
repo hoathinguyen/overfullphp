@@ -12,11 +12,12 @@ return array(
 
 		// Set URL for profile
 		'docs' => [
-			['<:empty>', 'get', 'controller=DocsController;method=index'],
-			['index.html', 'get', 'controller=DocsController;method=index'],
-			['detail.html', 'get', 'controller=DocsController;method=detail']
+			'<:integer>.[x|X]' => [
+				['index.html', 'get', 'controller=DocsController;method=index;version={1}'],
+				['posts-<:all>.html', 'get', 'controller=DocsController;method=index;version={1}']
+			]
 		],
 
-		['install.html', 'get', 'controller=DocsController;method=install']
+		//['install.html', 'get', 'controller=DocsController;method=install']
 	)
 );

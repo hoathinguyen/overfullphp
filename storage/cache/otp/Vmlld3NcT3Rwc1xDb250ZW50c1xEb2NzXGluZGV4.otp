@@ -3,7 +3,7 @@
         <div class="header-content-inner">
             <h1 id="homeHeading">Overfull framework</h1>
             <hr>
-            <p>Overfull giúp bạn tạo website nhanh hơn, dễ dàng và đẹp hơn. Với modern PHP 5.5+ bạn sẽ cảm nhận được sự mạnh mẽ, linh hoạt trong việc thiết kế và tạo mới website theo ý tưởng của bạn. Với sự giúp đỡ của nhiệt tình từ cộng đồng cũng như nhà sáng lập và đặt biệt tài liệu hỗ trợ ngôn ngữ tiếng Việt, tất cả điều đó giúp bạn sẽ nhanh chóng làm quen với Overfull.</p>
+            <p>Overfull giúp bạn tạo website nhanh hơn, dễ dàng và đẹp hơn. Với modern PHP 5.5+ bạn sẽ cảm nhận được sự mạnh mẽ, linh hoạt trong việc thiết kế và tạo mới website theo ý tưởng của bạn. Với sự giúp đỡ của nhiệt tình từ cộng đồng cũng như nhà sáng lập và đặc biệt tài liệu hỗ trợ ngôn ngữ tiếng Việt, tất cả điều đó giúp bạn sẽ nhanh chóng làm quen với Overfull.</p>
             <a href="#about" class="btn btn-primary btn-xl page-scroll">Bên dưới có gì?</a>
         </div>
     </div>

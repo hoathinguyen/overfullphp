@@ -70,23 +70,17 @@ class Route extends BaseObject{
 	* @param string $prefix
 	* @return void
 	*/
-	private function setAlias($pages, $prefix = ''){
+	private function setAlias($pages, $prefix = '', $aliasName = ''){
 		foreach ($pages as $key => $value) {
 			if(is_numeric($key)){
-				$regex = $this->convertRegex($value[0]);
+				$regex = $this->convertRegex($prefix.$value[0]);
 
-				if($regex){
-					$regex = $prefix.$regex;
-				} else {
-					$regex = $prefix;
-				}
-					
 				$value['regex'] = $regex;
 
 				$alias = new RouteAlias($value);
 
 				if(!empty($value['as'])){
-					$aliasName = (!empty($prefix) ? $prefix.'.' : '').$value['as'];
+					$aliasName = $aliasName.'.'.$value['as'];
 					$this->alias[$aliasName] = $alias;
 				}
 
@@ -96,7 +90,7 @@ class Route extends BaseObject{
 					$this->validAlias = $alias;
 				}
 			} else {
-				$this->setAlias($value, (!empty($prefix) ? $prefix.'.' : '').$key.'\/');
+				$this->setAlias($value, (!empty($prefix) ? $prefix : '').$key.'/', (!empty($prefix) ? $prefix.'.' : '').$key);
 			}
 		}
 	}

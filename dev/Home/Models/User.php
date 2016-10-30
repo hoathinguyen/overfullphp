@@ -1,5 +1,5 @@
 <?php
-namespace Dev\TestApp\Models;
+namespace Dev\Home\Models;
 use Overfull\Pattern\MVC\Model;
 /**
 * 

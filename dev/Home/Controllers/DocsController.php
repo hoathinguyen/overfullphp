@@ -9,6 +9,7 @@
 namespace Dev\Home\Controllers;
 use Overfull\Pattern\MVC\Controller;
 use Bag;
+use Dev\Home\Business\DocBusiness;
 /**
 * 
 */
@@ -18,8 +19,13 @@ class DocsController extends Controller{
 	];
 	
 	public function index(){
+		$version = Bag::route()->version;
+		$docBal = new DocBusiness();
+
+		$docList = $docBal->getDocListByVersion($version);
+		dd($docList);
+
 		return $this->render();
-		//echo \Overfull\Utility\URLUtil::asset('/css/test.css');
 	}
 
 	public function install(){
