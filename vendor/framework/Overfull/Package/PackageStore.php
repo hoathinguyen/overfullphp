@@ -14,15 +14,16 @@ use Bag;
 class PackageStore extends Store{
 	function __construct(){
 		$packages = Bag::config()->get('using.packages');
+
 		if(!empty($packages)){
 			foreach ($packages as $key => $value) {
 				if(!class_exists($value['class'])){
 					throw new PackageNotFoundException($value['class']);
 				}
-				Bag::package()->{$key} = new $value['class']();
+				$this->{$key} = new $value['class']();
 				unset($value['class']);
 				foreach ($value as $name => $setting) {
-					Bag::package()->{$key}->{$name} = $setting;
+					$this->{$key}->{$name} = $setting;
 				}
 			}
 		}

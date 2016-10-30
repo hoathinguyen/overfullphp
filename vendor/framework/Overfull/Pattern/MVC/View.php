@@ -8,6 +8,7 @@ namespace Overfull\Pattern\MVC;
 use Overfull\Pattern\MVC\Foundation\IView;
 use Overfull\Pattern\MVC\Exception\ViewTypeNotFoundException;
 use Overfull\Utility\PathUtil;
+use Overfull\Utility\URLUtil;
 use Overfull\Pattern\MVC\Exception\FileNotFoundException;
 use Overfull\Configure\Config;
 use Overfull\Http\Response\ResponseFormat;
@@ -151,7 +152,7 @@ class View implements IView{
 	protected final function redirect($gift){
 		Bag::$response->format = ResponseFormat::HTML;
 		$html = '<!DOCTYPE html>
-				<html><head><title>redirect</title><meta http-equiv="refresh" content="0; url='.$gift['data'].'" /></head><body></body></html>';
+				<html><head><title>redirect</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift['data']).'" /></head><body></body></html>';
 
 		return $html;
 	}

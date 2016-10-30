@@ -10,5 +10,11 @@ namespace Packages\Authentication;
 use Overfull\Package\BasePackage;
 
 class Auth extends BasePackage{
-	
+	public function test(){
+		return 100;
+	}
+
+	public function isLogged(){
+		return false;
+	}
 }

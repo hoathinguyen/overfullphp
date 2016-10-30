@@ -40,6 +40,11 @@ return [
 	// ],
 
 	'sub-domain' => [
+		'admin' => [
+			'root' => 'dev\Admin',
+			'namespace' => 'Dev\Admin'
+		],
+
 		'sharing' => [
 			'root' => 'dev\Home',
 			'namespace' => 'Dev\Home'

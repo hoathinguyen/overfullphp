@@ -51,8 +51,6 @@ class Bag{
 
 		static::session();
 
-		static::package();
-
 		static::mystore();
 
 		static::config();

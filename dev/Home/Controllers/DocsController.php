@@ -18,6 +18,11 @@ class DocsController extends Controller{
 		'layout' => 'home'
 	];
 	
+	/**
+	 * Index method
+	 *
+	 * @return render
+	 */
 	public function index(){
 		$version = Bag::route()->version;
 		$docBal = new DocBusiness();
@@ -28,6 +33,12 @@ class DocsController extends Controller{
 			['menu' => $docList, 'version' => $version, 'doc' => $content]);
 	}
 
+	/**
+	 * Posts method
+	 *
+	 * @param array $parameter
+	 * @return render
+	 */
 	public function posts($parameters){
 		$version = Bag::route()->version;
 		$docBal = new DocBusiness();
@@ -38,6 +49,11 @@ class DocsController extends Controller{
 			['menu' => $docList, 'version' => $version, 'doc' => $content]);
 	}
 
+	/**
+	 * Install method
+	 *
+	 * @return render
+	 */
 	public function install(){
 		$version = Bag::route()->version;
 		$docBal = new DocBusiness();
