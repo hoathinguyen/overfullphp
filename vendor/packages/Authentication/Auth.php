@@ -25,7 +25,12 @@ class Auth extends BasePackage{
 	 * Login method
 	 * @param array $data
 	 */
-	public function login($data){
+	public function login($data = null){
+		
+		if(!$data){
+			$data = Bag::request()->post();
+		}
+
 		$class = $this->entity;
 		$model = new $class;
 		$ids = $this->id;

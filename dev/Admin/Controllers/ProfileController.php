@@ -25,9 +25,9 @@ class ProfileController extends AdminController{
 
 		// Check if request is post
 		if(Bag::request()->isMethod('post')){
-			$data = Bag::request()->post();
+			//$data = Bag::request()->post();
 
-			if(Bag::package()->auth->login($data)){
+			if(Bag::package()->auth->login()){
 				return $this->redirect('/');
 			} else {
 				return $this->render(false, ['msg' => 'Username or password is incorrect!']);
