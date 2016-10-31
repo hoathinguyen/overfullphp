@@ -8,10 +8,8 @@
 namespace Overfull\Http;
 
 use Overfull\Http\Foundation\BaseRequest;
+use Overfull\Utility\ArrayUtil;
 
-/**
-* 
-*/
 class Request extends BaseRequest{
 	/**
 	* Uri method
@@ -110,5 +108,29 @@ class Request extends BaseRequest{
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get method
+	 *
+	 * @date 2016/02/27
+	 * @param string $name
+	 * @return string
+	 */
+	public function get($name = false){
+		if(!$name) return $_GET;
+		return ArrayUtil::access($_GET, $name);
+	}
+
+	/**
+	 * post method
+	 *
+	 * @date 2016/02/27
+	 * @param string $name
+	 * @return string
+	 */
+	public function post($name = false){
+		if(!$name) return $_POST;
+		return ArrayUtil::access($_POST, $name);
 	}
 }

@@ -20,8 +20,10 @@ class BaseSession extends BaseObject{
 	 * @param $uid
 	 */
 	public function start( $uid = "overfull" ){
-		$this->uid = $uid;
-		session_start($uid);
+		if(session_id() === ''){
+			$this->uid = $uid;
+			session_start($uid);
+		}
 	}
 
 	/**
@@ -46,7 +48,7 @@ class BaseSession extends BaseObject{
 	 */
 	public function check( $name = false ){
 		if ( $name ) {
-			return isset($_SESSION[$name]) ? true : false;
+			return isset($_SESSION[$name]);
 		}
 		return false;
 	}

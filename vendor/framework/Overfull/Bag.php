@@ -49,7 +49,7 @@ class Bag{
 		// Response
 		static::response();
 
-		static::session();
+		static::session()->start();
 
 		static::mystore();
 

@@ -12,6 +12,7 @@ return array(
 
 		// Set URL for profile
 		['login.html', 'any', 'controller=ProfileController;method=login'],
-		['register.html', 'any', 'controller=ProfileController;method=register']
+		['register.html', 'any', 'controller=ProfileController;method=register'],
+		['logout.html', 'any', 'controller=ProfileController;method=logout']
 	)
 );

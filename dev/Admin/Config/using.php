@@ -3,9 +3,10 @@ return [
 	'packages' => [
 		'auth' => [
 			'class' => \Packages\Authentication\Auth::class,
-			'table' => 'users',
+			'entity' => \Dev\Admin\Models\User::class,
 			'id' => ['username'],
-			'password' => 'password' 
+			'password' => 'password',
+			'session' => 'auth'
 		]
 	],
 
