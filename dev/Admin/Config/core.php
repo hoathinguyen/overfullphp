@@ -8,7 +8,7 @@ return [
 	'otp' => [
 		'ext' => 'php',
 		'helpers' => [
-			
+			'URL' => \Overfull\Utility\URLUtil::class
 		]
 	]
 ];

@@ -2,7 +2,10 @@
 return [
 	'packages' => [
 		'auth' => [
-			'class' => \Packages\Authentication\Auth::class
+			'class' => \Packages\Authentication\Auth::class,
+			'table' => 'users',
+			'id' => ['username'],
+			'password' => 'password' 
 		]
 	],
 
