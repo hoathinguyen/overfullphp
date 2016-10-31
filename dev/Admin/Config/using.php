@@ -5,8 +5,9 @@ return [
 			'class' => \Packages\Authentication\Auth::class,
 			'entity' => \Dev\Admin\Models\User::class,
 			'id' => ['username'],
-			'password' => 'password',
-			'session' => 'auth'
+			'secret' => 'password',
+			'session' => 'auth',
+			'hasher' => \Overfull\Security\Hasher\SimpleHasher::class
 		]
 	],
 

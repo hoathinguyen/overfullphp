@@ -29,8 +29,11 @@ class ProfileController extends AdminController{
 
 			if(Bag::package()->auth->login($data)){
 				return $this->redirect('/');
+			} else {
+				return $this->render(false, ['msg' => 'Username or password is incorrect!']);
 			}
 		}
+		
 		// Return render if have no logged
 		return $this->render();
 	}

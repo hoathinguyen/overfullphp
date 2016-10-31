@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-md-3">
                 <?php foreach ($menu as $key => $value) { ?>
-                    <i class="<?php echo $value->icon ?>"></i> <a href="<?php echo URL::to("/docs/{$version}.x/posts-".$value->name.".html") ?>"><?php echo $value->title ?></a>
+                    <i class="<?php echo $value->icon ?>"></i> <a href="<?php echo URL::to("/docs/{$version}.x/posts-".$value->title.".html") ?>"><?php echo $value->title ?></a>
                 <?php } ?>
             </div>
             <?php if(!$doc){  ?>

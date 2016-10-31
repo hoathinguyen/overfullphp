@@ -2,6 +2,15 @@
 CREATE DATABASE overfull;
 USE overfull;
 
+CREATE TABLE IF NOT EXISTS users
+(
+	id 				INT PRIMARY KEY AUTO_INCREMENT,
+	username		VARCHAR(30),
+	password		VARCHAR(255)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO users(username, password) VALUES ('overfull', '202cb962ac59075b964b07152d234b70');
+
 CREATE TABLE IF NOT EXISTS locales
 (
 	id 		INT PRIMARY KEY AUTO_INCREMENT,
@@ -24,7 +33,7 @@ CREATE TABLE IF NOT EXISTS categories
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO categories(name) VALUES ('framework'),('packages'),('weights');
 
--- Create users table
+-- Create docs table
 CREATE TABLE IF NOT EXISTS docs
 (
 	id 				INT PRIMARY KEY AUTO_INCREMENT,
