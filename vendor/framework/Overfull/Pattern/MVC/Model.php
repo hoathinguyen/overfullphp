@@ -258,4 +258,12 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
                 ->insert();
         }
     }
+
+    /**
+     * Get primary key method
+     *
+     */
+    public function getPrimaryKey(){
+        return $this->primaryKey;
+    }
 }

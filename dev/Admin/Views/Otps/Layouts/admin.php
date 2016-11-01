@@ -22,7 +22,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         page. However, you can choose any other skin. Make sure you
         apply the skin class to the body tag so the changes take effect.
   -->
-  <link rel="stylesheet" href="<?php echo URL::to('/plugins/adminlte/dist/css/skins/skin-blue.min.css')?>">
+  <link rel="stylesheet" href="<?php echo URL::to('/plugins/adminlte/dist/css/skins/skin-green.min.css')?>">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -51,7 +51,7 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper">
 
   <!-- Main Header -->
@@ -62,7 +62,7 @@ desired effect
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>A</b>LT</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Admin</b>LTE</span>
+      <span class="logo-lg"><b>Overfull.net</b></span>
     </a>
 
     <!-- Header Navbar -->
@@ -174,9 +174,9 @@ desired effect
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <img src="<?php echo \Bag::package()->auth->load()->avatar ?>" class="user-image" alt="User Image">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs"><?php echo \Bag::package()->auth->load()->username ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
@@ -206,10 +206,10 @@ desired effect
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="<?php echo URL::to('/profile.html'); ?>" class="btn btn-default btn-flat">Profile</a>
+                  <a href="<?php echo URL::to('/profile'); ?>" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="<?php echo URL::to('/logout.html'); ?>" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="<?php echo URL::to('/logout'); ?>" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>
@@ -229,16 +229,15 @@ desired effect
     <section class="sidebar">
 
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel">
+      <!-- <div class="user-panel">
         <div class="pull-left image">
           <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
           <p>Alexander Pierce</p>
-          <!-- Status -->
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
-      </div>
+      </div> -->
 
       <!-- search form (Optional) -->
       <form action="#" method="get" class="sidebar-form">
@@ -378,7 +377,17 @@ desired effect
 <script src="<?php echo URL::to('/plugins/bootstrap/js/bootstrap.min.js')?>"></script>
 <!-- AdminLTE App -->
 <script src="<?php echo URL::to('/plugins/adminlte/dist/js/app.min.js')?>"></script>
-
+<!-- CK Editor -->
+<script src="https://cdn.ckeditor.com/4.5.7/standard/ckeditor.js"></script>
+<script>
+  $(function () {
+    // Replace the <textarea id="editor1"> with a CKEditor
+    // instance, using default configuration.
+    CKEDITOR.replace('editor1');
+    //bootstrap WYSIHTML5 - text editor
+    $(".textarea").wysihtml5();
+  });
+</script>
 <!-- Optionally, you can add Slimscroll and FastClick plugins.
      Both of these plugins are recommended to enhance the
      user experience. Slimscroll is required when using the

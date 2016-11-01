@@ -1,4 +1,4 @@
-<?php use Overfull\Utility\URLUtil as URL; ?><?php echo $this->render('Elements\docs_navi', ['sub' => 'Index', 'folder' => 'Docs']); ?>
+<?php echo $this->render('Elements\docs_navi', ['sub' => 'Index', 'folder' => 'Docs']); ?>
 <section class="content">
   <div class="row">
     <div class="col-xs-12">

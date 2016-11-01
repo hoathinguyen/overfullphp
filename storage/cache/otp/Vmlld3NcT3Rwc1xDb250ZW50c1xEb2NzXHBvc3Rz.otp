@@ -12,15 +12,13 @@
                     <i class="<?php echo $value->icon ?>"></i> <a href="<?php echo URL::to("/docs/{$version}.x/posts-".$value->title.".html") ?>"><?php echo $value->title ?></a>
                 <?php } ?>
             </div>
+            <div class="col-md-9" style="border-left: 1px solid #ddd">
             <?php if(!$doc){  ?>
-                <div class="col-md-9" style="border-left: 1px solid #ddd">
                     Tài liệu không tồn tại.
-                </div>
             <?php } else {?>
-                <div class="col-md-9" style="border-left: 1px solid #ddd">
                     <?php echo $doc->content; ?>
-                </div>
             <?php } ?>
+            </div>
         </div>
     </div>
 </section>

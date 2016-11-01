@@ -70,6 +70,10 @@
 
     <?php echo $this->content(); ?>
 
+    <footer>
+        <?php echo $this->render('Elements\footer'); ?>
+    </footer>
+
     <!-- jQuery -->
     <script src="<?php echo URL::asset('/plugins/jquery/jquery.min.js') ?>"></script>
 

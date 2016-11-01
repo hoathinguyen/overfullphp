@@ -27,17 +27,17 @@
 */
 return [
 	'base' => 0,
-	// 'sub-folder' => [
-	// 	'sharing' => [
-	// 		'root' => 'dev\Home',
-	// 		'namespace' => 'Dev\Home'
-	// 	],
+	'sub-folder' => [
+		// 'sharing' => [
+		// 	'root' => 'dev\Home',
+		// 	'namespace' => 'Dev\Home'
+		// ],
 
-	// 	// '_default' => [
-	// 	// 	'root' => 'dev\Home',
-	// 	// 	'namespace' => 'Dev\Home'
-	// 	// ]
-	// ],
+		'_default' => [
+			'root' => 'dev\Home',
+			'namespace' => 'Dev\Home'
+		]
+	],
 
 	'sub-domain' => [
 		'admin' => [
@@ -46,13 +46,13 @@ return [
 		],
 
 		'sharing' => [
-			'root' => 'dev\Home',
-			'namespace' => 'Dev\Home'
+			'root' => 'dev\Sharing',
+			'namespace' => 'Dev\Sharing'
 		],
 
-		'_default' => [
-			'root' => 'dev\Home',
-			'namespace' => 'Dev\Home'
-		]
+		// '_default' => [
+		// 	'root' => 'dev\Home',
+		// 	'namespace' => 'Dev\Home'
+		// ]
 	]
 ];

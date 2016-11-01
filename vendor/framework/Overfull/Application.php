@@ -125,7 +125,7 @@ class Application extends BaseObject{
 
 					Bag::config()->set('app', [
 						'root' => $this->root,
-						'for' => 'sub-domain',
+						'for' => 'sub-domain-default',
 						'namespace' => $this->namespace,
 						'route' => ''
 					]);
@@ -157,7 +157,7 @@ class Application extends BaseObject{
 
 						Bag::config()->set('app', [
 							'root' => $this->root,
-							'for' => 'sub-folder',
+							'for' => 'sub-folder-default',
 							'namespace' => $this->namespace,
 							'route' => ''
 						]);

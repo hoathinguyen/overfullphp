@@ -9,12 +9,11 @@
 namespace Dev\Admin\Controllers;
 use Overfull\Pattern\MVC\Controller;
 
+/**
+* 
+*/
 class AdminController extends Controller{
 	protected $otp = [
 		'layout' => 'admin'
 	];
-
-	public function beforeAction(){
-		
-	}
 }

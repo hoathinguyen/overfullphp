@@ -49,7 +49,7 @@ class Route extends BaseObject{
 		}
 
 		// Get root
-		$this->uri = $this->setWebroot($configs, Bag::request()->uriArray());
+		$this->uri = strtolower($this->setWebroot($configs, Bag::request()->uriArray()));
 		$this->url = explode('?', $this->uri)[0];
 
 		$this->setAlias($configs['pages']);
@@ -74,6 +74,10 @@ class Route extends BaseObject{
 		foreach ($pages as $key => $value) {
 			if(is_numeric($key)){
 				$regex = $this->convertRegex($prefix.$value[0]);
+
+				if(substr( $regex, -1 ) == '/'){
+					$regex = substr($regex, 0, -2);
+				}
 
 				$value['regex'] = $regex;
 
@@ -184,6 +188,7 @@ class Route extends BaseObject{
 	* @return value
 	*/
 	private function convertRegex($str){
+		$str = strtolower($str);
 		foreach ($this->regexKeys as $key => $value) {
 			$str = str_replace($key, $value, $str);
 		}

@@ -9,8 +9,11 @@
 namespace Dev\Admin\Controllers;
 use Dev\Admin\Controllers\AdminController;
 use Dev\Admin\Business\UserBusiness;
+use Dev\Admin\Models\User;
 use Bag;
-
+/**
+* 
+*/
 class ProfileController extends AdminController{
 	private $userBusiness = null;//new UserBusiness();
 
@@ -18,16 +21,18 @@ class ProfileController extends AdminController{
 	// 	$this->userBusiness = $userBusiness;
 	// }
 
+	public function beforeAction(){
+		if (Bag::package()->auth->isLogged()){
+			return $this->redirect('/');
+		}
+	}
+
 	/**
 	 * Login method
 	 *
 	 * @return render
 	 */
 	public function login(){
-		if (Bag::package()->auth->isLogged()){
-			return $this->redirect('/');
-		}
-
 		// Check if request is post
 		if(Bag::request()->isMethod('post')){
 			//$data = Bag::request()->post();
@@ -50,7 +55,7 @@ class ProfileController extends AdminController{
 	 */
 	public function logout(){
 		Bag::package()->auth->logout();
-		return $this->redirect('/login');
+		return $this->redirect('/login.html');
 	}
 
 	/**
@@ -59,9 +64,6 @@ class ProfileController extends AdminController{
 	 * @return render
 	 */
 	public function profile(){
-		if (!Bag::package()->auth->isLogged()){
-			return $this->redirect('/login');
-		}
 		return $this->render(false, ['user' => Bag::package()->auth->load()]);
 	}
 }

@@ -9,11 +9,13 @@
 namespace Dev\Admin\Controllers;
 use Dev\Admin\Controllers\AdminController;
 use Bag;
-
+/**
+* 
+*/
 class HomeController extends AdminController{
 	public function index(){
 		if(!Bag::package()->auth->isLogged()){
-			return $this->redirect('/login');
+			return $this->redirect('/login.html');
 		}
 
 		return $this->render();

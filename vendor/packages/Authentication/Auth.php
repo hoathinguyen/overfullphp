@@ -8,11 +8,13 @@
 */
 namespace Packages\Authentication;
 use Overfull\Package\BasePackage;
+use Packages\Authentication\LoggedData;
 use Bag;
 
 class Auth extends BasePackage{
 	private $idField = 'username';
 	private $secretField = 'password';
+	private $dbData = null;
 	/**
 	 * Is logged method
 	 * @return boolean
@@ -54,7 +56,11 @@ class Auth extends BasePackage{
 		->one();
 
 		if($result){
-			Bag::session()->write($this->session, $data);
+			$logged = new LoggedData();
+			$pri = $result->getPrimaryKey();
+			$logged->{$pri} = $result->{$pri};
+
+			Bag::session()->write($this->session, $logged);
 			return true;
 		}
 		return false;
@@ -72,7 +78,23 @@ class Auth extends BasePackage{
 	 * user method
 	 * @param array $data
 	 */
-	public function user(){
+	public function get(){
 		return Bag::session()->read($this->session);
+	}
+
+	/**
+	 * user method
+	 * @param array $data
+	 */
+	public function load(){
+		$entityClass = $this->entity;
+		$model = new $entityClass;
+
+		if(!$this->dbData){
+			$pr = $model->getPrimaryKey();
+			$this->dbData = $model->find($this->get()->{$pr});
+		}
+
+		return $this->dbData;
 	}
 }
