@@ -7,12 +7,27 @@
 namespace Overfull\Database;
 use Bag;
 use Overfull\Database\Console\SQLCommand;
+use Overfull\Exception\QueryBuilderNotFoundException;
 
-class Query implements \JsonSerializable{
+class Schema implements \JsonSerializable{
+	/**
+	 * Name of connetion, which saved in dbstore
+	 */
 	protected $connectionName;
 
+	/**
+	 * Class name of result object
+	 */
 	protected $object = '';
 
+	/**
+	 * Query builder object
+	 */
+	protected $query = null;
+
+	/**
+	 * Query builder object
+	 */
 	protected $data = [
 		// common
 		'table' => '', // all
@@ -32,10 +47,6 @@ class Query implements \JsonSerializable{
 		],
 		'offset' => false,
 		'limit' => false
-		// update
-		
-		
-		// Insert
 	];
 
 	/**
@@ -45,9 +56,19 @@ class Query implements \JsonSerializable{
 	 * @param mixed $object
 	 * @return void
 	 */
-	function __construct($connectionName = null, $object = null){
+	function __construct($connectionName = null, $object = null, $query){
 		$this->connectionName = $connectionName;
 		$this->object = $object;
+
+		if(!class_exists($query)){
+			$query = "\Overfull\Database\Query\\".ucfirst($query)."\QueryBuilder";
+		}
+
+		if(!class_exists($query)){
+			throw new QueryBuilderNotFoundException($query);
+		}
+
+		$this->query = new $query;
 	}
 
 	/**
@@ -110,7 +131,7 @@ class Query implements \JsonSerializable{
 	public function table($table, $as = ''){
 		if(is_object($table)){
 			$class = get_class($this);
-			$q = new $class();
+			$q = new $class($this->connectionName, $this->object, get_class($this->query));
 			$table($q);
 			$this->data['table'] = '('.$q->all(false).')'.($as ? " {$as}" : '');
 		}else{
@@ -155,7 +176,7 @@ class Query implements \JsonSerializable{
 	public function andWhere($conditions){
 		if(is_object($conditions)){
 			$class = get_class($this);
-			$q = new $class();
+			$q = new $class($this->connectionName, $this->object, get_class($this->query));
 			$conditions($q);
 
 			$this->data['where'][] = [
@@ -182,7 +203,7 @@ class Query implements \JsonSerializable{
 	public function orWhere($conditions){
 		if(is_object($conditions)){
 			$class = get_class($this);
-			$q = new $class();
+			$q = new $class($this->connectionName, $this->object, get_class($this->query));
 			$conditions($q);
 
 			$this->data['where'][] = [
@@ -254,7 +275,7 @@ class Query implements \JsonSerializable{
 	 */
 	public function all($isExecute = true){
 		try{
-			$sql = SQLCommand::select($this->data);
+			$sql = $this->query->select($this->data);
 
 			if($isExecute){
 				$sql = $this->query($sql);
@@ -273,14 +294,16 @@ class Query implements \JsonSerializable{
 
 	/**
 	 * Select one
-	 *
+	 * This method call select query and set limit as 1
+	 * Before select, check if get query or execute
 	 * @return void
 	 */
 	public function one($isExecute = true){
 		try{
-			$this->data['limit'] = 1;
+			// Set limit as 1
+			$this->limit(1);
 
-			$sql = SQLCommand::select($this->data);
+			$sql = $this->query->select($this->data);
 
 			if($isExecute){
 				$sql = $this->query($sql);
@@ -326,6 +349,7 @@ class Query implements \JsonSerializable{
 	 */
 	public function execute($sql, $parameters = []){
 		try {
+			// Set attribute for connection
 			Bag::$dbstore->{$this->connectionName}->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
 			$dpo = Bag::$dbstore->{$this->connectionName}->prepare($sql);
 
@@ -338,8 +362,8 @@ class Query implements \JsonSerializable{
 	}
 
 	/**
-	 * Get where conditions
-	 *
+	 * Get where conditions array
+	 * 
 	 * @return array
 	 */
 	public function getWhere(){
@@ -348,7 +372,7 @@ class Query implements \JsonSerializable{
 
 	/**
 	 * Get data
-	 *
+	 * This method return all data which be setted on array before excute
 	 * @return array
 	 */
 	public function getData(){
@@ -356,7 +380,8 @@ class Query implements \JsonSerializable{
 	}
 
 	/**
-     * jsonSerialize method, which is implement from jsonSerialize, to json_encode .
+     * jsonSerialize method,
+     * which is implement from jsonSerialize, to json_encode .
      *
      * @return array
      */
@@ -374,34 +399,42 @@ class Query implements \JsonSerializable{
     }
 
     /**
-     * update.
-     *
+     * Update method.
+     * This method will be call method query to get sql
+     * After then exc this sql string by dbconnection
      * @return array
      */
     public function update($isExecute = true){
-    	$sql = SQLCommand::update($this->data);
+    	// Get sql string from query
+    	$sql = $this->query->update($this->data);
 
+    	// Check if is excute or get sql string
     	if($isExecute){
     		$sql = $this->execute($sql);
     	}
     	
+    	// Clear all after excute
     	$this->clear();
 
     	return $sql;
     }
 
     /**
-     * update.
-     *
+     * Insert method.
+     * This method will be call method query to get sql
+     * After then exc this sql string by dbconnection
      * @return array
      */
     public function insert($isExecute = true){
-    	$sql = SQLCommand::insert($this->data);
+    	// Get sql string from query
+    	$sql = $this->query->insert($this->data);
     	
+    	// Check if is excute or get sql string
     	if($isExecute){
     		$sql = $this->execute($sql);
     	}
     	
+    	// Clear all after excute
     	$this->clear();
 
     	return $sql;

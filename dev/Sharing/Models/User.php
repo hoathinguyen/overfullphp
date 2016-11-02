@@ -6,5 +6,5 @@ use Overfull\Pattern\MVC\Model;
 */
 class User extends Model{
 	protected $primaryKey = "id";
-	protected $table = 'users';
+	protected $tableName = 'users';
 }

@@ -20,7 +20,7 @@ class DocBusiness{
 	 */
 	public function getDocListByVersion($version){
 		return Doc::instance()
-				->query()
+				->schema()
 				->columns('docs.*')
 				->join('versions', 'versions.id = docs.version_id')
 				->where(['versions.id', '=', $version.'.x'])
@@ -35,7 +35,7 @@ class DocBusiness{
 	 */
 	public function getDoc($version, $name){
 		return Doc::instance()
-				->query()
+				->schema()
 				->columns('docs.*')
 				->join('versions', 'versions.id = docs.version_id')
 				->where(['versions.id', '=', $version.'.x'])
@@ -51,7 +51,7 @@ class DocBusiness{
 	 */
 	public function getFilesByCategory($name){
 		return File::instance()
-				->query()
+				->schema()
 				->columns(['files.*', 'versions.name'])
 				->join('categories', 'categories.id = files.category_id')
 				->join('versions', 'versions.id = files.version_id')

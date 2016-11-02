@@ -84,7 +84,7 @@ class Application extends BaseObject{
 	*/
 	private function getConfig(){
 		// Get config for database
-		Bag::config()->set('databases', ROOT.DS.$this->root.DS.'Config'.DS.'databases.php', true);
+		Bag::config()->set('databases', ROOT.DS.'dev'.DS.'Config'.DS.'databases.php', true);
 		//Bag::config()->set('alias', ROOT.DS.$this->root.DS.'config'.DS.'alias.php', true);
 		Bag::config()->set('using', ROOT.DS.$this->root.DS.'Config'.DS.'using.php', true);
 		Bag::config()->set('core', ROOT.DS.$this->root.DS.'Config'.DS.'core.php', true);

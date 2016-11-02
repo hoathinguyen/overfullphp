@@ -12,20 +12,12 @@ use Overfull\Database\Query;
 use JsonSerializable;
 
 abstract class Model extends DbContext implements IModel, JsonSerializable{
-	protected $primaryKey = 'id';
-
-    protected $autoIncrement = true;
 	
-	protected $table = null;
-
-	public $attributes = [];
 
 	protected $validates = [
 	];
 
 	protected $invalidErrors = [];
-
-	protected $query = null;
 
     /**
      * Construct
@@ -53,26 +45,8 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
 			throw new DatabaseConfigException($this->connectionName);
 		}
 
-		$this->connect( $this->connectionName,
-				$databases['connections'][$this->connectionName]["user"],
-				$databases['connections'][$this->connectionName]["password"],
-				$databases['connections'][$this->connectionName]["type"],
-				$databases['connections'][$this->connectionName]["host"],
-				'',
-				$databases['connections'][$this->connectionName]["dbname"]);
-	}
-
-    /**
-     * Get instance of this class
-     *
-     * @param string $use: name of connection,
-     * which is config in database.php
-     * @return object
-     */
-	public static function instance($use = false){
-		$class = get_called_class();
-		$model = new $class($use);
-		return $model;
+		parent::__construct( $this->connectionName,
+				$databases['connections'][$this->connectionName]);
 	}
 
     /**
@@ -83,7 +57,7 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
      */
     public function find($id){
         // Create query
-        return $this->query()
+        return $this->schema()
             ->where([$this->primaryKey, '=', $id])
             ->one();
     } 
@@ -96,76 +70,13 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
      */
     public function findOrDefault($id){
         // Create query
-        $rs = $this->query()
+        $rs = $this->schema()
             ->where([$this->primaryKey, '=', $id])
             ->one();
 
         if(!$rs){
             return $this;
         }
-    } 
-
-    /**
-     * Get query of this class
-     *
-     * @return object
-     */
-	public function query(){
-        if(!$this->query){
-            $this->query = new Query($this->connectionName, get_class($this));
-            $this->query->table($this->table);
-        }
-
-		return $this->query;
-	}
-
-    /**
-     * Auto call when set value for object properties
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-	public function __set($name, $value){
-		$this->attributes[$name] = $value;
-	}
-
-    /**
-     * Auto call when get value for object properties
-     *
-     * @param string $name
-     * @return mixed
-     */
-	public function __get($name){
-		if(!isset($this->attributes[$name])){
-			return null;
-		}
-		return $this->attributes[$name];
-	}
-
-    /**
-     * Determine if an attribute exists on the model.
-     *
-     * @param  string  $key
-     * @return bool
-     */
-    public function __isset($key)
-    {
-        //return (isset($this->attributes[$key]) || isset($this->relations[$key])) ||
-          //      ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key)));
-    	return isset($this->attributes[$key]);
-    }
-
-    /**
-     * Unset an attribute on the model.
-     *
-     * @param  string  $key
-     * @return void
-     */
-    public function __unset($key)
-    {
-        //unset($this->attributes[$key], $this->relations[$key]);
-        unset($this->attributes[$key]);
     }
 
     /**
@@ -187,20 +98,6 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
     //}
 
     /**
-     * Handle dynamic static method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    //public static function __callStatic($method, $parameters)
-    //{
-        //$instance = new static;
-
-        //return call_user_func_array([$instance, $method], $parameters);
-    //}
-
-    /**
      * Convert the model to its string representation.
      *
      * @return string
@@ -209,24 +106,6 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
     //{
         //return $this->toJson();
     //}
-
-    /**
-     * jsonSerialize method, which is implement from jsonSerialize, to json_encode .
-     *
-     * @return array
-     */
-    public function jsonSerialize(){
-        return $this->attributes;
-    }
-
-    /**
-     * __debugInfo method, return values when use debug.
-     *
-     * @return array
-     */
-    public function __debugInfo() {
-        return $this->attributes;
-    }
 
     /**
      * Save object
@@ -238,7 +117,7 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
             $values = $this->attributes;
             unset($values[$this->primaryKey]);
             // Update
-            return $this->query()
+            return $this->schema()
                 ->columns(array_keys($values))
                 ->values($values)
                 ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
@@ -252,18 +131,10 @@ abstract class Model extends DbContext implements IModel, JsonSerializable{
             }
 
             // Creates
-            return $this->query()
+            return $this->schema()
                 ->columns(array_keys($values))
                 ->values($values)
                 ->insert();
         }
-    }
-
-    /**
-     * Get primary key method
-     *
-     */
-    public function getPrimaryKey(){
-        return $this->primaryKey;
     }
 }

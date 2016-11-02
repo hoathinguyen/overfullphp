@@ -42,7 +42,7 @@ class Auth extends BasePackage{
 		$username = isset($data[$this->idField]) ? $data[$this->idField] : '';
 		$password = $hasher->hash(isset($data[$this->secretField]) ? $data[$this->secretField] : '');
 
-		$result = $model->query()
+		$result = $model->schema()
 		->where([$this->secret, '=', $password])
 		->andWhere(function($query) use($ids, $username) {
 			$count = count($ids);

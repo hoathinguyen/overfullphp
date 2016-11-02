@@ -58,6 +58,29 @@ class Controller implements IController{
 	}
 
 	/**
+	 * Set type to view is renderAjax
+	 *
+	 * @param string/array $view
+	 * @param mixed $data
+	 * @return array
+	 */
+	protected final function renderAjax($view = false, $data = []){
+		$this->otp['layout'] = false;
+
+		if($view){
+			$this->otp['content'] = $view;
+		}
+
+		return [
+			'type' => 'render',
+			'gift' => [
+				'otp' => $this->__getOtp(),
+				'data' => $data
+			]
+		];
+	}
+
+	/**
 	 * Set type to view is redirect
 	 *
 	 * @param string $url
