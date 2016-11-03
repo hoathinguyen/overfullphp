@@ -1,9 +1,10 @@
 <?php
-/*___________________________________________________________________________
-* The Request object class
-* This object handle some business about routing. You can rewrite url mapping
-* with your controller or filter ...
-* ___________________________________________________________________________
+/*----------------------------------------------------
+* Filename: Request.php
+* Author: Overfull.net
+* Date: 2016/05/20
+* Description: The Request object class
+* ----------------------------------------------------
 */
 namespace Overfull\Http;
 
@@ -79,6 +80,26 @@ class Request extends BaseRequest{
 			}
 			return false;
 		}
+	}
+
+	/**
+	 * Check if request is from ajax
+	 *
+	 * @param string/array method
+	 * @return boolean
+	 */
+	public function isAjax($method = false){
+		if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+			// If do not need check method, so return true
+			if(!$method){
+				return true;
+			}
+
+			// Call check method
+			return $this->isMethod($method);
+		}
+
+		return false;
 	}
 
 	/**

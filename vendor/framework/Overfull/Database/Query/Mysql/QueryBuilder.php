@@ -3,17 +3,17 @@
 * SQLCommand object class
 * ----------------------------------------------------
 */
-namespace Overfull\Database\Console;
-use Overfull\Database\Console\Command;
+namespace Overfull\Database\Query\Mysql;
+use Overfull\Database\Query\Foundation\IQuery;
 
-class SQLCommand extends Command{
+class QueryBuilder implements IQuery{
 	/**
 	 * select syntax
 	 *
 	 * @param array $data
 	 * @return string
 	 */
-	public static function select($data){
+	public function select($data){
 		$sql = "SELECT ".implode(',', $data['columns'])." FROM ". $data['table'];
 
 		// Check if have joins syntax
@@ -51,7 +51,7 @@ class SQLCommand extends Command{
 	 * @param array $data
 	 * @return string
 	 */
-	public static function update($data){
+	public function update($data){
 		$sql = "UPDATE ". $data['table'].' SET';
 
 		foreach ($data['values'] as $key => $columns) {
@@ -81,7 +81,7 @@ class SQLCommand extends Command{
 	 * @param array $data
 	 * @return string
 	 */
-	public static function insert($data){
+	public function insert($data){
 		$sql = "INSERT INTO ". $data['table']." (".implode(',', $data['columns']).") VALUES";
 
 		foreach ($data['values'] as $key => $values) {
@@ -106,7 +106,7 @@ class SQLCommand extends Command{
 	 * @param array $conditions
 	 * @return string
 	 */
-	private static function where($conditions){
+	private function where($conditions){
 		if($conditions['type'] == 'simple'){
 			if(is_array($conditions['values'])){
 				return " {$conditions['operation']} {$conditions['values'][0]} {$conditions['values'][1]} '".addslashes($conditions['values'][2])."'";

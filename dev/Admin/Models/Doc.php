@@ -13,5 +13,5 @@ use Overfull\Pattern\MVC\Model;
 */
 class Doc extends Model{
 	protected $primaryKey = "id";
-	protected $table = 'docs';
+	protected $tableName = 'docs';
 }

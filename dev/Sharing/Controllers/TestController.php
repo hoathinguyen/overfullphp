@@ -16,7 +16,7 @@ class TestController extends Controller{
 	
 	public function setting(){
 		// $data = Test::instance()
-		// 		->query()
+		// 		->schema()
 		// 		->columns(['user_uid', 'username'])
 		// 		->where(['id', '=', 169])
 		// 		//->values('user_uid', 'update_success')

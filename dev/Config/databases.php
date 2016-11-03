@@ -7,7 +7,7 @@ return [
 		'overfull' => [
 			'user' => 'root',
 			'password' => '',
-			'port' => '',
+			'port' => '80',
 			'host' => 'localhost',
 			'type' => 'mysql', //pgsql
 			'dbname' => 'overfull',
@@ -17,7 +17,7 @@ return [
 		'test' => [
 			'user' => 'root',
 			'password' => '',
-			'port' => '',
+			'port' => '80',
 			'host' => 'localhost',
 			'type' => 'mysql', //pgsql
 			'dbname' => 'viewers',

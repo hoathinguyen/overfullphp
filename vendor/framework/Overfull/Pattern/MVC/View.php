@@ -64,7 +64,7 @@ class View implements IView{
 			}
 
 			// Set layout
-			$this->layout = isset($gift['otp']['layout']) ? $gift['otp']['layout'] : false;
+			$this->layout = !empty($gift['otp']['layout']) ? $gift['otp']['layout'] : false;
 
 			$this->content = $this->__readOtp([
 				'file' => $this->contentPath.DS.(!empty($gift['otp']['root']) ? $gift['otp']['root'].DS : '' ).$gift['otp']['content'],

@@ -18,7 +18,7 @@ class DocBusiness{
 	 */
 	public function getDocAsList(){
 		return Doc::instance()
-			->query()
+			->schema()
 			->columns(['docs.id', 'docs.title', 'versions.name AS version', 'categories.name AS category'])
 			->join('categories', 'categories.id = docs.category_id')
 			->join('versions', 'versions.id = docs.version_id')
