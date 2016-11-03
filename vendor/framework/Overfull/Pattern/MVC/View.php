@@ -18,9 +18,9 @@ use Bag;
 class View implements IView{
 	public $template = null;
 
-	protected $contentPath = 'Views'.DS.'Otps'.DS.'Contents';
+	protected $contentPath = null;
 
-	protected $layoutPath = 'Views'.DS.'Otps'.DS.'Layouts';
+	protected $layoutPath = null;
 
 	protected $helpers = [];
 
@@ -29,6 +29,11 @@ class View implements IView{
 	protected $content = '';
 
 	protected $layout = false;
+	
+	function __construct(){
+		$this->contentPath = 'Views'.DS.'Otps'.DS.'Contents';
+		$this->layoutPath = 'Views'.DS.'Otps'.DS.'Layouts';
+	}
 
 	/**
 	* Run method

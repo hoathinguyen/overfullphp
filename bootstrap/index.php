@@ -10,11 +10,11 @@
 // ----------------------------------------------------
 // require the autoload
 // ----------------------------------------------------
-require_once dirname(__DIR__) . '\vendor\autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 // ----------------------------------------------------
 // Create applicateion object and run it
 // ----------------------------------------------------
-$application = new \Overfull\Application('dev\App', 'Dev\App');
+$application = new \Overfull\Application('dev/App', 'Dev\App');
 
 $application->run();

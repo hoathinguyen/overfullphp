@@ -26,7 +26,7 @@ class Application extends BaseObject{
 	*
 	* @param string appRoot : root of project
 	*/
-	public function __construct($appRoot = 'dev\App', $appNamespace = 'Dev\App'){
+	public function __construct($appRoot = 'dev/App', $appNamespace = 'Dev\App'){
 		$this->root = $appRoot;
 		$this->namespace = $appNamespace;
 		$this->getDirectionConfig();

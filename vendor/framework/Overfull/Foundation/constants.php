@@ -7,7 +7,7 @@
 */
 define('ROOT', dirname(dirname(dirname(dirname(__DIR__)))));
 
-define('DS', DIRECTORY_SEPARATOR);
+define('DS', '/'); //DIRECTORY_SEPARATOR
 
 define("BASE_URL",(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http').':'.'//'.$_SERVER["HTTP_HOST"]);
 

@@ -71,7 +71,7 @@
     <?php echo $this->content(); ?>
 
     <footer>
-        <?php echo $this->render('Elements\footer'); ?>
+        <?php echo $this->render('Elements/footer'); ?>
     </footer>
 
     <!-- jQuery -->

@@ -31,7 +31,7 @@ class PatternHandler extends BaseObject{
 		// Get controller name
 		$controller = Bag::$route->controller;
 		if(!class_exists($controller)){
-			$controller = $appNamespace.DS.'controllers'.DS.$controller;
+			$controller = "{$appNamespace}\\Controllers\\{$controller}";
 			if(!class_exists($controller)){
 				throw new ControllerNotFoundException($controller);
 			}
@@ -45,7 +45,7 @@ class PatternHandler extends BaseObject{
 			$view = $controllerData['data']['otp']['handler'];
 
 			if(!class_exists($view)){
-				$view = $appNamespace.DS.'views'.DS.$view;
+				$view = "{$appNamespace}\\Views\\{$view}";
 				if(!class_exists($view)){
 					throw new ViewNotFoundException($view);	
 				}
@@ -56,7 +56,7 @@ class PatternHandler extends BaseObject{
 			$view = Bag::$route->view;
 
 			if(!class_exists($view)){
-				$view = $appRoot.DS.'views'.DS.$view;
+				$view = "{$appNamespace}\\Views\\{$view}";
 				if(!class_exists($view)){
 					throw new ViewNotFoundException($view);	
 				}
