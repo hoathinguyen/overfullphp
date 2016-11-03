@@ -34,19 +34,19 @@ return [
 		// ],
 
 		'_default' => [
-			'root' => 'dev\Home',
+			'root' => 'dev/Home',
 			'namespace' => 'Dev\Home'
 		]
 	],
 
 	'sub-domain' => [
 		'admin' => [
-			'root' => 'dev\Admin',
+			'root' => 'dev/Admin',
 			'namespace' => 'Dev\Admin'
 		],
 
 		'sharing' => [
-			'root' => 'dev\Sharing',
+			'root' => 'dev/Sharing',
 			'namespace' => 'Dev\Sharing'
 		],
 
