@@ -45,9 +45,9 @@ return [
 			'namespace' => 'Dev\Admin'
 		],
 
-		'sharing' => [
-			'root' => 'dev/Sharing',
-			'namespace' => 'Dev\Sharing'
+		'share' => [
+			'root' => 'dev/Share',
+			'namespace' => 'Dev\Share'
 		],
 
 		// '_default' => [
