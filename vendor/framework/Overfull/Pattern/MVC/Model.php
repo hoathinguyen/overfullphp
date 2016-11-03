@@ -7,11 +7,11 @@ namespace Overfull\Pattern\MVC;
 use Overfull\Pattern\MVC\Foundation\IModel;
 use Bag;
 use Overfull\Exception\DatabaseConfigException;
-use Overfull\Database\DbContext;
+use Overfull\Database\ActiveRecord;
 use Overfull\Database\Query;
 use JsonSerializable;
 
-abstract class Model extends DbContext implements IModel, JsonSerializable{
+abstract class Model extends ActiveRecord implements IModel, JsonSerializable{
 	
 
 	protected $validates = [

@@ -6,6 +6,6 @@
 */
 namespace Overfull\Database\Foundation;
 
-interface IDbContext{
+interface IActiveRecord{
 
 }

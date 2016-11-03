@@ -84,12 +84,32 @@ class Application extends BaseObject{
 	*/
 	private function getConfig(){
 		// Get config for database
-		Bag::config()->set('databases', ROOT.DS.'dev'.DS.'Config'.DS.'databases.php', true);
+		Bag::config()->set('databases', [
+			ROOT.DS.'dev'.DS.'Config'.DS.'databases.php',
+			ROOT.DS.$this->root.DS.'Config'.DS.'databases.php'
+		], true, false);
+
 		//Bag::config()->set('alias', ROOT.DS.$this->root.DS.'config'.DS.'alias.php', true);
-		Bag::config()->set('using', ROOT.DS.$this->root.DS.'Config'.DS.'using.php', true);
-		Bag::config()->set('core', ROOT.DS.$this->root.DS.'Config'.DS.'core.php', true);
-		Bag::config()->set('debug', ROOT.DS.$this->root.DS.'Config'.DS.'debug.php', true);
-		Bag::config()->set('routes', ROOT.DS.$this->root.DS.'Config'.DS.'routes.php', true);
+		Bag::config()->set('packages', [
+			ROOT.DS.'dev'.DS.'Config'.DS.'packages.php',
+			ROOT.DS.$this->root.DS.'Config'.DS.'packages.php'
+		], true, false);
+
+		Bag::config()->set('core', [
+			ROOT.DS.'dev'.DS.'Config'.DS.'core.php',
+			ROOT.DS.$this->root.DS.'Config'.DS.'core.php'
+		], true, false);
+
+		Bag::config()->set('debug', [
+			ROOT.DS.'dev'.DS.'Config'.DS.'debug.php',
+			ROOT.DS.$this->root.DS.'Config'.DS.'debug.php'
+		], true, false);
+
+		Bag::config()->set('routes', [
+			ROOT.DS.'dev'.DS.'Config'.DS.'routes.php',
+			ROOT.DS.$this->root.DS.'Config'.DS.'routes.php'
+		], true, false);
+
 		Bag::config()->set('system', ROOT.DS.'vendor'.DS.'framework'.DS.'Overfull'.DS.'Configure'.DS.'system.php', true);
 	}
 

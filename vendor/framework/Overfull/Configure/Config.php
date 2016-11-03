@@ -35,18 +35,33 @@ class Config extends BaseObject{
 	 * @param value $val
 	 * @param boolean $isPath
 	 */
-	public function set( $name = false, $val = array() , $isPath = false){
+	public function set( $name = false, $val = array() , $isPath = false, $isException = true){
 		try {
 			if ( !$name ) {
 				return;
 			}
 
 			if($isPath){
-				if(file_exists($val)){
-					$this->configs[$name] = require($val);
+				if(is_array($val)){
+					if(empty($this->configs[$name])){
+						$this->configs[$name] = [];
+					}
+					foreach ($val as $key => $value) {
+						if(file_exists($value)){
+							$configs = require($value);
+							$this->configs[$name] = array_merge($this->configs[$name], $configs);
+						} else if($isException){
+							throw new ConfigFileNotFoundException($val);
+						}
+					}
 				} else {
-					throw new ConfigFileNotFoundException($val);
+					if(file_exists($val)){
+						$this->configs[$name] = require($val);
+					} else if($isException){
+						throw new ConfigFileNotFoundException($val);
+					}
 				}
+				
 			} else {
 				$this->configs[$name] = $val;
 			}

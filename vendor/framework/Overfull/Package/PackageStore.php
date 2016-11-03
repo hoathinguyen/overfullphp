@@ -28,7 +28,7 @@ class PackageStore extends Store{
 			return $this->attributes[$name];
 		}
 		// Get config packages
-		$packages = Bag::config()->get('using.packages.'.$name);
+		$packages = Bag::config()->get('packages.'.$name);
 
 		if(!empty($packages)){
 			if(!class_exists($packages['class'])){

@@ -11,24 +11,24 @@ use Bag;
 
 class ExceptionHandler extends BaseObject{
 	public static function exceptionHandler($code, $message, $file, $line){
-		static::showError($code, $message, $file, $line, 'Data exception', error_get_last());
+		static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
 	}
 
 	public static function errorHandler($code, $message, $file, $line){
-		static::showError($code, $message, $file, $line, 'Data exception', error_get_last());
+		static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
 	}
 
 	public static function shutdown(){
 		if ( ($errors = error_get_last()) ) {
-			static::showError($errors['type'], $errors['message'], $errors['file'], $errors['line'], 'Syntax exception', $errors);
+			static::showError($errors['type'], $errors['message'], $errors['file'], $errors['line'], 'Syntax exception', debug_backtrace());
 		}
 	}
 
 	public static function showExceptionObject($e){
-		static::showError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), 'Exception', error_get_last());
+		static::showError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), 'Exception', debug_backtrace());
 	}
 
-	private static function showError($code, $message, $file, $line, $title, $lastErrors){
+	private static function showError($code, $message, $file, $line, $title, $listStack){
 		//ob_clean();
 		$isShowDetail = Bag::config()->get('debug.display-errors');
 		

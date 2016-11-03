@@ -5,14 +5,16 @@
 * ----------------------------------------------------
 */
 namespace Overfull\Database;
-use Overfull\Database\Foundation\IDbContext;
+use Overfull\Database\Foundation\IActiveRecord;
 use Overfull\Exception\ConnectionException;
 use Overfull\Database\Schema;
 use Bag;
+use Overfull\Exception\SchemaNotFoundException;
+
 /**
 * 
 */
-abstract class DbContext implements IDbContext{
+abstract class ActiveRecord implements IActiveRecord{
 	protected $primaryKey = 'id';
 
     protected $autoIncrement = true;
@@ -69,6 +71,8 @@ abstract class DbContext implements IDbContext{
 			}
 
 			Bag::$dbstore->{$connectionName}->setAttribute( \PDO::ATTR_EMULATE_PREPARES, false );
+			
+			$this->schema(true);
 		}
 	}
 
@@ -77,11 +81,17 @@ abstract class DbContext implements IDbContext{
      *
      * @return object
      */
-	public function schema(){
-        if(!$this->schema){
-            $this->schema = new Schema($this->connectionName, get_class($this), $this->connectionInfo['type']);
-            $this->schema->table($this->getTableName());
-        }
+	public final function schema($reset = false){
+        if(!$this->schema || $reset){
+			$chemaClass = "\Overfull\Database\Schema\\".ucfirst($this->connectionInfo['type'])."\Schema";
+
+			if(!class_exists($chemaClass)){
+				throw new SchemaNotFoundException($query);
+	        }
+
+	        $this->schema = new $chemaClass(Bag::$dbstore->{$this->connectionName}, get_class($this));
+	        $this->schema->table($this->getTableName());
+		}
 
 		return $this->schema;
 	}

@@ -6,8 +6,8 @@
 namespace Overfull\Exception;
 use Overfull\Exception\OverfullException;
 
-class QueryBuilderNotFoundException extends OverfullException{
-	function __construct($queryBuilder){
-		parent::__construct("QueryBuilder \"$queryBuilder\" is not found", 1);
+class SchemaNotFoundException extends OverfullException{
+	function __construct($schema){
+		parent::__construct("Schema \"$schema\" is not found", 1);
 	}
 }
