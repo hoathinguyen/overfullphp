@@ -26,48 +26,28 @@
 * ----------------------------------------------------
 */
 return [
-	'base' => 0,
-	'sub-folder' => [
-		// 'sharing' => [
-		// 	'root' => 'dev\Home',
-		// 	'namespace' => 'Dev\Home'
-		// ],
-
-		'_default' => [
-			'root' => 'dev/Home',
-			'namespace' => 'Dev\Home'
-		]
-	],
-
-	'sub-domain' => [
-		'admin' => [
-			'root' => 'dev/Admin',
-			'namespace' => 'Dev\Admin'
-		],
-
-		'share' => [
-			'root' => 'dev/Share',
-			'namespace' => 'Dev\Share'
-		],
-
-		// '_default' => [
-		// 	'root' => 'dev\Home',
-		// 	'namespace' => 'Dev\Home'
-		// ]
-	],
-
-	'admin.{domain}.{ext}' => [
+	'sharing.overfull.dev/login' => [
 		'root' => 'dev/Admin',
 		'namespace' => 'Dev\Admin'
 	],
 
-	'share.{domain}.{ext}' => [
-		'root' => 'dev/Share',
-		'namespace' => 'Dev\Share'
-	],
+	// 'admin.{domain}.{ext}' => [
+	// 	'root' => 'dev/Admin',
+	// 	'namespace' => 'Dev\Admin'
+	// ],
 
-	'{domain}.{ext}' => [
-		'root' => 'dev/Home',
-		'namespace' => 'Dev\Home'
-	],
+	// '{sub}.{domain}.{ext}/{folder}/{folder}' => [
+	// 	'root' => 'dev/Share',
+	// 	'namespace' => 'Dev\Share'
+	// ],
+
+	// '{domain}.{ext}' => [
+	// 	'root' => 'dev/Home',
+	// 	'namespace' => 'Dev\Home'
+	// ],
+
+	// '{domain}.{ext}' => [
+	// 	'root' => 'dev/Home',
+	// 	'namespace' => 'Dev\Home'
+	// ]
 ];

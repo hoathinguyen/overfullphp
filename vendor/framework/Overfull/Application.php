@@ -122,78 +122,64 @@ class Application extends BaseObject{
 
 		// Check if have config in app
 		if(!empty($app = Bag::config()->get('app-config'))){
-			// Check if is subdomain
-			$sub = explode(".", Bag::request()->host());
+			$uri = Bag::request()->uriArray();
+			$domain = Bag::request()->host();
+			foreach ($app as $key => $value) {
+				
+				$regex = str_replace('{sub}', '([a-zA-Z0-9\-]+)', $key);
+				$regex = str_replace('{domain}', '([a-zA-Z0-9\-]+)', $regex);
+				$regex = str_replace('{ext}', '([a-zA-Z0-9]+)', $regex);
+				$regex = str_replace('{folder}', '([a-zA-Z0-9\-]+)', $regex);
 
-			// Check if have config in subdomain
-			if(count($sub) == 3 && $sub[0] != 'www'){
-				// Check exists setting
-				if(isset($app['sub-domain'][$sub[0]])){
-					$this->root = $app['sub-domain'][$sub[0]]['root'];
-					$this->namespace = $app['sub-domain'][$sub[0]]['namespace'];
-					
-					Bag::config()->set('app', [
-						'root' => $this->root,
-						'for' => 'sub-domain',
-						'namespace' => $this->namespace,
-						'route' => ''
-					]);
-					return;
-				} else if(isset($app['sub-domain']['_default'])){
-					$this->root = $app['sub-domain']['_default']['root'];
-					$this->namespace = $app['sub-domain']['_default']['namespace'];
+				$exRegex = explode('/', $regex);
+				$base = count($exRegex) - 1;
 
-					Bag::config()->set('app', [
-						'root' => $this->root,
-						'for' => 'sub-domain-default',
-						'namespace' => $this->namespace,
-						'route' => ''
-					]);
-				}
-			}
+				// Check if correct domain
+				if(preg_match("/^".$exRegex[0]."$/", $domain)){
+					array_shift($exRegex);
+					if(count($exRegex) > 0){
+						$isValid = true;
+						$route = '';
+						foreach ($exRegex as $index => $folder) {
+							if(empty($uri[$index]) || !preg_match("/^".$folder."$/", $uri[$index])){
+								$isValid = false;
+								break;
+							}
+							$route = ($route != '') ? $route.'/'.$uri[$index] : $uri[$index];
+						}
 
-			// Check exists setting in subfolder
-			if(isset($app['sub-folder'])){
-				$folders = Bag::request()->uriArray();
-
-				$folderIndex = !empty($app['base']) && is_integer($app['base']) ? $app['base'] : 0;
-
-				if(isset($app['sub-folder'][isset($folders[$folderIndex]) ? $folders[$folderIndex] : ''])){
-					$this->root = $app['sub-folder'][$folders[$folderIndex]]['root'];
-					$this->namespace = $app['sub-folder'][$folders[$folderIndex]]['namespace'];
-
-					Bag::config()->set('app', [
-						'root' => $this->root,
-						'for' => 'sub-folder',
-						'route' => $folders[$folderIndex],
-						'namespace' => $this->namespace
-					]);
-
-					return;
-				} else if(!Bag::config()->get('app')){
-					if(isset($app['sub-folder']['_default'])){
-						$this->root =  $app['sub-folder']['_default']['root'];
-						$this->namespace = $app['sub-folder']['_default']['namespace'];
-
+						if($isValid){
+							$route = explode('/', $key);
+							$this->root = $value['root'];
+							$this->namespace = $value['namespace'];
+							Bag::config()->set('app', [
+								'root' => $this->root,
+								'namespace' => $this->namespace,
+								'base' => $base,
+								'route' => $route
+							]);
+							return;
+						}
+					} else {
+						$this->root = $value['root'];
+						$this->namespace = $value['namespace'];
 						Bag::config()->set('app', [
 							'root' => $this->root,
-							'for' => 'sub-folder-default',
 							'namespace' => $this->namespace,
+							'base' => $base,
 							'route' => ''
 						]);
-
 						return;
 					}
-				} else {
-					return;
 				}
 			}
 		}
 
 		Bag::config()->set('app', [
 			'root' => $this->root,
-			'for' => 'init', 
-			'namespace' => $this->namespace
+			'namespace' => $this->namespace,
+			'base' => 0,
+			'route' => ''
 		]);
 	}
 

@@ -117,27 +117,27 @@ class Route extends BaseObject{
 	* @return string $url
 	*/
 	private function setWebroot($configs, $url){
-		$appConfig = Bag::config()->get('app');
+		//$appConfig = Bag::config()->get('app');
 
 		// Get baseFolder
 		$base = (int) Bag::config()->get('app.base');
 		$publicFolder = '';
 
-		$root = ROOT;
+		//$root = ROOT;
 		for ($i = 1; $i <= $base; $i++) {
-			$publicFolder = '/'.basename($root).$publicFolder;
-			$root = dirname($root);
+			//$publicFolder = '/'.basename($root).$publicFolder;
+			//$root = dirname($root);
 			array_shift($url);
 		}
 
 		$this->attributes['webroot'] = $publicFolder;
 		$this->attributes['fileroot'] = $publicFolder;
 
-		// Get root name with config on global
-		if('sub-folder' == $appConfig['for']){
-			$this->attributes['webroot'] .= !empty($appConfig['route']) ? '/'.$appConfig['route'] : '';
-			array_shift($url);
-		}
+		// // Get root name with config on global
+		// if('sub-folder' == $appConfig['for']){
+		// 	$this->attributes['webroot'] .= !empty($appConfig['route']) ? '/'.$appConfig['route'] : '';
+		// 	array_shift($url);
+		// }
 
 		//Get root with private setting
 		if ( !empty($configs['base']) && is_numeric($configs['base'])) {
