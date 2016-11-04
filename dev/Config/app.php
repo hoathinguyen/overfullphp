@@ -54,5 +54,20 @@ return [
 		// 	'root' => 'dev\Home',
 		// 	'namespace' => 'Dev\Home'
 		// ]
-	]
+	],
+
+	'admin.{domain}.{ext}' => [
+		'root' => 'dev/Admin',
+		'namespace' => 'Dev\Admin'
+	],
+
+	'share.{domain}.{ext}' => [
+		'root' => 'dev/Share',
+		'namespace' => 'Dev\Share'
+	],
+
+	'{domain}.{ext}' => [
+		'root' => 'dev/Home',
+		'namespace' => 'Dev\Home'
+	],
 ];
