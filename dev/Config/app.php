@@ -26,28 +26,23 @@
 * ----------------------------------------------------
 */
 return [
-	'sharing.overfull.dev/login' => [
+	'share.overfull.dev' => [
+		'root' => 'dev/Share',
+		'namespace' => 'Dev\Share'
+	],
+
+	'admin.overfull.dev' => [
 		'root' => 'dev/Admin',
 		'namespace' => 'Dev\Admin'
 	],
 
-	// 'admin.{domain}.{ext}' => [
-	// 	'root' => 'dev/Admin',
-	// 	'namespace' => 'Dev\Admin'
-	// ],
+	'[www.]overfull.dev' => [
+		'root' => 'dev/Home',
+		'namespace' => 'Dev\Home'
+	],
 
-	// '{sub}.{domain}.{ext}/{folder}/{folder}' => [
-	// 	'root' => 'dev/Share',
-	// 	'namespace' => 'Dev\Share'
-	// ],
-
-	// '{domain}.{ext}' => [
-	// 	'root' => 'dev/Home',
-	// 	'namespace' => 'Dev\Home'
-	// ],
-
-	// '{domain}.{ext}' => [
-	// 	'root' => 'dev/Home',
-	// 	'namespace' => 'Dev\Home'
-	// ]
+	'[{sub}.]{domain}.{ext}' => [
+		'root' => 'dev/Home',
+		'namespace' => 'Dev\Home'
+	],
 ];

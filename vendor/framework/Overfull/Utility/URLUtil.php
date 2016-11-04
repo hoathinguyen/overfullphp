@@ -20,12 +20,9 @@ class URLUtil extends BaseUtil{
 	public static function asset($name){
 		if ( substr($name, 0, 1) != '/') {
 			$route = Bag::config()->get('app.route');
-			$root = Bag::route()->fileroot;
 
-			$name = ($root == '/' ? '' : $root).($route == '' ? '' : '/'.$route).'/'.$name;
+			$name = ($route == '' ? '' : '/'.$route).'/'.$name;
 
-		} else {
-			$name = (Bag::route()->fileroot != '/' ? Bag::route()->fileroot : '').$name;
 		}
 
 		return Bag::request()->schema().Bag::request()->host().$name;
@@ -40,8 +37,6 @@ class URLUtil extends BaseUtil{
 	public static function to($name){
 		if ( substr($name, 0, 1) != '/') {
 			// todo
-		} else {
-			$name = (Bag::route()->fileroot != '/' ? Bag::route()->fileroot : '').$name;
 		}
 
 		return Bag::request()->schema().Bag::request()->host().$name;

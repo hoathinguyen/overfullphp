@@ -66,6 +66,29 @@ class QueryBuilder extends BaseQueryBuilder{
 	}
 
 	/**
+	 * Delete syntax
+	 *
+	 * @param array $data
+	 * @return string
+	 */
+	public function deleteSyntax(){
+		$sql = "DELETE FROM ". $this->attributes['table'].'';
+		$sql = trim($sql, ',');
+
+		// Check if have where syntax
+		if(!empty($this->attributes['where'])){
+			$sql .= " WHERE ";
+			$isFirst = true;
+			foreach ($this->attributes['where'] as $key => $value) {
+				$sql .= static::where($value);
+				$isFirst = false;
+			}
+		}
+
+		return $sql;
+	}
+
+	/**
 	 * Insert syntax
 	 *
 	 * @param array $data

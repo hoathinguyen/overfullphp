@@ -123,13 +123,15 @@ class Application extends BaseObject{
 		// Check if have config in app
 		if(!empty($app = Bag::config()->get('app-config'))){
 			$uri = Bag::request()->uriArray();
-			$domain = Bag::request()->host();
+			$domain = strtolower(Bag::request()->host());
 			foreach ($app as $key => $value) {
 				
 				$regex = str_replace('{sub}', '([a-zA-Z0-9\-]+)', $key);
 				$regex = str_replace('{domain}', '([a-zA-Z0-9\-]+)', $regex);
 				$regex = str_replace('{ext}', '([a-zA-Z0-9]+)', $regex);
 				$regex = str_replace('{folder}', '([a-zA-Z0-9\-]+)', $regex);
+				$regex = str_replace('[', '|(', $regex);
+				$regex = str_replace(']', ')', $regex);
 
 				$exRegex = explode('/', $regex);
 				$base = count($exRegex) - 1;
@@ -141,7 +143,7 @@ class Application extends BaseObject{
 						$isValid = true;
 						$route = '';
 						foreach ($exRegex as $index => $folder) {
-							if(empty($uri[$index]) || !preg_match("/^".$folder."$/", $uri[$index])){
+							if(empty($uri[$index]) || !preg_match("/^".$folder."$/", strtolower($uri[$index]))){
 								$isValid = false;
 								break;
 							}

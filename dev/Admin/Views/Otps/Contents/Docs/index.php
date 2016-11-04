@@ -8,23 +8,31 @@
                 </div>
                 <form role="form">
                     <div class="box-body">
-                        <div class="input-group">
-                        <input type="text" class="form-control" aria-label="Text input with segmented button dropdown">
-                          <div class="input-group-btn">
-                            <button type="button" class="btn btn-secondary">Action</button>
-                            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="#">Action</a>
-                              <a class="dropdown-item" href="#">Another action</a>
-                              <a class="dropdown-item" href="#">Something else here</a>
-                              <div role="separator" class="dropdown-divider"></div>
-                              <a class="dropdown-item" href="#">Separated link</a>
-                            </div>
-                            </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>Keyword:</label>
+                          <input class="form-control" placeholder="Input your keyword" name="keyword" />
+                        </div> 
+                        <div class="col-md-3">
+                          <label>Category:</label>
+                          <select class="form-control" name="category">
+                            <option value="0">All</option>
+                            <option value="1">Framework</option>
+                            <option value="2">Package</option>
+                            <option value="3">Weight</option>
+                          </select>
                         </div>
-
+                        <div class="col-md-3">
+                          <label>Version:</label>
+                          <select class="form-control" name="version">
+                            <option value="1">All</option>
+                            <option value="1">1.x</option>
+                          </select>
+                        </div>
+                        <!-- <div class="col-md-2">
+                          <input class="form-control"/>
+                        </div> -->
+                      </div>
                     </div>
                     <div class="box-footer">
                         <button type="submit" class="btn btn-primary">Search</button>
@@ -48,10 +56,10 @@
                 </tr>
                 <?php foreach ($docs as $key => $value){ ?>
                 <tr>
-                  <td><?php echo $value->title; ?></td>
+                  <td><a href="<?php echo URL::to("/docs/detail/$value->id"); ?>"><?php echo $value->title; ?></a></td>
                   <td><?php echo $value->category; ?></td>
                   <td><?php echo $value->version; ?></td>
-                  <td><a href="<?php echo URL::to('/docs/edit'); ?>">Edit</a></td>
+                  <td><a href="<?php echo URL::to("/docs/edit/$value->id"); ?>">Edit</a></td>
                 </tr>
                 <?php } ?>
               </table>
@@ -60,3 +68,9 @@
         </div>
     </div>
 </section>
+
+@beginSection("js")
+<script type="text/javascript">
+    
+</script>
+@endSection

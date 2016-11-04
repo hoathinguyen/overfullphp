@@ -165,6 +165,80 @@ abstract class ActiveRecord implements IActiveRecord{
     }
 
     /**
+     * Get find object
+     *
+     * @param mixed $id
+     * @return object
+     */
+    public function find($id){
+        // Create query
+        return $this->schema()
+            ->where([$this->primaryKey, '=', $id])
+            ->one();
+    } 
+
+    /**
+     * Get find object or new empty object
+     *
+     * @param mixed $id
+     * @return object
+     */
+    public function findOrDefault($id){
+        // Create query
+        $rs = $this->schema()
+            ->where([$this->primaryKey, '=', $id])
+            ->one();
+
+        if(!$rs){
+            return $this;
+        }
+    }
+
+    /**
+     * Save object
+     *
+     * @return array
+     */
+    public function save(){
+        if(!empty($this->attributes[$this->primaryKey])){
+            $values = $this->attributes;
+            unset($values[$this->primaryKey]);
+            // Update
+            return $this->schema()
+                ->columns(array_keys($values))
+                ->values($values)
+                ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
+                ->update();
+        } else {
+            if($this->autoIncrement){
+                $values = $this->attributes;
+                unset($values[$this->primaryKey]);
+            } else {
+                $values = $this->attributes;
+            }
+
+            // Creates
+            return $this->schema()
+                ->columns(array_keys($values))
+                ->values($values)
+                ->insert();
+        }
+    }
+
+    /**
+     * Save object
+     *
+     * @return array
+     */
+    public function delete(){
+        if(!empty($this->attributes[$this->primaryKey])){
+            return $this->schema()
+                ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
+                ->delete();
+        }
+    }
+
+    /**
      * jsonSerialize method, which is implement from jsonSerialize, to json_encode .
      *
      * @return array

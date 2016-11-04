@@ -18,9 +18,9 @@
 	
 		<div style="padding: 5px; border: 1px dashed #eee">
 			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee; background: #eee"><?php echo $key+1 ?></span>
-			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo $value['file'] ?></span>
-			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo $value['function'] ?></span>
-			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo $value['line'] ?></span>
+			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo isset($value['file']) ? $value['file'] : null ?></span>
+			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo isset($value['function']) ? $value['function'] : null ?></span>
+			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo isset($value['line']) ? $value['line'] : null ?></span>
 			<div>
 				<?php var_dump($value['args']); ?>				
 			</div>

@@ -14,8 +14,9 @@ use Overfull\Configure\Config;
 use Overfull\Http\Response\ResponseFormat;
 use Overfull\Http\Response\Response;
 use Bag;
+use Overfull\Template\Otp;
 
-class View implements IView{
+class View extends Otp implements IView{
 	public $template = null;
 
 	protected $contentPath = null;
@@ -190,6 +191,13 @@ class View implements IView{
 				}
 
 				$____content = file_get_contents($fullFile);
+
+				foreach ($this->tags as $key => $value) {
+					//dd($key);
+					$____content = preg_replace($key, $value, $____content);
+				}
+
+				//dd($____content);
 
 				$namespace = "";
 

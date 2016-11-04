@@ -41,15 +41,18 @@ class Route extends BaseObject{
 	 */
 	public function run(){
 		$configs = Bag::config()->get('routes');
-		Bag::config()->delete('routes');
 
 		// Check if have no data in pages
 		if(empty($configs['pages'])){
 			throw new PageNotFoundException();
 		}
-
 		// Get root
-		$this->uri = strtolower($this->setWebroot($configs, Bag::request()->uriArray()));
+		if(Bag::config()->get('routes.compare') == 'relative'){
+			$this->uri = strtolower($this->setWebroot($configs, Bag::request()->uriArray()));
+		} else {
+			$this->uri = $this->setWebroot($configs, Bag::request()->uriArray());
+		}
+		
 		$this->url = explode('?', $this->uri)[0];
 
 		$this->setAlias($configs['pages']);
@@ -61,6 +64,8 @@ class Route extends BaseObject{
 		$data = $this->validAlias->get();
 
 		$this->attributes = array_merge($data, $this->attributes);
+
+		Bag::config()->delete('routes');
 	}
 
 	/**
@@ -117,27 +122,15 @@ class Route extends BaseObject{
 	* @return string $url
 	*/
 	private function setWebroot($configs, $url){
-		//$appConfig = Bag::config()->get('app');
-
 		// Get baseFolder
 		$base = (int) Bag::config()->get('app.base');
-		$publicFolder = '';
 
 		//$root = ROOT;
 		for ($i = 1; $i <= $base; $i++) {
-			//$publicFolder = '/'.basename($root).$publicFolder;
-			//$root = dirname($root);
 			array_shift($url);
 		}
 
-		$this->attributes['webroot'] = $publicFolder;
-		$this->attributes['fileroot'] = $publicFolder;
-
-		// // Get root name with config on global
-		// if('sub-folder' == $appConfig['for']){
-		// 	$this->attributes['webroot'] .= !empty($appConfig['route']) ? '/'.$appConfig['route'] : '';
-		// 	array_shift($url);
-		// }
+		$this->attributes['webroot'] = '';
 
 		//Get root with private setting
 		if ( !empty($configs['base']) && is_numeric($configs['base'])) {
@@ -149,10 +142,6 @@ class Route extends BaseObject{
 
 		if(!$this->attributes['webroot']){
 			$this->attributes['webroot'] = '/';
-		}
-
-		if(!$this->attributes['fileroot']){
-			$this->attributes['fileroot'] = '/';
 		}
 
 		return implode('/', $url);
@@ -188,7 +177,7 @@ class Route extends BaseObject{
 	* @return value
 	*/
 	private function convertRegex($str){
-		$str = strtolower($str);
+		
 		foreach ($this->regexKeys as $key => $value) {
 			$str = str_replace($key, $value, $str);
 		}

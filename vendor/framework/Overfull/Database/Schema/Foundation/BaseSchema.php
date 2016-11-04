@@ -342,6 +342,27 @@ abstract class BaseSchema implements \JsonSerializable{
     }
 
     /**
+     * Delete method.
+     * This method will be call method query to get sql
+     * After then exc this sql string by dbconnection
+     * @return array
+     */
+    public function delete($isExecute = true){
+    	// Get sql string from query
+    	$sql = $this->queryBuilder->deleteSyntax();
+
+    	// Check if is excute or get sql string
+    	if($isExecute){
+    		$sql = $this->execute($sql);
+    	}
+    	
+    	// Clear all after excute
+    	$this->queryBuilder->clear();
+
+    	return $sql;
+    }
+
+    /**
      * Insert method.
      * This method will be call method query to get sql
      * After then exc this sql string by dbconnection

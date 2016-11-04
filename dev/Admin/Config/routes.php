@@ -20,8 +20,15 @@ return array(
 		'docs' => [
 			['<:empty>', 'any', 'controller=DocsController;method=index'],
 			['create', 'any', 'controller=DocsController;method=create'],
-			['edit', 'any', 'controller=DocsController;method=edit'],
-			['delete', 'any', 'controller=DocsController;method=delete']
+			['edit/<:integer>', 'any', 'controller=DocsController;method=edit'],
+			['detail/<:integer>', 'any', 'controller=DocsController;method=detail'],
+			['delete/<:integer>', 'any', 'controller=DocsController;method=delete']
+		],
+
+		'ajax' => [
+			'categories' => [
+				['list.json', 'any', 'controller=CategoriesController;method=ajaxCategories']
+			]
 		]
 	)
 );
