@@ -1,6 +1,6 @@
 <?php
 namespace Dev\Admin\Models;
-use Overfull\Pattern\MVC\Model;
+use Overfull\Patterns\MVC\Model;
 /**
 * 
 */

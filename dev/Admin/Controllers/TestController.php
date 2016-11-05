@@ -1,6 +1,6 @@
 <?php
 namespace Dev\TestApp\Controllers;
-use Overfull\Pattern\MVC\Controller;
+use Overfull\Patterns\MVC\Controller;
 use Dev\TestApp\Models\Test;
 /**
 * 

@@ -7,7 +7,7 @@
 * ----------------------------------------------------
 */
 namespace Dev\Home\Controllers;
-use Overfull\Pattern\MVC\Controller;
+use Overfull\Patterns\MVC\Controller;
 use Bag;
 use Dev\Home\Business\DocBusiness;
 /**

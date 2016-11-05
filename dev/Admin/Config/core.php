@@ -3,12 +3,13 @@ return [
 	// Set alway build the view disp for developer
 	'alway-build-otp' => true,
 
-	'pattern' => \Overfull\Pattern\MVC\PatternHandler::class,
+	'pattern' => \Overfull\Patterns\MVC\PatternHandler::class,
 
 	'otp' => [
 		'ext' => 'php',
 		'helpers' => [
-			'URL' => \Overfull\Utility\URLUtil::class
+			'URL' => \Overfull\Utility\URLUtil::class,
+			'Form' => \Overfull\Template\Helpers\Form::class
 		]
 	],
 	/**

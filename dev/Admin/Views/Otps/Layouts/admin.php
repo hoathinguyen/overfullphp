@@ -379,21 +379,6 @@ desired effect
 <script src="<?php echo URL::to('/plugins/bootstrap/js/bootstrap.min.js')?>"></script>
 <!-- AdminLTE App -->
 <script src="<?php echo URL::to('/plugins/adminlte/dist/js/app.min.js')?>"></script>
-<!-- CK Editor -->
-<script src="https://cdn.ckeditor.com/4.5.7/standard/ckeditor.js"></script>
-<script>
-  $(function () {
-    // Replace the <textarea id="editor1"> with a CKEditor
-    // instance, using default configuration.
-    CKEDITOR.replace('editor1');
-    //bootstrap WYSIHTML5 - text editor
-    $(".textarea").wysihtml5();
-  });
-</script>
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. Slimscroll is required when using the
-     fixed layout. -->
 @section("js")
 </body>
 </html>

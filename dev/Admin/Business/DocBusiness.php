@@ -50,4 +50,20 @@ class DocBusiness{
 	public function getDocById($id){
 		return Doc::instance()->find($id);
 	}
+
+	/**
+	 * addDoc
+	 *
+	 * @param data
+	 * @return boolean
+	 */
+	public function addDoc($data){
+		$doc = new Doc();
+		$doc->title = !empty($data['title']) ? $data['title'] : '';
+		$doc->content = !empty($data['content']) ? $data['content'] : '';
+		$doc->icon = !empty($data['icon']) ? $data['icon'] : '';
+		$doc->category_id = !empty($data['category_id']) ? $data['category_id'] : '';
+		$doc->version_id = !empty($data['version_id']) ? $data['version_id'] : '';
+		return $doc->save();
+	}
 }

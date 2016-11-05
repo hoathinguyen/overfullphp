@@ -1,4 +1,4 @@
-<?php use Overfull\Utility\URLUtil as URL; ?><section class="content-header">
+<?php use Overfull\Utility\URLUtil as URL;use Overfull\Template\Helpers\Form as Form; ?><section class="content-header">
     <h1>
       <i class="fa fa-book"></i> Document manager
       <small>Manage document control panel</small>

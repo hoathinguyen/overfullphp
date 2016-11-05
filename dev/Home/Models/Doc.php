@@ -7,7 +7,7 @@
 * ----------------------------------------------------
 */
 namespace Dev\Home\Models;
-use Overfull\Pattern\MVC\Model;
+use Overfull\Patterns\MVC\Model;
 /**
 * 
 */

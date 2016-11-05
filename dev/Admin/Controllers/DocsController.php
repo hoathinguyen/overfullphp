@@ -49,6 +49,12 @@ class DocsController extends AdminController{
 		if (!Bag::package()->auth->isLogged()){
 			return $this->redirect('/login');
 		}
+
+		if(Bag::request()->isMethod('POST')){
+			$this->docBusiness->addDoc(Bag::request()->post());
+			return $this->render();
+		}
+
 		return $this->render();
 	}
 

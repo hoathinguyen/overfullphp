@@ -7,7 +7,7 @@
 * ----------------------------------------------------
 */
 namespace Dev\Admin\Controllers;
-use Overfull\Pattern\MVC\Controller;
+use Overfull\Patterns\MVC\Controller;
 
 /**
 * 
