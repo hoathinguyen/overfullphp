@@ -1,4 +1,4 @@
-<?php use Overfull\Utility\URLUtil as URL; ?><?php echo $this->render('Elements\docs_navi', ['sub' => 'Edit', 'folder' => 'Docs']); ?>
+<?php use Overfull\Utility\URLUtil as URL;use Overfull\Template\Helpers\Form as Form;use Overfull\Template\Helpers\Flash as Flash; ?><?php echo $this->render('Elements\docs_navi', ['sub' => 'Edit', 'folder' => 'Docs']); ?>
 <section class="content">
       <div class="row">
         <div class="col-md-12">

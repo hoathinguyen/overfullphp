@@ -40,15 +40,13 @@ class View extends Otp implements IView{
 	* Run method
 	* This handle something to get view result
 	*/
-	public function run($setting){
+	public function run($actionResult){
 		// Check if view type is exist
-		if(!method_exists($this, $setting['type'])){
-			throw new ViewTypeNotFoundException($setting['type']);
+		if(!method_exists($this, $actionResult->get('type'))){
+			throw new ViewTypeNotFoundException($actionResult->get('type'));
 		}
 
-		//$this->template = new Object();
-
-		return $this->{$setting['type']}($setting['gift']);
+		return $this->{$actionResult->get('type')}($actionResult->get('gift'));
 	}
 
 	/**

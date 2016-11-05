@@ -154,4 +154,18 @@ class Request extends BaseRequest{
 		if(!$name) return $_POST;
 		return ArrayUtil::access($_POST, $name);
 	}
+	/**
+	 * any method
+	 *
+	 * @date 2016/02/27
+	 * @param string $name
+	 * @return string
+	 */
+	public function any($name = false){
+		if($this->isMethod("POST")){
+			return $this->post($name);
+		}
+		
+		return $this->get($name);
+	}
 }

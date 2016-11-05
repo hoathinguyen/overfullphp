@@ -2,6 +2,9 @@
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
+          <?php echo $this->render('Elements/flash_message'); ?>
+        </div>
+        <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Search document</h3>
@@ -25,7 +28,7 @@
                         <div class="col-md-3">
                           <label>Version:</label>
                           <select class="form-control" name="version">
-                            <option value="1">All</option>
+                            <option value="0">All</option>
                             <option value="1">1.x</option>
                           </select>
                         </div>
@@ -59,7 +62,9 @@
                   <td><a href="<?php echo URL::to("/docs/detail/$value->id"); ?>"><?php echo $value->title; ?></a></td>
                   <td><?php echo $value->category; ?></td>
                   <td><?php echo $value->version; ?></td>
-                  <td><a href="<?php echo URL::to("/docs/edit/$value->id"); ?>">Edit</a></td>
+                  <td>
+                    <a href="<?php echo URL::to("/docs/edit/$value->id"); ?>">Edit</a> | <a href="<?php echo URL::to("/docs/delete/$value->id"); ?>">Delete</a>
+                    </td>
                 </tr>
                 <?php } ?>
               </table>

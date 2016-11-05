@@ -4,7 +4,7 @@
     <div class="col-md-12">
       <div class="box box-info">
         <div class="box-header">
-          <h3 class="box-title">Create new document</h3>
+          <h3 class="box-title"><?php echo $type; ?> document</h3>
           <div class="pull-right box-tools">
             <button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
               <i class="fa fa-minus"></i></button>
@@ -12,33 +12,28 @@
               <i class="fa fa-times"></i></button>
           </div>
         </div>
-        <form method="post">
+        <?php echo Form::open('doc'); ?>
+          <?php echo Form::hidden('id'); ?>
           <div class="box-body pad">
             <div class="form-group">
               <label for="formtitle">Title</label>
-              <input class="form-control" name="title" id="formtitle" value="<?php echo !empty($model->title) ? $model->title : null ?>">
+              <?php echo Form::input('title', ['class' => 'form-control']); ?>
             </div>
             <div class="form-group">
               <label for="formcategory">Category</label>
-              <select class="form-control" name="category_id" id="formcategory" value="<?php echo !empty($model->category_id) ? $model->category_id : null ?>">
-                <option value="1">Framework</option>
-                <option value="2">Package</option>
-                <option value="3">Weight</option>
-              </select>
+              <?php echo Form::select('category_id', ['1' => 'Framework', '2' => 'Package', '3' => 'Weight'],['class' => 'form-control', 'id' => "formcategory"]); ?>
             </div>
             <div class="form-group">
               <label for="formversion">Version</label>
-              <select class="form-control" name="version_id" id="formversion" value="<?php echo !empty($model->version_id) ? $model->version_id : null ?>">
-                <option value="1">1.x</option>
-              </select>
+              <?php echo Form::select('version_id', ['1' => '1.x'], ['class' => 'form-control', 'id' => "formversion"]); ?>
             </div>
             <div class="form-group">
               <label for="formcontent">Content</label>
-              <textarea id="formcontent" name="content" rows="10" cols="80"><?php echo !empty($model->content) ? $model->content : null ?></textarea>
+              <?php echo Form::textarea('content', ['class' => 'form-control', 'id' => 'formcontent']); ?>
             </div>
           </div>
           <div class="box-footer">
-            <button type="submit" class="btn btn-primary">Create</button>
+            <?php echo Form::submit('submit', ['class' => 'btn btn-primary', 'value' => $type]); ?>
           </div>
         </form>
       </div>

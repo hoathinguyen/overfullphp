@@ -28,13 +28,13 @@ class Bag{
 	// MVCHandler
 	public static $pattern;
 
-	public static $dbstore;
+	public static $dbStore;
 
 	public static $session;
 
 	public static $package;
 
-	public static $mystore;
+	public static $myStore;
 
 	public static $config;
 
@@ -43,7 +43,7 @@ class Bag{
 	* This method will create some object in this app
 	*/
 	public static function init(){
-		static::dbstore();
+		static::dbStore();
 		// Create request
 		static::request();
 		// Response
@@ -51,7 +51,7 @@ class Bag{
 
 		static::session()->start();
 
-		static::mystore();
+		static::myStore();
 
 		static::config();
 	}
@@ -60,12 +60,12 @@ class Bag{
 	 * Get DbStore
 	 * @return DbStore
 	 */
-	public static function dbstore(){
-		if(!static::$dbstore){
-			static::$dbstore = new DbStore();
+	public static function dbStore(){
+		if(!static::$dbStore){
+			static::$dbStore = new DbStore();
 		}
 
-		return static::$dbstore;
+		return static::$dbStore;
 	}
 
 	/**
@@ -132,12 +132,12 @@ class Bag{
 	 * Get MyStore
 	 * @return PackageStore
 	 */
-	public static function mystore(){
-		if(!static::$mystore){
-			static::$mystore = new MyStore();
+	public static function myStore(){
+		if(!static::$myStore){
+			static::$myStore = new MyStore();
 		}
 
-		return static::$mystore;
+		return static::$myStore;
 	}
 
 	/**

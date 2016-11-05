@@ -18,16 +18,12 @@ class DocBusiness{
 	 */
 	public function getDocAsList($keyword = false, $category = false, $version = false){
 		// Check and set default data
-		if(!$keyword){
-			$keyword = '%';
-		}
-
 		if(!$category){
-			$category = '%';
+			$category = '';
 		}
 
 		if(!$version){
-			$version = '%';
+			$version = '';
 		}
 
 		return Doc::instance()
@@ -35,9 +31,9 @@ class DocBusiness{
 			->columns(['docs.id', 'docs.title', 'versions.name AS version', 'categories.name AS category'])
 			->join('categories', 'categories.id = docs.category_id')
 			->join('versions', 'versions.id = docs.version_id')
-			->where(['docs.title', 'LIKE', $keyword])
-			->andWhere(['categories.id', 'LIKE', $category])
-			->andWhere(['versions.id', 'LIKE', $version])
+			->where(['docs.title', 'LIKE', "%$keyword%"])
+			->andWhere(['categories.id', 'LIKE', "%$category%"])
+			->andWhere(['versions.id', 'LIKE', "%$version%"])
 			->all();
 	}
 
@@ -57,8 +53,13 @@ class DocBusiness{
 	 * @param data
 	 * @return boolean
 	 */
-	public function addDoc($data){
-		$doc = new Doc();
+	public function addOrEditDoc($data){
+		if(empty($data['id'])){
+			$doc = new Doc();
+		} else {
+			$doc = $this->getDocById($data['id']);
+		}
+		
 		$doc->title = !empty($data['title']) ? $data['title'] : '';
 		$doc->content = !empty($data['content']) ? $data['content'] : '';
 		$doc->icon = !empty($data['icon']) ? $data['icon'] : '';

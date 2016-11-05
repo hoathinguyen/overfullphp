@@ -9,6 +9,7 @@ use Overfull\Patterns\MVC\Foundation\IController;
 use Overfull\Patterns\MVC\Exception\MethodNotFoundException;
 use Bag;
 use Overfull\Http\Response\ResponseFormat;
+use Overfull\Patterns\MVC\ActionResult;
 
 class Controller implements IController{
 	protected $otp = [
@@ -48,13 +49,14 @@ class Controller implements IController{
 		} else if($view){
 			$this->otp['content'] = $view;
 		}
-		return [
+
+		return new ActionResult([
 			'type' => 'render',
 			'gift' => [
 				'otp' => $this->__getOtp(),
 				'data' => $data
 			]
-		];
+		]);
 	}
 
 	/**
@@ -71,13 +73,13 @@ class Controller implements IController{
 			$this->otp['content'] = $view;
 		}
 
-		return [
+		return new ActionResult([
 			'type' => 'render',
 			'gift' => [
 				'otp' => $this->__getOtp(),
 				'data' => $data
 			]
-		];
+		]);
 	}
 
 	/**
@@ -87,13 +89,13 @@ class Controller implements IController{
 	 * @return array
 	 */
 	protected final function redirect($url){
-		return [
+		return new ActionResult([
 			'type' => 'redirect',
 			'gift' => [
 				'data' => $url,
 				'otp' => $this->__getOtp(),
 			]
-		];
+		]);
 	}
 
 	/**
@@ -103,31 +105,15 @@ class Controller implements IController{
 	 * @return array
 	 */
 	protected final function json($data){
-		return [
+		return new ActionResult([
 			'type' => 'json',
 			'gift' => [
 				'otp' => $this->__getOtp(),
 				'data' => $data,
 			]
-		];
+		]);
 	}
-
-	// /**
-	//  * Set type to view is json
-	//  *
-	//  * @param mixed $data
-	//  * @return array
-	//  */
-	// protected final function text($data){
-	// 	return [
-	// 		'type' => 'text',
-	// 		'gift' => [
-	// 			'otp' => $this->__getOtp(),
-	// 			'data' => $data,
-	// 		]
-	// 	];
-	// }
-
+	
 	/**
 	 * Run controller
 	 *
@@ -147,32 +133,30 @@ class Controller implements IController{
 
 		$this->beforeAction();
 
-		$this->data = $this->{$method}(Bag::route()->parameters);
+		$ActionResult = $this->{$method}(Bag::route()->parameters);
 
 		$this->beforeRender();
 
-		if(is_array($this->data)){
-			if(!isset($this->data['type'])){
-				$this->data = [
+		if (is_a($ActionResult, ActionResult::class)){
+			return $ActionResult;
+		} elseif(is_array($ActionResult)){
+			return new ActionResult([
 					'type' => 'json',
 					'gift' => [
 						'otp' => $this->__getOtp(),
-						'data' => $this->data,
+						'data' => $ActionResult,
 					]
-				];
-			}
-		} else if(is_object($this->data)){
-			$this->data = $this->data->run();
+				]);
+		} elseif(is_object($ActionResult)){
+			return new ActionResult($ActionResult->run());
 		} else{
-			$this->data = [
+			return new ActionResult([
 				'type' => 'html',
 				'gift' => [
 					'otp' => $this->__getOtp(),
-					'data' => $this->data,
+					'data' => $ActionResult,
 				]
-			];
+			]);
 		}
-
-		return $this->data;
 	}
 }

@@ -10,7 +10,7 @@ namespace Overfull\Foundation;
 use Overfull\Foundation\Base\BaseObject;
 
 abstract class Store extends BaseObject{
-	protected $__store = [];
+	protected $attributes = [];
 	
 	/**
 	 * Get package
@@ -19,7 +19,7 @@ abstract class Store extends BaseObject{
 	 * @return Package object
 	 */
 	function __get($name){
-		return isset($this->__store[$name]) ? $this->__store[$name] : null;
+		return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
 	}
 
 	/**
@@ -30,6 +30,6 @@ abstract class Store extends BaseObject{
 	 * @return Package object
 	 */
 	function __set($name, $value){
-		return $this->__store[$name] = $value;
+		return $this->attributes[$name] = $value;
 	}
 }

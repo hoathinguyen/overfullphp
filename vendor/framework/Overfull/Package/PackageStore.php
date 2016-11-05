@@ -12,10 +12,6 @@ use Overfull\Exception\PackageNotFoundException;
 use Bag;
 
 class PackageStore extends Store{
-	private $attributes = [];
-	function __construct(){
-		
-	}
 
 	/**
 	* __get method
@@ -43,16 +39,5 @@ class PackageStore extends Store{
 		}
 		
 		throw new PackageNotFoundException($name);
-	}
-
-	/**
-	* __get method
-	*
-	* @param string $name
-	* @return value
-	*/
-	public function __set($name, $value){
-		//Nothing
-		$this->attributes[$name] = $value;
 	}
 }

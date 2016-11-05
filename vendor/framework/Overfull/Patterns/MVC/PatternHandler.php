@@ -40,10 +40,8 @@ class PatternHandler extends BaseObject{
 		$this->controller = new $controller();
 
 		// Call view
-		$controllerData = $this->controller->run();
-		if(!empty($controllerData['data']['otp']['handler'])){
-			$view = $controllerData['data']['otp']['handler'];
-
+		$actionResult = $this->controller->run();
+		if(!empty($view = $actionResult->get('data.otp.handler'))){
 			if(!class_exists($view)){
 				$view = "{$appNamespace}\\Views\\{$view}";
 				if(!class_exists($view)){
@@ -76,6 +74,6 @@ class PatternHandler extends BaseObject{
 		// 		break;
 		// }
 
-		Bag::$response->content = $this->view->run($controllerData);
+		Bag::$response->content = $this->view->run($actionResult);
 	}
 }

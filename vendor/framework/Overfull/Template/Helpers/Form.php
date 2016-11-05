@@ -1,15 +1,200 @@
 <?php
 /*----------------------------------------------------
-* Filename: Auth.php
+* Filename: Form.php
 * Author: Overfull.net
 * Date: 2016/10/25
-* Description: The Authentication package
+* Description: The Form helper
 * ----------------------------------------------------
 */
-namespace Packages\Authentication;
-use Overfull\Package\BasePackage;
+namespace Overfull\Template\Helpers;
 use Bag;
+use Overfull\Utility\ArrayUtil;
+use Overfull\Template\Foundation\Helper;
 
-class Form extends BasePackage{
+class Form extends Helper{
+	protected static $data = false;
 
+	/**
+	 * Parse name to name in HTML
+	 * @param $name
+	 */
+	protected static function parseName($name){
+		$exs = explode('.', $name);
+
+		$name = $exs[0];
+		array_shift($exs);
+
+		foreach ($exs as $value) {
+			$name .= "[$value]";
+		}
+
+		return $name;
+	}
+
+	/**
+	 * Open method
+	 * @param array config
+	 * @return form open
+	 */
+	public static function open($model = 'default', $properties = []){
+		if(!$model){
+			$model = 'default';
+		}
+
+		$__key__ = '';
+		if(is_string($model)){
+			static::$data = Bag::myStore()->{$model};
+
+			if (is_object(static::$data)){
+				static::$data = json_decode(json_encode(static::$data), true);
+			}
+			$__key__ = "<input name=\"__key__\" value=\"$model\" type=\"hidden\"/>";
+		} elseif (is_object($model)){
+			static::$data = json_decode(json_encode($model), true);
+		}
+
+		$propertiesHTML = '';
+
+		foreach ($properties as $key => $value) {
+			$propertiesHTML .= " $key=\"$value\"";
+		}
+
+		return '<form method="'. (isset($properties['method']) ? $properties['method'] : 'POST') .'" '.$propertiesHTML.'>' . $__key__;
+		// object-save="'.$model.'"
+	}
+
+	/**
+	 * Close method
+	 * @return string html
+	 */
+	public static function close(){
+		return '</form>';
+	}
+
+	/**
+	 * input method
+	 * @return string html
+	 */
+	public static function input($name, $properties = []){
+		if(!isset($properties['value'])){
+			$properties['value'] = ArrayUtil::access(static::$data, $name);
+		}
+
+		$properties['name'] = static::parseName($name);
+
+		$propertiesHTML = '';
+
+		foreach ($properties as $key => $value) {
+			$propertiesHTML .= " $key=\"$value\"";
+		}
+
+		return "<input $propertiesHTML/>";
+	}
+
+	/**
+	 * textarea method
+	 * @return string html
+	 */
+	public static function textarea($name, $properties = []){
+		if(!isset($properties['value'])){
+			$value = ArrayUtil::access(static::$data, $name);
+		} else {
+			$value = $properties['value'];
+		}
+		
+		$properties['name'] = static::parseName($name);
+
+		$propertiesHTML = '';
+
+		foreach ($properties as $key => $val) {
+			$propertiesHTML .= " $key=\"$val\"";
+		}
+
+		return "<textarea $propertiesHTML>$value</textarea>";
+	}
+
+	/**
+	 * select method
+	 * @return string html
+	 */
+	public static function select($name, $options = [], $properties = []){
+		if(!isset($properties['value'])){
+			$properties['value'] = ArrayUtil::access(static::$data, $name);
+		}
+
+		$properties['name'] = static::parseName($name);
+
+		$strproperties = '';
+
+		foreach ($properties as $key => $value) {
+			$strproperties .= " $key=\"$value\"";
+		}
+
+		$optionsHTML = '';
+		foreach ($options as $key => $value) {
+			$optionsHTML .= '<option value="'.$key.'" '.($properties['value'] == $key ? 'selected' : '').'>'.$value.'</option>';
+		}
+
+		return "<select $strproperties>$optionsHTML</select>";
+	}
+
+	/**
+	 * submit method
+	 * @return string html
+	 */
+	public static function submit($name, $properties = []){
+		$value = isset($properties['value']) ? $properties['value'] : $name;
+		unset($properties['value']);
+
+		$propertiesHTML = '';
+		$properties['type'] = 'submit';
+
+		foreach ($properties as $key => $val) {
+			$propertiesHTML .= " $key=\"$val\"";
+		}
+
+		return "<button $propertiesHTML>$value</button>";
+	}
+
+	/**
+	 * hidden method
+	 * @return string html
+	 */
+	public static function hidden($name, $properties = []){
+		if(!isset($properties['value'])){
+			$properties['value'] = ArrayUtil::access(static::$data, $name);
+		}
+
+		$properties['name'] = static::parseName($name);
+		$properties['type'] = 'hidden';
+
+		$propertiesHTML = '';
+
+		foreach ($properties as $key => $value) {
+			$propertiesHTML .= " $key=\"$value\"";
+		}
+
+		return "<input $propertiesHTML/>";
+	}
+
+	/**
+	 * password method
+	 * @return string html
+	 */
+	public static function password($name, $properties = []){
+		if(!isset($properties['value'])){
+			$properties['value'] = ArrayUtil::access(static::$data, $name);
+		}
+
+		$properties['name'] = static::parseName($name);
+		$properties['type'] = 'password';
+
+		$propertiesHTML = '';
+
+		foreach ($properties as $key => $value) {
+			$propertiesHTML .= " $key=\"$value\"";
+		}
+
+		return "<input $propertiesHTML/>";
+	}
 }

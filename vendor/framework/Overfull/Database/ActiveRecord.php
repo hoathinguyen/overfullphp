@@ -62,15 +62,15 @@ abstract class ActiveRecord implements IActiveRecord{
 		$this->connectionName = $connectionName;
 		$this->connectionInfo = $connectionInfo;
 
-		if ( !isset(Bag::$dbstore->{$connectionName}) ) {
+		if ( !isset(Bag::$dbStore->{$connectionName}) ) {
 			// Create new connect
-			Bag::$dbstore->{$connectionName} = new \PDO("{$connectionInfo['type']}:dbname={$connectionInfo['dbname']};host={$connectionInfo['host']}", $connectionInfo['user'], $connectionInfo['password']);
+			Bag::$dbStore->{$connectionName} = new \PDO("{$connectionInfo['type']}:dbname={$connectionInfo['dbname']};host={$connectionInfo['host']}", $connectionInfo['user'], $connectionInfo['password']);
 
-			if(!Bag::$dbstore->{$connectionName}){
+			if(!Bag::$dbStore->{$connectionName}){
 				throw new ConnectionException($connectionName);
 			}
 
-			Bag::$dbstore->{$connectionName}->setAttribute( \PDO::ATTR_EMULATE_PREPARES, false );
+			Bag::$dbStore->{$connectionName}->setAttribute( \PDO::ATTR_EMULATE_PREPARES, false );
 			
 			$this->schema(true);
 		}
@@ -89,7 +89,7 @@ abstract class ActiveRecord implements IActiveRecord{
 				throw new SchemaNotFoundException($query);
 	        }
 
-	        $this->schema = new $chemaClass(Bag::$dbstore->{$this->connectionName}, get_class($this));
+	        $this->schema = new $chemaClass(Bag::$dbStore->{$this->connectionName}, get_class($this));
 	        $this->schema->table($this->getTableName());
 		}
 
@@ -103,7 +103,7 @@ abstract class ActiveRecord implements IActiveRecord{
 	 */
 	public function beginTransaction(){
 		try {
-			Bag::$dbstore->{$this->connectionName}->beginTransaction();
+			Bag::$dbStore->{$this->connectionName}->beginTransaction();
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage(), 112);
 		}
@@ -116,7 +116,7 @@ abstract class ActiveRecord implements IActiveRecord{
 	 */
 	public function rollBack(){
 		try {
-			Bag::$dbstore->{$this->connectionName}->rollBack();
+			Bag::$dbStore->{$this->connectionName}->rollBack();
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage(), 112);
 		}
@@ -129,7 +129,7 @@ abstract class ActiveRecord implements IActiveRecord{
 	 */
 	public function commit(){
 		try {
-			Bag::$dbstore->{$this->connectionName}->commit();
+			Bag::$dbStore->{$this->connectionName}->commit();
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage(), 112);
 		}

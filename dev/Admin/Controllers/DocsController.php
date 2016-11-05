@@ -12,7 +12,7 @@ use Dev\Admin\Business\DocBusiness;
 use Dev\Admin\Business\CategoryBusiness;
 use Dev\Admin\Business\VersionBusiness;
 use Bag;
-
+use Overfull\Template\Helpers\Flash;
 
 class DocsController extends AdminController{
 	private $docBusiness;
@@ -51,22 +51,32 @@ class DocsController extends AdminController{
 		}
 
 		if(Bag::request()->isMethod('POST')){
-			$this->docBusiness->addDoc(Bag::request()->post());
-			return $this->render();
+			$this->docBusiness->addOrEditDoc(Bag::request()->post());
+			Flash::write('success', "Created new document");
+			return $this->redirect('/docs');
 		}
 
-		return $this->render();
+		return $this->render(false, ['type' => 'Create']);
 	}
 
 	/**
 	 * create method
 	 * @return render
 	 */
-	public function edit(){
+	public function edit($parameter){
 		if (!Bag::package()->auth->isLogged()){
 			return $this->redirect('/login');
 		}
-		return $this->render();
+
+		if(Bag::request()->isMethod('POST')){
+			$this->docBusiness->addOrEditDoc(Bag::request()->post());
+			Flash::write('success', "Edited #$parameter[1]");
+			return $this->redirect('/docs');
+		}
+
+		$doc = $this->docBusiness->getDocById($parameter[1]);
+
+		return $this->render('create', ['type' => 'Edit'])->form(['doc' => $doc]);
 	}
 
 	/**
@@ -74,6 +84,10 @@ class DocsController extends AdminController{
 	 * @return render
 	 */
 	public function detail($parameter){
+		if (!Bag::package()->auth->isLogged()){
+			return $this->redirect('/login');
+		}
+
 		$doc = $this->docBusiness->getDocById($parameter[1]);
 		return $this->render(false, ['doc' => $doc]);
 	}
@@ -83,10 +97,15 @@ class DocsController extends AdminController{
 	 * @return render
 	 */
 	public function delete($parameter){
+		if (!Bag::package()->auth->isLogged()){
+			return $this->redirect('/login');
+		}
+
 		$doc = $this->docBusiness->getDocById($parameter[1]);
 
 		if($doc && $doc->delete()){
 			// Set falsh
+			Flash::write('success', "Deleted #$parameter[1]");
 		}
 
 		return $this->redirect('/docs');

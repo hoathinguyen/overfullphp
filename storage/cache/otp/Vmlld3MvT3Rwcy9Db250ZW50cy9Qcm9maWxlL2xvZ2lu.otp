@@ -119,19 +119,24 @@
             <div class="row omb_row-sm-offset-3">
                 <div class="col-xs-12 col-sm-6">
                     <?php if(isset($msg) && !empty($msg)) {?><div class="alert alert-danger"><?php echo $msg; ?></div><?php } ?>
-                    <form class="omb_loginForm" action="" autocomplete="off" method="POST">
+                    <?php echo Form::open(false, ['class' => 'omb_loginForm']); ?>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                            <input type="text" class="form-control" name="username" placeholder="email address">
+                            <?php echo Form::input('username', [
+                                'class' => 'form-control',
+                                'placeholder' => 'Username']); ?>
                         </div>
                         <span class="help-block"></span>
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                            <input  type="password" class="form-control" name="password" placeholder="Password">
+                            <?php echo Form::password('password', [
+                                'class' => 'form-control',
+                                'placeholder' => 'Password',
+                                'value' => '']); ?>
                         </div>
                         <span class="help-block"></span>
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
-                    </form>
+                    <?php echo Form::close(); ?>
                 </div>
             </div>
             <div class="row omb_row-sm-offset-3">
