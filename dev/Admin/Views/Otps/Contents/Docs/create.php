@@ -48,7 +48,7 @@
 
 @beginSection("js")
 <!-- CK Editor -->
-<script src="<?php echo URL::to('/plugins/ckeditor/ckeditor.js')?>"></script>
+<script src="<?php echo URL::asset('/plugins/ckeditor/ckeditor.js')?>"></script>
 <script>
   $(function () {
     CKEDITOR.replace('formcontent');
