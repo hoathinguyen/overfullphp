@@ -1,13 +1,13 @@
-<?php use Overfull\Utility\URLUtil as URL;use Overfull\Template\Helpers\Form as Form;use Overfull\Template\Helpers\Flash as Flash; ?><?php echo $this->render('Elements\docs_navi', ['sub' => 'Detail', 'folder' => 'Docs']); ?>
+<?php echo $this->render('Elements/docs_navi', ['sub' => 'Detail', 'folder' => 'Services']); ?>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title"><?php echo $doc->title ?></h3>
+                    <h3 class="box-title"><?php echo $service->title ?></h3>
                 </div>
                 <div class="box-body">
-                  <?php echo $doc->content ?>
+                  <?php echo $service->url ?>
                 </div>
                 <div class="box-footer">
                   <button type="submit" class="btn btn-primary">Search</button>

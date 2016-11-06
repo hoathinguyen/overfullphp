@@ -24,7 +24,7 @@
             <div class="form-group">
               <label for="formtitle">Url</label>
               <?php echo Form::input('url', ['class' => 'form-control']); ?>
-              <span class="text-danger"><?php echo Form::message('title'); ?></span>
+              <span class="text-danger"><?php echo Form::message('url'); ?></span>
             </div>
             <div class="form-group">
               <label for="formcategory">Category</label>

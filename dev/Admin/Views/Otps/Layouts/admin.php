@@ -236,6 +236,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <li class="header">HEADER</li>
         <li><a href="<?php echo URL::to('/docs'); ?>"><i class="fa fa-link"></i> <span>Documents</span></a></li>
         <li><a href="<?php echo URL::to('/files'); ?>"><i class="fa fa-link"></i> <span>Files</span></a></li>
+        <li><a href="<?php echo URL::to('/services'); ?>"><i class="fa fa-link"></i> <span>Services</span></a></li>
 
         <!-- <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Documents</span>

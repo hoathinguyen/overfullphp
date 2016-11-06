@@ -1,4 +1,4 @@
 <?php
 return [
-	'alway-build-otp' => false
+	'alway-build-otp' => true
 ];

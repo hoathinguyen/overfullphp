@@ -1,4 +1,4 @@
-<?php use Overfull\Utility\URLUtil as URL;use Overfull\Template\Helpers\Form as Form;use Overfull\Template\Helpers\Flash as Flash; ?><?php echo $this->render('Elements\docs_navi', ['sub' => 'Index', 'folder' => 'Files']); ?>
+<?php use Overfull\Utility\URLUtil as URL;use Overfull\Template\Helpers\Form as Form;use Overfull\Template\Helpers\Flash as Flash; ?><?php echo $this->render('Elements/docs_navi', ['sub' => 'Index', 'folder' => 'Services']); ?>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -53,18 +53,16 @@
               <table class="table">
                 <tr>
                   <th>Title</th>
-                  <th>Category</th>
-                  <th>Version</th>
+                  <th>Url</th>
                   <th>Action</th>
                 </tr>
-                <?php foreach ($files as $key => $value){ ?>
+                <?php foreach ($services as $key => $value){ ?>
                 <tr>
                   <td><a href="<?php echo URL::to("/files/detail/$value->id"); ?>"><?php echo $value->title; ?></a></td>
-                  <td><?php echo $value->category; ?></td>
-                  <td><?php echo $value->version; ?></td>
+                  <td><?php echo $value->url; ?></td>
                   <td>
                     <a href="<?php echo URL::to("/files/edit/$value->id"); ?>">Edit</a> | <a href="<?php echo URL::to("/files/delete/$value->id"); ?>">Delete</a>
-                    </td>
+                  </td>
                 </tr>
                 <?php } ?>
               </table>

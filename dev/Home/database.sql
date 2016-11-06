@@ -59,3 +59,12 @@ CREATE TABLE IF NOT EXISTS files
 	FOREIGN KEY (category_id) REFERENCES categories(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO files(title, category_id, version_id, content, url) VALUES ('Release 1.0.0', 1, 1, '', 'https://github.com/overfull/php-framework/archive/master.zip');
+
+CREATE TABLE IF NOT EXISTS services
+(
+	id 				INT PRIMARY KEY AUTO_INCREMENT,
+	title			VARCHAR(50),
+	url				VARCHAR(255),
+	description		VARCHAR(100),
+	image			VARCHAR(255)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

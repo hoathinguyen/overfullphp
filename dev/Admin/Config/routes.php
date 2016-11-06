@@ -34,6 +34,15 @@ return array(
 			['delete/<:integer>', 'any', 'controller=FilesController;method=delete']
 		],
 
+		// Set url for docs
+		'services' => [
+			['<:empty>', 'any', 'controller=ServicesController;method=index'],
+			['create', 'any', 'controller=ServicesController;method=create'],
+			['edit/<:integer>', 'any', 'controller=ServicesController;method=edit'],
+			['detail/<:integer>', 'any', 'controller=ServicesController;method=detail'],
+			['delete/<:integer>', 'any', 'controller=ServicesController;method=delete']
+		],
+
 		'ajax' => [
 			'categories' => [
 				['list.json', 'any', 'controller=CategoriesController;method=ajaxCategories']

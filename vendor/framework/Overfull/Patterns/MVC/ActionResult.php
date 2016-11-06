@@ -22,7 +22,7 @@ class ActionResult{
 	 * @param string $name
 	 * @return this
 	 */
-	function get($name = ''){
+	public function get($name = ''){
 		return ArrayUtil::access($this->data, $name);
 	}
 
@@ -31,7 +31,7 @@ class ActionResult{
 	 * @param string $name
 	 * @return this
 	 */
-	function withLastGet(){
+	public function withLastGet(){
 		if(!empty($data = Bag::request()->get())){
 			if(isset($data['__key__'])){
 				Bag::myStore()->{"value_for_".$data['__key__']} = $data;
@@ -48,7 +48,7 @@ class ActionResult{
 	 * @param string $name
 	 * @return this
 	 */
-	function withLastPost(){
+	public function withLastPost(){
 		if(!empty($data = Bag::request()->post())){
 			if(isset($data['__key__'])){
 				Bag::myStore()->{"value_for_".$data['__key__']} = $data;
@@ -65,7 +65,7 @@ class ActionResult{
 	 * @param string $name
 	 * @return this
 	 */
-	function withLastData(){
+	public function withLastData(){
 		if(!empty($data = Bag::request()->any())){
 			if(isset($data['__key__'])){
 				Bag::myStore()->{"value_for_".$data['__key__']} = $data;
@@ -82,7 +82,7 @@ class ActionResult{
 	 * @param array $data
 	 * @return this
 	 */
-	function form($data = []){
+	public function form($data = []){
 		if(!is_array($data)){
 			return $this;
 		}
@@ -93,6 +93,16 @@ class ActionResult{
 			}
 		}
 		
+		return $this;
+	}
+
+	/**
+	 * with method
+	 * @param array $data
+	 * @return this
+	 */
+	public function with($data){
+		$this->data['gift']['data'] = array_merge($this->data['gift']['data'], $data);
 		return $this;
 	}
 }

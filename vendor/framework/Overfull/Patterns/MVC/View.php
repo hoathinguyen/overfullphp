@@ -176,12 +176,16 @@ class View extends Otp implements IView{
 				$$key = $value;
 			}
 
-			$storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($otp['file']).'.otp');
+			$otp['file'] = PathUtil::convert($otp['file']);
+
+			$appRoot = Bag::config()->get('app.root');
+
+			$storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($appRoot.DS.$otp['file']).'.otp');
 
 			if ( !file_exists($storageFile) || Bag::config()->get('core.alway-build-otp')) {
 				$ext = Bag::config()->get('core.otp.ext');
 				
-				$fullFile = PathUtil::getFull(Bag::config()->get('app.root').DS.PathUtil::convert($otp['file']).'.'.($ext ? $ext : 'php'));
+				$fullFile = PathUtil::getFull($appRoot.DS.$otp['file'].'.'.($ext ? $ext : 'php'));
 
 				// Get content of view
 				if ( !file_exists($fullFile) ) {
@@ -195,16 +199,17 @@ class View extends Otp implements IView{
 					$____content = preg_replace($key, $value, $____content);
 				}
 
-				//dd($____content);
-
 				$namespace = "";
 
-				foreach ( Bag::config()->get('core.otp.helpers') as $key => $value) {
+				$helpers = Bag::config()->get('core.otp.helpers');
+				$helpers = !empty($helpers) ? $helpers : [];
+
+				foreach ( $helpers as $key => $value) {
 					$namespace .= "use {$value} as {$key};";
 				}
 
 				foreach ( $this->helpers as $key => $value) {
-					$namespace .= "use {$value} as {$key};";
+					$namespace .= "use {$value} as {$key}; ";
 				}
 
 				file_put_contents($storageFile, "<?php {$namespace} ?>".$____content);

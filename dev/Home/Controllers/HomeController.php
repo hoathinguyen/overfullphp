@@ -9,7 +9,7 @@
 namespace Dev\Home\Controllers;
 use Overfull\Patterns\MVC\Controller;
 use Bag;
-use Dev\Home\Business\DocBusiness;
+use Dev\Home\Business\ServiceBusiness;
 
 class HomeController extends Controller{
 	protected $otp = [
@@ -17,10 +17,12 @@ class HomeController extends Controller{
 	];
 	
 	public function index(){
-		return $this->render();
+		return $this->render('index');
 	}
 
 	public function services(){
-		
+		$service = new ServiceBusiness();
+		$services = $service->getServiceAsList();
+		return $this->render(false, ['services' => $services]);
 	}
 }

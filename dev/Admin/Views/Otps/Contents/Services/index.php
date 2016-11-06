@@ -1,4 +1,4 @@
-<?php use Overfull\Utility\URLUtil as URL;use Overfull\Template\Helpers\Form as Form;use Overfull\Template\Helpers\Flash as Flash; ?><?php echo $this->render('Elements\docs_navi', ['sub' => 'Index', 'folder' => 'Docs']); ?>
+<?php echo $this->render('Elements/docs_navi', ['sub' => 'Index', 'folder' => 'Services']); ?>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
@@ -47,24 +47,22 @@
             <div class="box">
             <div class="box-header">
               <h3 class="box-title">Document list</h3>
-              <div class="pull-right"><a href="<?php echo URL::to('/docs/create') ?>" class="btn btn-success btn-sm"><i class="fa fa-edit"></i> Create</a></div>
+              <div class="pull-right"><a href="<?php echo URL::to('/services/create') ?>" class="btn btn-success btn-sm"><i class="fa fa-edit"></i> Create</a></div>
             </div>
             <div class="box-body">
               <table class="table">
                 <tr>
                   <th>Title</th>
-                  <th>Category</th>
-                  <th>Version</th>
+                  <th>Url</th>
                   <th>Action</th>
                 </tr>
-                <?php foreach ($docs as $key => $value){ ?>
+                <?php foreach ($services as $key => $value){ ?>
                 <tr>
-                  <td><a href="<?php echo URL::to("/docs/detail/$value->id"); ?>"><?php echo $value->title; ?></a></td>
-                  <td><?php echo $value->category; ?></td>
-                  <td><?php echo $value->version; ?></td>
+                  <td><a href="<?php echo URL::to("/services/detail/$value->id"); ?>"><?php echo $value->title; ?></a></td>
+                  <td><?php echo $value->url; ?></td>
                   <td>
-                    <a href="<?php echo URL::to("/docs/edit/$value->id"); ?>">Edit</a> | <a href="<?php echo URL::to("/docs/delete/$value->id"); ?>">Delete</a>
-                    </td>
+                    <a href="<?php echo URL::to("/services/edit/$value->id"); ?>">Edit</a> | <a href="<?php echo URL::to("/services/delete/$value->id"); ?>">Delete</a>
+                  </td>
                 </tr>
                 <?php } ?>
               </table>
@@ -74,8 +72,8 @@
     </div>
 </section>
 
-<?php $this->setSection("js", function(){ ?>
+@beginSection("js")
 <script type="text/javascript">
     
 </script>
-<?php }); ?>
+@endSection
