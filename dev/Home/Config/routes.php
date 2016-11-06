@@ -13,6 +13,19 @@ return array(
 		['install.html', 'get', 'controller=DocsController;method=install;version={1}'],
 
 		// Set URL for profile
+		'packages' => [
+			'<:integer>.[x|X]' => [
+				['index.html', 'get', 'controller=DocsController;method=packages;version={1}'],
+			]
+		],
+
+		// Set URL for profile
+		'weights' => [
+			'<:integer>.[x|X]' => [
+				['index.html', 'get', 'controller=DocsController;method=weights;version={1}'],
+			]
+		],
+		// Set URL for profile
 		'docs' => [
 			'<:integer>.[x|X]' => [
 				['index.html', 'get', 'controller=DocsController;method=index;version={1}'],

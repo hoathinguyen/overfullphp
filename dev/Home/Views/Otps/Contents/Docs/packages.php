@@ -1,9 +1,9 @@
-<?php use Overfull\Utility\URLUtil as URL; ?><section style="padding-top: 50px; background: #6f5499">
+<section style="padding-top: 50px; background: #069696">
     <div class="container">
     	<h2 style="color: #fff">Danh sách file</h2>
 		<ul class="list-group">
 		<?php if(empty($files)){ ?>
-			<li class="list-group-item">Hiện tại chưa có version framework.</li>
+			<li class="list-group-item">Hiện tại chưa có package.</li>
 		<?php } ?>
 		<?php foreach ($files as $key => $value) { ?>
 			<li class="list-group-item">

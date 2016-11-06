@@ -1,4 +1,4 @@
-<?php use Overfull\Utility\URLUtil as URL; ?><div class="box box-success direct-chat direct-chat-success" style="position: fixed; bottom: 0; right: 0; width: 300px; margin-bottom: 0;">
+<?php use Overfull\Utility\URLUtil as URL;use Overfull\Template\Helpers\Form as Form;use Overfull\Template\Helpers\Flash as Flash; ?><div class="box box-success direct-chat direct-chat-success" style="position: fixed; bottom: 0; right: 0; width: 300px; margin-bottom: 0;">
                 <div class="box-header with-border">
                   <h3 class="box-title">Direct Chat</h3>
 

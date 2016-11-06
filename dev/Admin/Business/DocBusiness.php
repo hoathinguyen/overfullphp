@@ -67,4 +67,14 @@ class DocBusiness{
 		$doc->version_id = !empty($data['version_id']) ? $data['version_id'] : '';
 		return $doc->save();
 	}
+
+	/**
+	 * addDoc
+	 *
+	 * @param data
+	 * @return boolean
+	 */
+	public function validate($data){
+		return Doc::instance()->isCreateValid($data);
+	}
 }

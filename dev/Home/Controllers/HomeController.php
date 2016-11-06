@@ -10,9 +10,7 @@ namespace Dev\Home\Controllers;
 use Overfull\Patterns\MVC\Controller;
 use Bag;
 use Dev\Home\Business\DocBusiness;
-/**
-* 
-*/
+
 class HomeController extends Controller{
 	protected $otp = [
 		'layout' => 'home'

@@ -56,10 +56,10 @@
                         <a class="page-scroll" href="<?php echo URL::to('/docs/1.x/index.html') ?>">Docs</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="<?php echo URL::to('/packages/index.html') ?>">Packages</a>
+                        <a class="page-scroll" href="<?php echo URL::to('/packages/1.x/index.html') ?>">Packages</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="<?php echo URL::to('/weights/index.html') ?>">Weights</a>
+                        <a class="page-scroll" href="<?php echo URL::to('/weights/1.x/index.html') ?>">Weights</a>
                     </li>
                 </ul>
             </div>

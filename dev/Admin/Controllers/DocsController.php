@@ -51,9 +51,17 @@ class DocsController extends AdminController{
 		}
 
 		if(Bag::request()->isMethod('POST')){
-			$this->docBusiness->addOrEditDoc(Bag::request()->post());
-			Flash::write('success', "Created new document");
-			return $this->redirect('/docs');
+			if(!$this->docBusiness->validate(Bag::request()->post())){
+				return $this->render(false, ['type' => 'Create'])->withLastPost();
+			}
+
+			if($this->docBusiness->addOrEditDoc(Bag::request()->post())){
+				Flash::write('success', "Created new document");
+				return $this->redirect('/docs');
+			}
+
+			Flash::write('success', "Have error when creating");
+			return $this->render(false, ['type' => 'Create'])->withLastPost();
 		}
 
 		return $this->render(false, ['type' => 'Create']);

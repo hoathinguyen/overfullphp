@@ -51,6 +51,8 @@ class Application extends BaseObject{
 			// Get config
 			$this->getConfig();
 
+			Bag::pattern();
+
 			// Get result in route
 			Bag::route()->run();
 
@@ -125,6 +127,18 @@ class Application extends BaseObject{
 			$uri = Bag::request()->uriArray();
 			$domain = strtolower(Bag::request()->host());
 			foreach ($app as $key => $value) {
+				if(is_object($value)){
+					$value = $value();
+				}
+
+				if(is_string($value)){
+					$keyValDo = explode(";", $value);
+					$value = [];
+					foreach ($keyValDo as $appOrRootValue) {
+						$appExplode = explode('=', $appOrRootValue);
+						$value[$appExplode[0]] = $appExplode[1];
+					}
+				}
 				
 				$regex = str_replace('{sub}', '([a-zA-Z0-9\-]+)', $key);
 				$regex = str_replace('{domain}', '([a-zA-Z0-9\-]+)', $regex);

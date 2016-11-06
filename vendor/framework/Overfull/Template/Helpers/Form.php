@@ -13,6 +13,7 @@ use Overfull\Template\Foundation\Helper;
 
 class Form extends Helper{
 	protected static $data = false;
+	protected static $messages = [];
 
 	/**
 	 * Parse name to name in HTML
@@ -36,14 +37,15 @@ class Form extends Helper{
 	 * @param array config
 	 * @return form open
 	 */
-	public static function open($model = 'default', $properties = []){
+	public static function open($model = 'default', $properties = [], $messages = []){
 		if(!$model){
 			$model = 'default';
 		}
 
+		// Create open form and get model data
 		$__key__ = '';
 		if(is_string($model)){
-			static::$data = Bag::myStore()->{$model};
+			static::$data = Bag::myStore()->{"value_for_$model"};
 
 			if (is_object(static::$data)){
 				static::$data = json_decode(json_encode(static::$data), true);
@@ -53,6 +55,18 @@ class Form extends Helper{
 			static::$data = json_decode(json_encode($model), true);
 		}
 
+		// Create message for model
+		if(!empty($messages)){
+			static::$messages = $messages;
+		} else {
+			static::$messages = Bag::myStore()->{"message_for_$model"};
+		}
+
+		if (is_object(static::$messages)){
+			static::$messages = json_decode(json_encode(static::$messages), true);
+		}
+
+		// Generate html
 		$propertiesHTML = '';
 
 		foreach ($properties as $key => $value) {
@@ -196,5 +210,20 @@ class Form extends Helper{
 		}
 
 		return "<input $propertiesHTML/>";
+	}
+	/**
+	 * message method
+	 * @return string
+	 */
+	public static function message($name = null, $isArray = false){
+		if(!$name){
+			return static::$messages;
+		}
+
+		if($isArray){
+			return ArrayUtil::access(static::$messages[$name]);
+		}
+
+		return isset(static::$messages[$name]) ? static::$messages[$name] : null;
 	}
 }

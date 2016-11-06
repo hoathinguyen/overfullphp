@@ -23,8 +23,27 @@ class DocBusiness{
 				->schema()
 				->columns('docs.*')
 				->join('versions', 'versions.id = docs.version_id')
+				->join('categories', 'categories.id = docs.category_id')
 				->where(['versions.id', '=', $version.'.x'])
+				->andWhere(['categories.name', 'LIKE', 'framework'])
 				->all();
+	}
+
+	/**
+	 * Get getFirstDoc by version
+	 *
+	 * @param integer $version
+	 * @return Object list
+	 */
+	public function getFirstDoc($version){
+		return Doc::instance()
+				->schema()
+				->columns('docs.*')
+				->join('versions', 'versions.id = docs.version_id')
+				->join('categories', 'categories.id = docs.category_id')
+				->where(['versions.id', '=', $version.'.x'])
+				->andWhere(['categories.name', 'LIKE', 'framework'])
+				->one();
 	}
 
 	/**
@@ -33,13 +52,13 @@ class DocBusiness{
 	 * @param integer $version
 	 * @return Object list
 	 */
-	public function getDoc($version, $name){
+	public function getDoc($version, $id){
 		return Doc::instance()
 				->schema()
 				->columns('docs.*')
 				->join('versions', 'versions.id = docs.version_id')
 				->where(['versions.id', '=', $version.'.x'])
-				->andWhere(['docs.title', 'LIKE', $name])
+				->andWhere(['docs.id', '=', $id])
 				->one();
 	}
 
@@ -55,7 +74,7 @@ class DocBusiness{
 				->columns(['files.*', 'versions.name'])
 				->join('categories', 'categories.id = files.category_id')
 				->join('versions', 'versions.id = files.version_id')
-				->where(['categories.name', '=', $name])
+				->where(['categories.name', 'LIKE', $name])
 				->all();
 	}
 }

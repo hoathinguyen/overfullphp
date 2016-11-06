@@ -10,13 +10,10 @@ use Overfull\Exception\DatabaseConfigException;
 use Overfull\Database\ActiveRecord;
 use Overfull\Database\Query;
 use JsonSerializable;
+use Overfull\Utility\Validator;
 
 abstract class Model extends ActiveRecord implements IModel, JsonSerializable{
 	
-
-	protected $validates = [
-	];
-
 	protected $invalidErrors = [];
 
     /**
@@ -50,30 +47,37 @@ abstract class Model extends ActiveRecord implements IModel, JsonSerializable{
 	}
 
     /**
-     * Handle dynamic method calls into the model.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
+     * Validate
+     * @param $values
+     * @param $rules
      */
-    //public function __call($method, $parameters)
-    //{
-        // if (in_array($method, ['increment', 'decrement'])) {
-        //     return call_user_func_array([$this, $method], $parameters);
-        // }
+    public final function validate($values , $rules){
+        $this->invalidErrors = Validator::validate($values , $rules);
 
-        //$query = $this->newQuery();
-
-        //return call_user_func_array([$query, $method], $parameters);
-    //}
+        if(!empty($values['__key__'])){
+            Bag::myStore()->{"message_for_".$values['__key__']} = $this->invalidErrors;
+        } else {
+            Bag::myStore()->message_for_default = $this->invalidErrors;
+        }
+        
+        return $this;
+    }
 
     /**
-     * Convert the model to its string representation.
-     *
-     * @return string
+     * isValid
+     * @param $values
+     * @param $rules
      */
-    //public function __toString()
-    //{
-        //return $this->toJson();
-    //}
+    public function isValid(){
+        return empty($this->invalidErrors);
+    }
+
+    /**
+     * isValid
+     * @param $values
+     * @param $rules
+     */
+    public final function errorMessages(){
+        return $this->invalidErrors;
+    }
 }

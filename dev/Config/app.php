@@ -25,15 +25,47 @@
 *
 * ----------------------------------------------------
 */
+
 return [
 	'share.overfull.dev' => [
 		'root' => 'dev/Share',
 		'namespace' => 'Dev\Share'
 	],
 
-	'admin.overfull.dev' => [
+	'admin.overfull.dev' => 'root=dev/FirstAdmin;namespace=Dev\FirstAdmin',
+
+	// 'admin.overfull.dev' => function(){
+	// 	$page = \Bag::request()->get('uid');
+
+	// 	if($page == 'framework'){
+	// 		$page = [
+	// 			'root' => 'dev/Admin',
+	// 			'namespace' => 'Dev\Admin'
+	// 		];
+
+	// 		\Bag::session()->write('__page', $page);
+	// 	} else{
+	// 		$page = \Bag::session()->read('__page');
+	// 	}
+
+	// 	if(empty($page)){
+	// 		$page = [
+	// 			'root' => 'dev/FirstAdmin',
+	// 			'namespace' => 'Dev\FirstAdmin'
+	// 		];
+	// 	}
+
+	// 	return $page;
+	// },
+
+	'framework.admin.overfull.dev' => [
 		'root' => 'dev/Admin',
 		'namespace' => 'Dev\Admin'
+	],
+
+	'share.admin.overfull.dev' => [
+		'root' => 'dev/ShareAdmin',
+		'namespace' => 'Dev\ShareAdmin'
 	],
 
 	'[www.]overfull.dev' => [

@@ -28,7 +28,7 @@ class DocsController extends Controller{
 		$docBal = new DocBusiness();
 		$docList = $docBal->getDocListByVersion($version);
 		// Get data
-		$content = $docBal->getDoc($version, 'Get started');
+		$content = $docBal->getFirstDoc($version);
 		return $this->render('posts',
 			['menu' => $docList, 'version' => $version, 'doc' => $content]);
 	}
@@ -58,6 +58,30 @@ class DocsController extends Controller{
 		$version = Bag::route()->version;
 		$docBal = new DocBusiness();
 		$files = $docBal->getFilesByCategory('framework');
+		return $this->render(false, ['files' => $files]);
+	}
+
+	/**
+	 * Install method
+	 *
+	 * @return render
+	 */
+	public function packages(){
+		$version = Bag::route()->version;
+		$docBal = new DocBusiness();
+		$files = $docBal->getFilesByCategory('package');
+		return $this->render(false, ['files' => $files]);
+	}
+
+	/**
+	 * Install method
+	 *
+	 * @return render
+	 */
+	public function weights(){
+		$version = Bag::route()->version;
+		$docBal = new DocBusiness();
+		$files = $docBal->getFilesByCategory('weight');
 		return $this->render(false, ['files' => $files]);
 	}
 }

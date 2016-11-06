@@ -8,9 +8,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-3">
+                <ul>
                 <?php foreach ($menu as $key => $value) { ?>
-                    <i class="<?php echo $value->icon ?>"></i> <a href="<?php echo URL::to("/docs/{$version}.x/posts-".$value->id.".html") ?>"><?php echo $value->title ?></a>
+                   <li> <i class="<?php echo $value->icon ?>"></i> <a href="<?php echo URL::to("/docs/{$version}.x/posts-".$value->id.".html") ?>"><?php echo $value->title ?></a></li>
                 <?php } ?>
+                </ul>
             </div>
             <div class="col-md-9" style="border-left: 1px solid #ddd">
             <?php if(!$doc){  ?>

@@ -12,24 +12,29 @@
               <i class="fa fa-times"></i></button>
           </div>
         </div>
+        
         <?php echo Form::open('doc'); ?>
           <?php echo Form::hidden('id'); ?>
           <div class="box-body pad">
             <div class="form-group">
               <label for="formtitle">Title</label>
               <?php echo Form::input('title', ['class' => 'form-control']); ?>
+              <span class="text-danger"><?php echo Form::message('title'); ?></span>
             </div>
             <div class="form-group">
               <label for="formcategory">Category</label>
               <?php echo Form::select('category_id', ['1' => 'Framework', '2' => 'Package', '3' => 'Weight'],['class' => 'form-control', 'id' => "formcategory"]); ?>
+              <span class="text-danger"><?php echo Form::message('category_id'); ?></span>
             </div>
             <div class="form-group">
               <label for="formversion">Version</label>
               <?php echo Form::select('version_id', ['1' => '1.x'], ['class' => 'form-control', 'id' => "formversion"]); ?>
+              <span class="text-danger"><?php echo Form::message('version_id'); ?></span>
             </div>
             <div class="form-group">
               <label for="formcontent">Content</label>
               <?php echo Form::textarea('content', ['class' => 'form-control', 'id' => 'formcontent']); ?>
+              <span class="text-danger"><?php echo Form::message('content'); ?></span>
             </div>
           </div>
           <div class="box-footer">

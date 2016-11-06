@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS categories
 	id 			INT PRIMARY KEY AUTO_INCREMENT,
 	name		VARCHAR(50)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO categories(name) VALUES ('framework'),('packages'),('weights');
+INSERT INTO categories(name) VALUES ('framework'),('package'),('weight');
 
 -- Create docs table
 CREATE TABLE IF NOT EXISTS docs
@@ -53,7 +53,9 @@ CREATE TABLE IF NOT EXISTS files
 	title			VARCHAR(50),
 	category_id 	INT,
 	version_id		INT,
+	doc_id			INT,
 	FOREIGN KEY (version_id) REFERENCES versions(id),
+	FOREIGN KEY (doc_id) REFERENCES docs(id),
 	FOREIGN KEY (category_id) REFERENCES categories(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO files(title, category_id, version_id) VALUES ('Release 1.0.0', 1, 1);

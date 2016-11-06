@@ -160,10 +160,12 @@ class Bag{
 		if(!static::$pattern){
 			$pattern = static::config()->get('core.pattern');
 			if(!class_exists($pattern)){
-				$pattern = "\Overfull\Patterns\{$pattern}\PatternHandler";
-				if(!class_exists($pattern)){
+				$__pattern = "\Overfull\Patterns\{$pattern}\PatternHandler";
+				if(!class_exists($__pattern)){
 					throw new PatternNotFoundException($pattern);
 				}
+
+				$pattern = $__pattern;
 			}
 
 			static::$pattern = new $pattern();
