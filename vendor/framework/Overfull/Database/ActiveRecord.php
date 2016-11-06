@@ -64,7 +64,7 @@ abstract class ActiveRecord implements IActiveRecord{
 
 		if ( !isset(Bag::$dbStore->{$connectionName}) ) {
 			// Create new connect
-			Bag::$dbStore->{$connectionName} = new \PDO("{$connectionInfo['type']}:dbname={$connectionInfo['dbname']};host={$connectionInfo['host']}", $connectionInfo['user'], $connectionInfo['password']);
+			Bag::$dbStore->{$connectionName} = new \PDO("{$connectionInfo['type']}:dbname={$connectionInfo['dbname']};host={$connectionInfo['host']};charset={$connectionInfo['encoding']}", $connectionInfo['user'], $connectionInfo['password']);
 
 			if(!Bag::$dbStore->{$connectionName}){
 				throw new ConnectionException($connectionName);

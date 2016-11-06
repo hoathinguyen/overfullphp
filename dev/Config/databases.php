@@ -14,15 +14,14 @@ return [
 			'encoding' => 'utf8'
 		],
 
-		'test' => [
-			'user' => 'root',
-			'password' => '',
+		'server' => [
+			'user' => 'inamlim9_overful',
+			'password' => 'Tltttml14112109',
 			'port' => '80',
-			'host' => 'localhost',
+			'host' => '103.18.6.177',
 			'type' => 'mysql', //pgsql
-			'dbname' => 'viewers',
+			'dbname' => 'inamlim9_overfull',
 			'encoding' => 'utf8'
 		]
-		
 	]
 ];

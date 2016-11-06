@@ -8,7 +8,6 @@
 */
 namespace Dev\Home\Business;
 use Dev\Home\Models\Doc;
-use Dev\Home\Models\File;
 
 class DocBusiness{
 
@@ -21,7 +20,7 @@ class DocBusiness{
 	public function getDocListByVersion($version){
 		return Doc::instance()
 				->schema()
-				->columns('docs.*')
+				->columns(['docs.title', 'docs.id', 'docs.icon'])
 				->join('versions', 'versions.id = docs.version_id')
 				->join('categories', 'categories.id = docs.category_id')
 				->where(['versions.id', '=', $version.'.x'])
@@ -60,21 +59,5 @@ class DocBusiness{
 				->where(['versions.id', '=', $version.'.x'])
 				->andWhere(['docs.id', '=', $id])
 				->one();
-	}
-
-	/**
-	 * Get files by category
-	 *
-	 * @param string name
-	 * @return object list
-	 */
-	public function getFilesByCategory($name){
-		return File::instance()
-				->schema()
-				->columns(['files.*', 'versions.name'])
-				->join('categories', 'categories.id = files.category_id')
-				->join('versions', 'versions.id = files.version_id')
-				->where(['categories.name', 'LIKE', $name])
-				->all();
 	}
 }

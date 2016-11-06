@@ -31,26 +31,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to get the
-desired effect
-|---------------------------------------------------------|
-| SKINS         | skin-blue                               |
-|               | skin-black                              |
-|               | skin-purple                             |
-|               | skin-yellow                             |
-|               | skin-red                                |
-|               | skin-green                              |
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | fixed                                   |
-|               | layout-boxed                            |
-|               | layout-top-nav                          |
-|               | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
 <body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper">
 
@@ -184,7 +164,7 @@ desired effect
                 <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
+                  <?php echo \Bag::package()->auth->load()->username ?>
                   <small>Member since Nov. 2012</small>
                 </p>
               </li>
@@ -254,10 +234,8 @@ desired effect
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu">
         <li class="header">HEADER</li>
-        <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-
         <li><a href="<?php echo URL::to('/docs'); ?>"><i class="fa fa-link"></i> <span>Documents</span></a></li>
+        <li><a href="<?php echo URL::to('/files'); ?>"><i class="fa fa-link"></i> <span>Files</span></a></li>
 
         <!-- <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Documents</span>

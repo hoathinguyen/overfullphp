@@ -10,6 +10,8 @@ namespace Dev\Home\Controllers;
 use Overfull\Patterns\MVC\Controller;
 use Bag;
 use Dev\Home\Business\DocBusiness;
+use Dev\Home\Business\FileBusiness;
+
 /**
 * 
 */
@@ -56,32 +58,44 @@ class DocsController extends Controller{
 	 */
 	public function install(){
 		$version = Bag::route()->version;
-		$docBal = new DocBusiness();
+		$docBal = new FileBusiness();
 		$files = $docBal->getFilesByCategory('framework');
 		return $this->render(false, ['files' => $files]);
 	}
 
 	/**
-	 * Install method
+	 * packages method
 	 *
 	 * @return render
 	 */
 	public function packages(){
 		$version = Bag::route()->version;
-		$docBal = new DocBusiness();
+		$docBal = new FileBusiness();
 		$files = $docBal->getFilesByCategory('package');
 		return $this->render(false, ['files' => $files]);
 	}
 
 	/**
-	 * Install method
+	 * weights method
 	 *
 	 * @return render
 	 */
 	public function weights(){
 		$version = Bag::route()->version;
-		$docBal = new DocBusiness();
+		$docBal = new FileBusiness();
 		$files = $docBal->getFilesByCategory('weight');
+		return $this->render(false, ['files' => $files]);
+	}
+
+	/**
+	 * patterns method
+	 *
+	 * @return render
+	 */
+	public function patterns(){
+		$version = Bag::route()->version;
+		$docBal = new FileBusiness();
+		$files = $docBal->getFilesByCategory('package');
 		return $this->render(false, ['files' => $files]);
 	}
 }

@@ -8,19 +8,20 @@
 */
 namespace Dev\Home\Controllers;
 use Overfull\Patterns\MVC\Controller;
+use Dev\Home\Business\FileBusiness;
 use Bag;
-use Dev\Home\Business\DocBusiness;
 
-class HomeController extends Controller{
+class FilesController extends Controller{
 	protected $otp = [
 		'layout' => 'home'
 	];
-	
-	public function index(){
-		return $this->render();
-	}
-
-	public function services(){
-		
+	/**
+	 * Download package
+	 */
+	public function download(){
+		$id = Bag::route()->id;
+		$fileBusiness = new FileBusiness();
+		$file = $fileBusiness->getFileById($id);
+		return $this->render('download', ['file' => $file]);
 	}
 }

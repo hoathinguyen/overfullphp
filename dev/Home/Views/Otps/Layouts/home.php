@@ -50,16 +50,23 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="page-scroll" href="<?php echo URL::to('/install.html') ?>">Install</a>
-                    </li>
-                    <li>
                         <a class="page-scroll" href="<?php echo URL::to('/docs/1.x/index.html') ?>">Docs</a>
                     </li>
+                    <li>
+                        <a class="page-scroll" href="<?php echo URL::to('/install.html') ?>">Install</a>
+                    </li>
+                    
                     <li>
                         <a class="page-scroll" href="<?php echo URL::to('/packages/1.x/index.html') ?>">Packages</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="<?php echo URL::to('/weights/1.x/index.html') ?>">Weights</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="<?php echo URL::to('/patterns/1.x/index.html') ?>">Patterns</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="<?php echo URL::to('/services.html') ?>">Services</a>
                     </li>
                 </ul>
             </div>

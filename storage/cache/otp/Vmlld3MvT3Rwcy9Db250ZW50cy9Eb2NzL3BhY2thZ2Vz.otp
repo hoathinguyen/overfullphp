@@ -7,7 +7,7 @@
 		<?php } ?>
 		<?php foreach ($files as $key => $value) { ?>
 			<li class="list-group-item">
-				<a href="<?php echo URL::to('/download/docs/'.$value->id.'.html') ?>" class="btn btn-success badge" target="_blank">Download</a>
+				<a href="<?php echo URL::to('/download/'.$value->id.'/package.html') ?>" class="btn btn-success badge" target="_blank">Download</a>
 				<i class="glyphicon glyphicon-pushpin"></i> [<a href="<?php echo URL::to('/docs/'.$value->name.'/index.html') ?>"><?php echo $value->name; ?></a>] <?php echo $value->title; ?>
 			</li>
     	<?php } ?>

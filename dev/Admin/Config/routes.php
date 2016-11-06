@@ -25,6 +25,15 @@ return array(
 			['delete/<:integer>', 'any', 'controller=DocsController;method=delete']
 		],
 
+		// Set url for docs
+		'files' => [
+			['<:empty>', 'any', 'controller=FilesController;method=index'],
+			['create', 'any', 'controller=FilesController;method=create'],
+			['edit/<:integer>', 'any', 'controller=FilesController;method=edit'],
+			['detail/<:integer>', 'any', 'controller=FilesController;method=detail'],
+			['delete/<:integer>', 'any', 'controller=FilesController;method=delete']
+		],
+
 		'ajax' => [
 			'categories' => [
 				['list.json', 'any', 'controller=CategoriesController;method=ajaxCategories']
