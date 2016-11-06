@@ -1,4 +1,4 @@
-<?php echo $this->render('Elements\docs_navi', ['sub' => 'Index', 'folder' => 'Files']); ?>
+<?php echo $this->render('Elements/docs_navi', ['sub' => 'Index', 'folder' => 'Files']); ?>
 <section class="content">
     <div class="row">
         <div class="col-xs-12">

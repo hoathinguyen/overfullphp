@@ -165,7 +165,7 @@ class Application extends BaseObject{
 						}
 
 						if($isValid){
-							$route = explode('/', $key);
+							//$route = explode('/', $key);
 							$this->root = $value['root'];
 							$this->namespace = $value['namespace'];
 							Bag::config()->set('app', [

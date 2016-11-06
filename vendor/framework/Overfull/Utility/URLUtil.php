@@ -22,7 +22,6 @@ class URLUtil extends BaseUtil{
 			$route = Bag::config()->get('app.route');
 
 			$name = ($route == '' ? '' : '/'.$route).'/'.$name;
-
 		}
 
 		return Bag::request()->schema().Bag::request()->host().$name;
@@ -34,9 +33,16 @@ class URLUtil extends BaseUtil{
 	 * @param string $name
 	 * @return string
 	 */
-	public static function to($name){
+	public static function to($name, $inRoot = true){
 		if ( substr($name, 0, 1) != '/') {
-			// todo
+			$route = Bag::config()->get('app.route');
+
+			$name = ($route == '' ? '' : '/'.$route).'/'.$name;
+
+		} else if($inRoot){
+			$route = Bag::config()->get('app.route');
+
+			$name = ($route == '' ? '' : '/'.$route).$name;
 		}
 
 		return Bag::request()->schema().Bag::request()->host().$name;
