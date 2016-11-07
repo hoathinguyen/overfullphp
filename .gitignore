@@ -3,3 +3,6 @@ vendor/composer
 vendor/autoload.php
 config/databases.php
 src
+storeage
+#public/css
+#public/plugins
