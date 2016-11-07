@@ -8,7 +8,7 @@
 namespace Overfull\Foundation\Base;
 use Overfull\Foundation\Base\IBaseObject;
 
-class BaseObject implements IBaseObject{
+abstract class BaseObject implements IBaseObject{
 	/**
 	* Get instance class name of object
 	*

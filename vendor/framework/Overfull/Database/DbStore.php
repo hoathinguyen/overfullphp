@@ -36,4 +36,27 @@ class DbStore extends BaseObject{
 		}
 		return $this->__connections[$name];
 	}
+
+	/**
+     * Determine if an attribute exists on the model.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function __isset($key){
+        //return (isset($this->attributes[$key]) || isset($this->relations[$key])) ||
+          //      ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key)));
+    	return isset($this->__connections[$key]);
+    }
+
+    /**
+     * Unset an attribute on the model.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function __unset($key){
+        //unset($this->attributes[$key], $this->relations[$key]);
+        unset($this->__connections[$key]);
+    }
 }

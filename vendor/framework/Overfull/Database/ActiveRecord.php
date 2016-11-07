@@ -11,9 +11,6 @@ use Overfull\Database\Schema;
 use Bag;
 use Overfull\Exception\SchemaNotFoundException;
 
-/**
-* 
-*/
 abstract class ActiveRecord implements IActiveRecord{
 	protected $primaryKey = 'id';
 
@@ -23,15 +20,15 @@ abstract class ActiveRecord implements IActiveRecord{
 
 	protected $attributes = [];
 
+    protected $oldAttributes = [];
+
 	protected $schema = null;
 
-	protected $connectionName = null;
+	protected $connection = null;
 
-	protected $connectionInfo = [];
-
-	function __construct($connectionName, $connectionInfo){
-		$this->connect($connectionName, $connectionInfo);
-	}
+	function __construct( $use = false ){
+        $this->connect($use);
+    }
 
 	/**
      * Get instance of this class
@@ -50,30 +47,42 @@ abstract class ActiveRecord implements IActiveRecord{
 	 * Connect to database
 	 *
 	 * @param string $connectionName
-	 * @param string $user
-	 * @param string $password
-	 * @param string $type
-	 * @param string $host
-	 * @param string $port
-	 * @param string $dnname
+	 * @param array $connectionInfo
 	 * @return void
 	 */
-	public final function connect( $connectionName, $connectionInfo){
-		$this->connectionName = $connectionName;
-		$this->connectionInfo = $connectionInfo;
+	public final function connect($use = false){
 
-		if ( !isset(Bag::$dbStore->{$connectionName}) ) {
+        $databases = Bag::config()->get('databases');
+
+        if ( !$use ) {
+            $use = $databases['use'];
+        }
+
+        if(!isset($databases['connections'][$use])
+            || empty($databases['connections'][$use]["type"])
+            || empty($databases['connections'][$use]["host"])
+            || empty($databases['connections'][$use]["dbname"])
+            || empty($databases['connections'][$use]["user"])
+            || !isset($databases['connections'][$use]["password"])){
+            throw new DatabaseConfigException($use);
+        }
+
+		if ( !isset(Bag::dbStore()->{$use}) ) {
 			// Create new connect
-			Bag::$dbStore->{$connectionName} = new \PDO("{$connectionInfo['type']}:dbname={$connectionInfo['dbname']};host={$connectionInfo['host']};charset={$connectionInfo['encoding']}", $connectionInfo['user'], $connectionInfo['password']);
+			Bag::dbStore()->{$use} = new \PDO("{$databases['connections'][$use]['type']}:dbname={$databases['connections'][$use]['dbname']};host={$databases['connections'][$use]['host']};charset={$databases['connections'][$use]['encoding']}", $databases['connections'][$use]['user'], $databases['connections'][$use]['password']);
 
-			if(!Bag::$dbStore->{$connectionName}){
-				throw new ConnectionException($connectionName);
+			if(!Bag::dbStore()->{$use}){
+				throw new ConnectionException($use);
 			}
-
-			Bag::$dbStore->{$connectionName}->setAttribute( \PDO::ATTR_EMULATE_PREPARES, false );
-			
-			$this->schema(true);
 		}
+
+        $this->connection = Bag::dbStore()->{$use};
+
+        $this->connection->setAttribute( \PDO::ATTR_EMULATE_PREPARES, false );
+
+        $this->schema($databases['connections'][$use]['type']);
+
+        return $this;
 	}
 
 	/**
@@ -81,15 +90,15 @@ abstract class ActiveRecord implements IActiveRecord{
      *
      * @return object
      */
-	public final function schema($reset = false){
-        if(!$this->schema || $reset){
-			$chemaClass = "\Overfull\Database\Schema\\".ucfirst($this->connectionInfo['type'])."\Schema";
+	public final function schema($type = false){
+        if(!empty($type)){
+			$chemaClass = "\Overfull\Database\Schema\\".ucfirst($type)."\Schema";
 
 			if(!class_exists($chemaClass)){
-				throw new SchemaNotFoundException($query);
+				throw new SchemaNotFoundException($chemaClass);
 	        }
 
-	        $this->schema = new $chemaClass(Bag::$dbStore->{$this->connectionName}, get_class($this));
+	        $this->schema = new $chemaClass($this->connection, get_class($this));
 	        $this->schema->table($this->getTableName());
 		}
 
@@ -103,7 +112,7 @@ abstract class ActiveRecord implements IActiveRecord{
 	 */
 	public function beginTransaction(){
 		try {
-			Bag::$dbStore->{$this->connectionName}->beginTransaction();
+			$this->connection->beginTransaction();
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage(), 112);
 		}
@@ -116,7 +125,7 @@ abstract class ActiveRecord implements IActiveRecord{
 	 */
 	public function rollBack(){
 		try {
-			Bag::$dbStore->{$this->connectionName}->rollBack();
+			$this->connection->rollBack();
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage(), 112);
 		}
@@ -129,24 +138,11 @@ abstract class ActiveRecord implements IActiveRecord{
 	 */
 	public function commit(){
 		try {
-			Bag::$dbStore->{$this->connectionName}->commit();
+			$this->connection->commit();
 		} catch(Exception $e) {
 			throw new Exception($e->getMessage(), 112);
 		}
 	}
-
-	/**
-     * Handle dynamic static method calls into the method.
-     *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
-     */
-    // public static function __callStatic($method, $parameters){
-    //     $instance = new static;
-
-    //     return call_user_func_array([$instance, $method], $parameters);
-    // }
 
     /**
      * Get primary key method
@@ -200,16 +196,7 @@ abstract class ActiveRecord implements IActiveRecord{
      * @return array
      */
     public function save(){
-        if(!empty($this->attributes[$this->primaryKey])){
-            $values = $this->attributes;
-            unset($values[$this->primaryKey]);
-            // Update
-            return $this->schema()
-                ->columns(array_keys($values))
-                ->values($values)
-                ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
-                ->update();
-        } else {
+        if($this->isNew()){
             if($this->autoIncrement){
                 $values = $this->attributes;
                 unset($values[$this->primaryKey]);
@@ -222,6 +209,15 @@ abstract class ActiveRecord implements IActiveRecord{
                 ->columns(array_keys($values))
                 ->values($values)
                 ->insert();
+        } else {
+            $values = $this->attributes;
+            unset($values[$this->primaryKey]);
+            // Update
+            return $this->schema()
+                ->columns(array_keys($values))
+                ->values($values)
+                ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
+                ->update();
         }
     }
 
@@ -231,11 +227,20 @@ abstract class ActiveRecord implements IActiveRecord{
      * @return array
      */
     public function delete(){
-        if(!empty($this->attributes[$this->primaryKey])){
+        if(!$this->isNew()){
             return $this->schema()
                 ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
                 ->delete();
         }
+    }
+
+    /**
+     * jsonSerialize method, which is implement from jsonSerialize, to json_encode .
+     *
+     * @return array
+     */
+    public function isNew(){
+        return empty($this->attributes[$this->getPrimaryKey()]);
     }
 
     /**
