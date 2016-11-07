@@ -26,7 +26,7 @@ class Application extends BaseObject{
 	*
 	* @param string appRoot : root of project
 	*/
-	public function __construct($appRoot = 'dev/App', $appNamespace = 'Dev\App'){
+	public function __construct($appRoot = 'src/App', $appNamespace = 'src\App'){
 		$this->root = $appRoot;
 		$this->namespace = $appNamespace;
 		$this->getDirectionConfig();
@@ -87,28 +87,28 @@ class Application extends BaseObject{
 	private function getConfig(){
 		// Get config for database
 		Bag::config()->set('databases', [
-			ROOT.DS.'dev'.DS.'Config'.DS.'databases.php',
+			ROOT.DS.'config'.DS.'databases.php',
 			ROOT.DS.$this->root.DS.'Config'.DS.'databases.php'
 		], true, false);
 
 		//Bag::config()->set('alias', ROOT.DS.$this->root.DS.'config'.DS.'alias.php', true);
 		Bag::config()->set('packages', [
-			ROOT.DS.'dev'.DS.'Config'.DS.'packages.php',
+			ROOT.DS.'config'.DS.'packages.php',
 			ROOT.DS.$this->root.DS.'Config'.DS.'packages.php'
 		], true, false);
 
 		Bag::config()->set('core', [
-			ROOT.DS.'dev'.DS.'Config'.DS.'core.php',
+			ROOT.DS.'config'.DS.'core.php',
 			ROOT.DS.$this->root.DS.'Config'.DS.'core.php'
 		], true, false);
 
 		Bag::config()->set('debug', [
-			ROOT.DS.'dev'.DS.'Config'.DS.'debug.php',
+			ROOT.DS.'config'.DS.'debug.php',
 			ROOT.DS.$this->root.DS.'Config'.DS.'debug.php'
 		], true, false);
 
 		Bag::config()->set('routes', [
-			ROOT.DS.'dev'.DS.'Config'.DS.'routes.php',
+			ROOT.DS.'config'.DS.'routes.php',
 			ROOT.DS.$this->root.DS.'Config'.DS.'routes.php'
 		], true, false);
 
@@ -120,7 +120,7 @@ class Application extends BaseObject{
 	* This method will be call config object and set value config to this config object.
 	*/
 	private function getDirectionConfig(){
-		Bag::config()->set('app-config', ROOT.DS.'dev'.DS.'Config'.DS.'app.php', true);
+		Bag::config()->set('app-config', ROOT.DS.'config'.DS.'app.php', true);
 
 		// Check if have config in app
 		if(!empty($app = Bag::config()->get('app-config'))){

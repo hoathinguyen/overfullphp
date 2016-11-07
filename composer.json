@@ -2,7 +2,7 @@
     "autoload": {
     	"psr-4": {
     		"Overfull\\": "vendor/framework/Overfull",
-            "Dev\\": "dev",
+            "Src\\": "src",
             "Weights\\": "weights",
             "Packages\\": "vendor/packages"
     	},

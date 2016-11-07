@@ -1,4 +1,5 @@
 #ignore composer file and folder
 vendor/composer
 vendor/autoload.php
-dev/Config/databases.php
+config/databases.php
+src
