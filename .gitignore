@@ -1,7 +1,10 @@
 #ignore composer file and folder
 vendor/composer
 vendor/autoload.php
-src
+src/Admin
+src/FirstAdmin
+src/Home
+src/temp.php
 storeage
 public/css
 public/plugins
