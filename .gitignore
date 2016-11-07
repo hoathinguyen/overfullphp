@@ -1,7 +1,6 @@
 #ignore composer file and folder
 vendor/composer
 vendor/autoload.php
-config/databases.php
 src
 storeage
 public/css
