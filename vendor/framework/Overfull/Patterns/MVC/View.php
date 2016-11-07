@@ -156,7 +156,7 @@ class View extends Otp implements IView{
 	protected final function redirect($gift){
 		Bag::$response->format = ResponseFormat::HTML;
 		$html = '<!DOCTYPE html>
-				<html><head><title>redirect</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift['data']).'" /></head><body></body></html>';
+				<html><head><title>Redirecting...</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift['data']).'" /></head><body></body></html>';
 
 		return $html;
 	}
