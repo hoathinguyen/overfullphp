@@ -1,9 +1,10 @@
 <?php
-/*___________________________________________________________________________
-* The Request header object class
-* This object handle some business about routing. You can rewrite url mapping
-* with your controller or filter ...
-* ___________________________________________________________________________
+/*----------------------------------------------------
+* Filename: ResponseFormat.php
+* Author: Overfull.net
+* Date: 2016/05/20
+* Description:
+* ----------------------------------------------------
 */
 namespace Overfull\Http\Response;
 

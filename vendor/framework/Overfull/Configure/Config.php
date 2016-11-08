@@ -14,9 +14,8 @@ class Config extends BaseObject{
 	private $configs = array();
 
 	/**
-	 * get value of config
+	 * Get value of config
 	 *
-	 * @date 2016/05/21
 	 * @param string $name
 	 */
 	public function get( $name = '' ){

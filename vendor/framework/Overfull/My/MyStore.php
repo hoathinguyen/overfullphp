@@ -3,7 +3,7 @@
 * Filename: MyStore.php
 * Author: Overfull.net
 * Date: 2016/10/25
-* Description: The Package store
+* Description: The my store, which save mixed data
 * ----------------------------------------------------
 */
 namespace Overfull\My;

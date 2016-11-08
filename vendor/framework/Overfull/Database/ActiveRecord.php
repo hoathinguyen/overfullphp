@@ -1,33 +1,48 @@
 <?php
 /*----------------------------------------------------
-* DbContext object class
-* object for all context, which connect to database
+* Filename: ActiveRecord.php
+* Author: Overfull.net
+* Date: 2016/10/25
+* Description: The ActiveRecord will be use as a row
+* in table of database.
 * ----------------------------------------------------
 */
 namespace Overfull\Database;
+use Bag;
+use Overfull\Database\Schema;
 use Overfull\Database\Foundation\IActiveRecord;
 use Overfull\Exception\ConnectionException;
-use Overfull\Database\Schema;
-use Bag;
 use Overfull\Exception\SchemaNotFoundException;
+use Overfull\Foundation\Base\BaseObject;
 
-abstract class ActiveRecord implements IActiveRecord{
+abstract class ActiveRecord extends BaseObject implements IActiveRecord{
+    // The primary key of table
 	protected $primaryKey = 'id';
 
+    // The flag as auto increment in database
     protected $autoIncrement = true;
 	
+    // The table name in database
 	protected $tableName = null;
 
+    // All of columns in this table will be save here
 	protected $attributes = [];
 
+    // The last value of table
     protected $oldAttributes = [];
 
+    // The schema which will access database
 	protected $schema = null;
 
+    // The connection, which connect between db and php
 	protected $connection = null;
 
 	function __construct( $use = false ){
         $this->connect($use);
+    }
+
+    protected function beforeSave(){
+
     }
 
 	/**
@@ -35,10 +50,10 @@ abstract class ActiveRecord implements IActiveRecord{
      *
      * @param string $use: name of connection,
      * which is config in database.php
-     * @return object
+     * @return current object
      */
 	public static function instance($use = false){
-		$class = get_called_class();
+		$class = static::className();
 		$model = new $class($use);
 		return $model;
 	}
@@ -91,6 +106,7 @@ abstract class ActiveRecord implements IActiveRecord{
      * @return object
      */
 	public final function schema($type = false){
+        // Check if type is exists.
         if(!empty($type)){
 			$chemaClass = "\Overfull\Database\Schema\\".ucfirst($type)."\Schema";
 
@@ -108,27 +124,21 @@ abstract class ActiveRecord implements IActiveRecord{
 	/**
 	 * Begin transaction method
 	 *
-	 * @return void
+	 * @return instance
 	 */
 	public function beginTransaction(){
-		try {
-			$this->connection->beginTransaction();
-		} catch(Exception $e) {
-			throw new Exception($e->getMessage(), 112);
-		}
+		$this->connection->beginTransaction();
+		return $this;
 	}
 
 	/**
 	 * Rollback transaction
 	 *
-	 * @return void
+	 * @return instance
 	 */
 	public function rollBack(){
-		try {
-			$this->connection->rollBack();
-		} catch(Exception $e) {
-			throw new Exception($e->getMessage(), 112);
-		}
+		$this->connection->rollBack();
+        return $this;
 	}
 	
 	/**
@@ -195,7 +205,9 @@ abstract class ActiveRecord implements IActiveRecord{
      *
      * @return array
      */
-    public function save(){
+    public function save($isExecute = true){
+        $this->beforeSave();
+        
         if($this->isNew()){
             if($this->autoIncrement){
                 $values = $this->attributes;
@@ -208,7 +220,7 @@ abstract class ActiveRecord implements IActiveRecord{
             return $this->schema()
                 ->columns(array_keys($values))
                 ->values($values)
-                ->insert();
+                ->insert($isExecute);
         } else {
             $values = $this->attributes;
             unset($values[$this->primaryKey]);
@@ -217,7 +229,7 @@ abstract class ActiveRecord implements IActiveRecord{
                 ->columns(array_keys($values))
                 ->values($values)
                 ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
-                ->update();
+                ->update($isExecute);
         }
     }
 

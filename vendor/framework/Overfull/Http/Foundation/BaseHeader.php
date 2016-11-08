@@ -1,17 +1,15 @@
 <?php
-/*___________________________________________________________________________
-* The Request object class
-* This object handle some business about routing. You can rewrite url mapping
-* with your controller or filter ...
-* ___________________________________________________________________________
+/*----------------------------------------------------
+* Filename: BaseHeader.php
+* Author: Overfull.net
+* Date: 2016/05/20
+* Description:
+* ----------------------------------------------------
 */
 namespace Overfull\Http\Foundation;
 
 use Overfull\Http\Foundation\BaseHttp;
 
-/**
-* 
-*/
-class BaseHeader extends BaseHttp{
+abstract class BaseHeader extends BaseHttp{
 	
 }

@@ -1,9 +1,11 @@
 <?php
-/*___________________________________________________________________________
-* The Base interface
-* This class is highest in framework. First, this class will be call,
+/*----------------------------------------------------
+* Filename: BaseObject.php
+* Author: Overfull.net
+* Date: 2016/10/25
+* Description: This class is highest in framework. First, this class will be call,
 * and run some require and logic of framework
-* ___________________________________________________________________________
+* ----------------------------------------------------
 */
 namespace Overfull\Foundation\Base;
 
@@ -13,6 +15,6 @@ interface IBaseObject{
 	*
 	* return name of class (include namespace)
 	*/
-	function className();
+	static function className();
 }
 ?>

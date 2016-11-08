@@ -1,9 +1,11 @@
 <?php
-/*___________________________________________________________________________
-* The Base object class
-* This class is highest in framework. First, this class will be call,
+/*----------------------------------------------------
+* Filename: BaseObject.php
+* Author: Overfull.net
+* Date: 2016/10/25
+* Description: This class is highest in framework. First, this class will be call,
 * and run some require and logic of framework
-* ___________________________________________________________________________
+* ----------------------------------------------------
 */
 namespace Overfull\Foundation\Base;
 use Overfull\Foundation\Base\IBaseObject;
@@ -14,8 +16,9 @@ abstract class BaseObject implements IBaseObject{
 	*
 	* return name of class (include namespace)
 	*/
-	public function className(){
-		return get_class($this);
+	public static function className(){
+		//return get_class($this);
+		return get_called_class();
 	}
 }
 ?>

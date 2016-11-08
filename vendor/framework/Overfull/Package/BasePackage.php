@@ -3,8 +3,9 @@ namespace Overfull\Package;
 
 use Overfull\Foundation\Base\BaseObject;
 
-class BasePackage extends BaseObject{
-	private $attributes = [];
+abstract class BasePackage extends BaseObject{
+	protected $attributes = [];
+	
 	/**
 	* __get method
 	*
@@ -12,7 +13,6 @@ class BasePackage extends BaseObject{
 	* @return value
 	*/
 	public function __get($name){
-		//
 		return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
 	}
 
@@ -23,7 +23,6 @@ class BasePackage extends BaseObject{
 	* @return value
 	*/
 	public function __set($name, $value){
-		//Nothing
 		$this->attributes[$name] = $value;
 	}
 

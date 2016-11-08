@@ -1,6 +1,9 @@
 <?php
 /*----------------------------------------------------
-* Query object class
+* Filename: BaseQueryBuilder.php
+* Author: Overfull.net
+* Date: 2016/10/25
+* Description: The BaseQueryBuilder will return syntax to execute
 * ----------------------------------------------------
 */
 namespace Overfull\Database\Schema\Foundation;
@@ -61,8 +64,6 @@ abstract class BaseQueryBuilder implements IBaseQueryBuilder{
      * @return bool
      */
     public function __isset($key){
-        //return (isset($this->attributes[$key]) || isset($this->relations[$key])) ||
-          //      ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key)));
     	return isset($this->attributes[$key]);
     }
 
@@ -73,7 +74,6 @@ abstract class BaseQueryBuilder implements IBaseQueryBuilder{
      * @return void
      */
     public function __unset($key){
-        //unset($this->attributes[$key], $this->relations[$key]);
         unset($this->attributes[$key]);
     }
 

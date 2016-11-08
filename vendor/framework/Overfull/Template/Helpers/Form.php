@@ -58,7 +58,7 @@ class Form extends Helper{
 		// Create message for model
 		if(!empty($messages)){
 			static::$messages = $messages;
-		} else {
+		} elseif(is_string($model)){
 			static::$messages = Bag::myStore()->{"message_for_$model"};
 		}
 
