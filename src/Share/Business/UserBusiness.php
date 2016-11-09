@@ -1,14 +1,13 @@
 <?php
 /*----------------------------------------------------
-* Filename: DocBusiness.php
+* Filename: UserBusiness.php
 * Author: Overfull.net
 * Date: 2016/10/25
-* Description: The business about doc
+* Description: The business about user
 * ----------------------------------------------------
 */
-namespace Src\Admin\Business;
-use Src\Admin\Models\Doc;
-use Src\Admin\Models\File;
+namespace Src\Share\Business;
+use Src\Share\Models\User;
 
 class UserBusiness{
 	

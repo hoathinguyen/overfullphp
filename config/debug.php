@@ -1,4 +1,4 @@
 <?php
 return [
-	'display-errors' => true
+	'display-errors' => false
 ];

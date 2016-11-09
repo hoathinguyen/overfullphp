@@ -9,8 +9,10 @@
 	</div>
 	<div style="padding: 10px; border: 1px solid #ddd">
 		<b>Message:</b> <?php echo $message; ?>
+		<?php if($isShowDetail === true) {?>
 		<br/><b>File:</b> <?php echo $file; ?>
 		<br/><b>Line:</b> <?php echo $line; ?>
+		<?php } ?>
 	</div>
 	<?php if($isShowDetail === true && $listStack) {?>
 	<div style="padding: 10px; border: 1px solid #ddd; margin-top: 10px">

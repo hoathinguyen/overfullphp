@@ -6,13 +6,13 @@
 * Description: The controller to handle users
 * ----------------------------------------------------
 */
-namespace Src\Admin\Controllers;
-use Src\Admin\Controllers\AdminController;
+namespace Src\Share\Controllers;
+use Src\Share\Controllers\ShareController;
 use Bag;
 /**
 * 
 */
-class HomeController extends AdminController{
+class HomeController extends ShareController{
 	public function index(){
 		if(!Bag::package()->auth->isLogged()){
 			return $this->redirect('/login.html');

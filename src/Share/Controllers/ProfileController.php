@@ -6,20 +6,19 @@
 * Description: The controller to handle users
 * ----------------------------------------------------
 */
-namespace Src\Admin\Controllers;
-use Src\Admin\Controllers\AdminController;
-use Src\Admin\Business\UserBusiness;
-use Src\Admin\Models\User;
+namespace Src\Share\Controllers;
+use Src\Share\Controllers\ShareController;
+use Src\Share\Business\UserBusiness;
 use Bag;
 /**
 * 
 */
-class ProfileController extends AdminController{
-	private $userBusiness = null;//new UserBusiness();
+class ProfileController extends ShareController{
+	private $userBusiness = null;
 
-	// public function __construct(UserBusiness $userBusiness){
-	// 	$this->userBusiness = $userBusiness;
-	// }
+	public function __construct(){
+		$this->userBusiness = new UserBusiness();
+	}
 
 	public function beforeAction(){
 		if (Bag::package()->auth->isLogged()){
@@ -35,8 +34,6 @@ class ProfileController extends AdminController{
 	public function login(){
 		// Check if request is post
 		if(Bag::request()->isMethod('post')){
-			//$data = Bag::request()->post();
-
 			if(Bag::package()->auth->login()){
 				return $this->redirect('/');
 			} else {

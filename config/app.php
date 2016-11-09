@@ -28,11 +28,11 @@
 
 return [
 	'share.overfull.dev' => [
-		'root' => 'src\Share',
+		'root' => 'src/Share',
 		'namespace' => 'Src\Share'
 	],
 
-	'admin.overfull.dev' => 'root=src\FirstAdmin;namespace=Src\FirstAdmin',
+	'admin.overfull.dev' => 'root=src/FirstAdmin;namespace=Src\FirstAdmin',
 
 	// 'admin.overfull.dev' => function(){
 	// 	$page = \Bag::request()->get('uid');
@@ -59,22 +59,22 @@ return [
 	// },
 
 	'framework.admin.overfull.dev' => [
-		'root' => 'src\Admin',
+		'root' => 'src/Admin',
 		'namespace' => 'Src\Admin'
 	],
 
 	'share.admin.overfull.dev' => [
-		'root' => 'src\ShareAdmin',
+		'root' => 'src/ShareAdmin',
 		'namespace' => 'Src\ShareAdmin'
 	],
 
 	'[www.]overfull.dev' => [
-		'root' => 'src\Home',
+		'root' => 'src/Home',
 		'namespace' => 'Src\Home'
 	],
 
 	'[{sub}.]{domain}.{ext}' => [
-		'root' => 'src\Home',
+		'root' => 'src/Home',
 		'namespace' => 'Src\Home'
 	],
 ];
