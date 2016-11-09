@@ -1,0 +1,17 @@
+/* Custom css for menu of bootstrap*/
+.list-group li{
+	padding: 5px;
+	border: none;
+}
+
+.list-group li:not(:last-child){
+	border-bottom: 1px dashed #ddd;
+}
+
+.list-group-item.active,
+.list-group-item.active:focus,
+.list-group-item.active:hover{
+	border-radius: 0;
+	background: #eee;
+	color: #eb3812;
+}

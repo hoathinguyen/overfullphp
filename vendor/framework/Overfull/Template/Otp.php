@@ -15,7 +15,17 @@ class Otp{
 		"/@endSection/" => '<?php }); ?>',
 
 		// Use section
-		"/@section\(([a-zA-Z0-9\"\']+)\)/" => '<?php echo $this->getSection($1); ?>'
+		"/@section\(([a-zA-Z0-9\"\']+)\)/" => '<?php echo $this->getSection($1); ?>',
+
+		// Foreach
+		"/@foreach\((.*)as(.*)\)/" => '<?php foreach($1as$2){ ?>',
+		'/@endforeach/' => '<?php } ?>',
+
+		// If
+		"/@if\((.*)\)/" => '<?php if($1){ ?>',
+		'/@elseif\((.*)\)/' => '<?php }elseif($1){ ?>',
+		'/@else/' => '<?php }else{ ?>',
+		'/@endif/' => '<?php } ?>'
 	];
 
 	protected $sections = [];
