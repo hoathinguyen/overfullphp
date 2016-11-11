@@ -10,9 +10,5 @@ return [
 		'helpers' => [
 			'URL' => \Overfull\Utility\URLUtil::class
 		]
-	],
-	/**
-	 * Salt string, this varible will be use in hash object class
-	 */
-	'salt' => 'overfull-overfull-overfull-overfull'
+	]
 ];

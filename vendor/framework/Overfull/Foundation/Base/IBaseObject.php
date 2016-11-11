@@ -16,5 +16,7 @@ interface IBaseObject{
 	* return name of class (include namespace)
 	*/
 	static function className();
+
+	static function instance($use = false);
 }
 ?>

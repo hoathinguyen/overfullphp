@@ -32,8 +32,8 @@ class View extends Otp implements IView{
 	protected $layout = false;
 	
 	function __construct(){
-		$this->contentPath = 'Views'.DS.'Otps'.DS.'Contents';
-		$this->layoutPath = 'Views'.DS.'Otps'.DS.'Layouts';
+		$this->contentPath = 'Views'.DS.'Contents';
+		$this->layoutPath = 'Views'.DS.'Layouts';
 	}
 
 	/**

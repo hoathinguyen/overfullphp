@@ -10,29 +10,48 @@ use Overfull\Patterns\MVC\Exception\MethodNotFoundException;
 use Bag;
 use Overfull\Http\Response\ResponseFormat;
 use Overfull\Patterns\MVC\ActionResult;
+use Overfull\Foundation\Base\BaseObject;
 
-class Controller implements IController{
-	protected $otp = [
-		'layout' => false,
-		'helpers' => [],
-		'root' => '',
-		'handler' => null
-	];
+abstract class Controller extends BaseObject implements IController{
+	protected $layout = false;
+	protected $helpers = [];
+	protected $root = '';
+	protected $handler = null;
 
 	public function beforeAction(){}
 	public function beforeFilter(){}
 	public function beforeRender(){}
 
-	protected final function __getOtp(){
-		$otp = [
-			'layout' => !empty($this->otp['layout']) ? $this->otp['layout'] : false,
-			'helpers' => !empty($this->otp['helpers']) ? $this->otp['helpers'] : [],
-			'handler' => !empty($this->otp['handler']) ? $this->otp['handler'] : null,
-			'root' => !empty($this->otp['root']) ? $this->otp['root'] : str_replace('Controller', '', Bag::$route->controller),
-			'content' => !empty($this->otp['content']) ? $this->otp['content'] : Bag::$route->method
-		];
+	/**
+	 * Set type to view is render
+	 *
+	 * @param string/array $view
+	 * @param mixed $data
+	 * @return array
+	 */
+	public final function otp($name = false, $value = null){
+		if(!$name){
+			$otp = [
+				'layout' => !empty($this->layout) ? $this->layout : false,
+				'helpers' => !empty($this->helpers) ? $this->helpers : [],
+				'handler' => !empty($this->hanlder) ? $this->hanlder : null,
+				'root' => !empty($this->root) ? $this->root : str_replace('Controller', '', Bag::$route->controller),
+				'content' => !empty($this->content) ? $this->content : Bag::$route->method
+			];
 
-		return $otp;
+			return $otp;
+		}
+
+		if(is_array($name)){
+			foreach ($name as $key => $value) {
+				$this->$key = $value;
+			}
+
+			return $this;
+		}
+
+		$this->$name = $value;
+		return $this;
 	}
 
 	/**
@@ -44,16 +63,16 @@ class Controller implements IController{
 	 */
 	protected final function render($view = false, $data = []){
 		if(is_array($view)){
-			$this->otp['layout'] = $view[0];
-			$this->otp['content'] = $view[1];
+			$this->layout = $view[0];
+			$this->content = $view[1];
 		} else if($view){
-			$this->otp['content'] = $view;
+			$this->content = $view;
 		}
 
 		return new ActionResult([
 			'type' => 'render',
 			'gift' => [
-				'otp' => $this->__getOtp(),
+				'otp' => $this->otp(),
 				'data' => $data
 			]
 		]);
@@ -67,16 +86,16 @@ class Controller implements IController{
 	 * @return array
 	 */
 	protected final function renderAjax($view = false, $data = []){
-		$this->otp['layout'] = false;
+		$this->layout = false;
 
 		if($view){
-			$this->otp['content'] = $view;
+			$this->content = $view;
 		}
 
 		return new ActionResult([
 			'type' => 'render',
 			'gift' => [
-				'otp' => $this->__getOtp(),
+				'otp' => $this->otp(),
 				'data' => $data
 			]
 		]);
@@ -93,7 +112,7 @@ class Controller implements IController{
 			'type' => 'redirect',
 			'gift' => [
 				'data' => $url,
-				'otp' => $this->__getOtp(),
+				'otp' => $this->otp(),
 			]
 		]);
 	}
@@ -108,7 +127,7 @@ class Controller implements IController{
 		return new ActionResult([
 			'type' => 'json',
 			'gift' => [
-				'otp' => $this->__getOtp(),
+				'otp' => $this->otp(),
 				'data' => $data,
 			]
 		]);
@@ -143,7 +162,7 @@ class Controller implements IController{
 			return new ActionResult([
 					'type' => 'json',
 					'gift' => [
-						'otp' => $this->__getOtp(),
+						'otp' => $this->otp(),
 						'data' => $ActionResult,
 					]
 				]);
@@ -153,7 +172,7 @@ class Controller implements IController{
 			return new ActionResult([
 				'type' => 'html',
 				'gift' => [
-					'otp' => $this->__getOtp(),
+					'otp' => $this->otp(),
 					'data' => $ActionResult,
 				]
 			]);

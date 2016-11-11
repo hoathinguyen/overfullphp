@@ -20,7 +20,6 @@ class Request extends BaseRequest{
 	* @return string $uri
 	*/
 	public function uri(){
-		// Return value
 		return $_SERVER['REQUEST_URI'];
 	}
 
@@ -34,12 +33,43 @@ class Request extends BaseRequest{
 	}
 
 	/**
+	 * port method
+	 *
+	 * @return string
+	 */
+	public function port(){
+		return $_SERVER['SERVER_PORT'];
+	}
+
+	/**
+	 * name method
+	 *
+	 * @return string
+	 */
+	public function name(){
+		return $_SERVER['SERVER_NAME'];
+	}
+
+	/**
+	 * docRoot method
+	 *
+	 * @return string
+	 */
+	public function docRoot(){
+		return $_SERVER['DOCUMENT_ROOT'];
+	}
+
+	/**
 	 * schema method
 	 *
 	 * @return string
 	 */
-	public function schema(){
-		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+	public function protocol($asPath = false){
+		if($asPath){
+			return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+		}
+
+		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 	}
 	/**
 	* UriArray method
@@ -129,6 +159,46 @@ class Request extends BaseRequest{
 		}
 
 		return null;
+	}
+
+	/**
+	 * publicPath method
+	 *
+	 * @author ToiTL
+	 * @date 2016/02/27
+	 * @return string
+	 */
+	public function publicPath(){
+		return str_replace(
+			'\\',
+			'/',
+			substr(
+				dirname(dirname(dirname(dirname(dirname(__FILE__))))),
+				strlen($this->docRoot())
+			)
+		);
+	}
+
+	/**
+	 * Get method
+	 *
+	 * @date 2016/02/27
+	 * @param string $name
+	 * @return string
+	 */
+	public function baseUrl(){
+		return $this->protocol(true).$this->host();
+	}
+
+	/**
+	 * Get method
+	 *
+	 * @date 2016/02/27
+	 * @param string $name
+	 * @return string
+	 */
+	public function root(){
+		return $this->protocol(true).$this->host().$this->publicPath();
 	}
 
 	/**

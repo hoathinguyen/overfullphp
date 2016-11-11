@@ -20,5 +20,23 @@ abstract class BaseObject implements IBaseObject{
 		//return get_class($this);
 		return get_called_class();
 	}
+
+	/**
+     * Get instance of this class
+     *
+     * @param string $use: name of connection,
+     * which is config in database.php
+     * @return current object
+     */
+	public static function instance($use = false){
+		$class = static::className();
+		return new $class();
+	}
+
+	// pass static requests to the instance
+    // public static function __callStatic($method, $parameters){
+    // 	dd($method);
+    //     return static::instance()->{$method}($parameters);
+    // }
 }
 ?>

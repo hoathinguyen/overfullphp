@@ -24,7 +24,7 @@ class URLUtil extends BaseUtil{
 			$name = ($route == '' ? '' : '/'.$route).'/'.$name;
 		}
 
-		return Bag::request()->schema().Bag::request()->host().$name;
+		return Bag::request()->root().$name;
 	}
 
 	/**
@@ -45,7 +45,7 @@ class URLUtil extends BaseUtil{
 			$name = ($route == '' ? '' : '/'.$route).$name;
 		}
 
-		return Bag::request()->schema().Bag::request()->host().$name;
+		return Bag::request()->root().$name;
 	}
 
 	/**

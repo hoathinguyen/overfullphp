@@ -46,11 +46,19 @@ class Route extends BaseObject{
 		if(empty($configs['pages'])){
 			throw new PageNotFoundException();
 		}
+
+		$uriArray = Bag::request()->uriArray();
+		$publics = explode('/', Bag::request()->publicPath());
+		array_shift($publics);
+		foreach ($publics as $key => $value) {
+			array_shift($uriArray);
+		}
+
 		// Get root
 		if(Bag::config()->get('routes.compare') == 'relative'){
-			$this->uri = strtolower($this->setWebroot($configs, Bag::request()->uriArray()));
+			$this->uri = strtolower($this->setWebroot($configs, $uriArray));
 		} else {
-			$this->uri = $this->setWebroot($configs, Bag::request()->uriArray());
+			$this->uri = $this->setWebroot($configs, $uriArray);
 		}
 		
 		$this->url = explode('?', $this->uri)[0];
