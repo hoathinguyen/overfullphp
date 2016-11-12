@@ -1,0 +1,71 @@
+/* Custom CSS for tabs */
+.tab-contents{
+	margin-bottom: 10px;
+}
+
+.nav-tabs li, .nav-tabs li a{
+	border-radius: 0;
+}
+
+.tab-contents > div{
+	border: 1px solid #ddd;
+	border-top: 0;
+	padding: 10px;
+}
+
+.btn{
+	border-radius: 0;
+}
+
+.form-control{
+	border-radius: 0;
+}
+
+/* CSS for chanel video*/
+.panel{
+	border-radius: 0;
+}
+.panel > div{
+	border-radius: 0;
+}
+
+.panel .panel-body{
+	padding: 0;
+	border: 0px solid #09c
+}
+
+.panel .panel-footer{
+	background: #fff
+}
+
+.info-view .view{
+	margin-left: 20px;
+	border-bottom: 2px solid #09c;
+}
+
+.info-view .online{
+	border-bottom: 2px solid red;
+}
+
+/* CSS for ad*/
+.advertising{
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background: #fff;
+}
+.advertising .ad-content{
+	width: 100%;
+	height: 100%;
+	background: red;
+}
+.advertising .btn-skip{
+	background: #000;
+	color: #fff;
+	padding: 5px 20px;
+	position: absolute;
+	right: 0;
+	bottom: 20px;
+}

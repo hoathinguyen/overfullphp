@@ -32,6 +32,11 @@ return [
 		'namespace' => 'Src\Share'
 	],
 
+	'192.168.0.111' => [
+		'root' => 'src/Share',
+		'namespace' => 'Src\Share'
+	],
+
 	'admin.overfull.dev' => 'root=src/FirstAdmin;namespace=Src\FirstAdmin',
 
 	// 'admin.overfull.dev' => function(){

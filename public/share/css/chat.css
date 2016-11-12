@@ -1,0 +1,36 @@
+#chat ul{
+  border: 1px solid #ddd;
+  padding: 5px;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+#chat ul li{
+  margin:0;
+  padding: 3px;
+  position: relative;
+}
+
+#chat ul li .media-left img{
+  border-radius: 50%;
+  border: 1px solid #eee;
+}
+
+#chat ul li .media-body{
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 5px;
+  background: #f9f7f7;
+}
+
+#chat ul li .media-body:before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 23px;
+    top: 8px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-color: transparent #f9f7f7 transparent transparent;
+    border-width: 10px;
+}
