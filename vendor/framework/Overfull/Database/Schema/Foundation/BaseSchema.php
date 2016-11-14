@@ -108,9 +108,9 @@ abstract class BaseSchema implements \JsonSerializable{
 			$this->connection->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
 			$dpo = $this->connection->prepare($sql);
 
-			$result = $dpo->execute($parameters);
+			$dpo->execute($parameters);
 
-			return $result;
+			return $dpo;
 		}catch (\PDOException $err) {
 		    throw $err;
 		}

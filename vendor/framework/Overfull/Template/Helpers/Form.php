@@ -45,7 +45,7 @@ class Form extends Helper{
 		// Create open form and get model data
 		$__key__ = '';
 		if(is_string($model)){
-			static::$data = Bag::myStore()->{"value_for_$model"};
+			static::$data = Bag::store()->{"value_for_$model"};
 
 			if (is_object(static::$data)){
 				static::$data = json_decode(json_encode(static::$data), true);
@@ -59,7 +59,7 @@ class Form extends Helper{
 		if(!empty($messages)){
 			static::$messages = $messages;
 		} elseif(is_string($model)){
-			static::$messages = Bag::myStore()->{"message_for_$model"};
+			static::$messages = Bag::store()->{"message_for_$model"};
 		}
 
 		if (is_object(static::$messages)){
@@ -91,7 +91,7 @@ class Form extends Helper{
 	// 	if(!empty($messages)){
 	// 		static::$messages = $messages;
 	// 	} else {
-	// 		static::$messages = Bag::myStore()->{"message_for_$model"};
+	// 		static::$messages = Bag::store()->{"message_for_$model"};
 	// 	}
 
 	// 	if (is_object(static::$messages)){
@@ -124,7 +124,7 @@ class Form extends Helper{
 	// 		}
 	// 	} else {
 	// 		if(is_string($model)){
-	// 			static::$data = Bag::myStore()->{"value_for_$model"};
+	// 			static::$data = Bag::store()->{"value_for_$model"};
 
 	// 			if (is_object(static::$data)){
 	// 				static::$data = json_decode(json_encode(static::$data), true);

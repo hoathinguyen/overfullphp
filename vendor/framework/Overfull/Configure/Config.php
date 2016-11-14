@@ -64,7 +64,7 @@ class Config extends BaseObject{
 			} else {
 				$this->configs[$name] = $val;
 			}
-			
+			return isset($this->configs[$name]) ? $this->configs[$name] : null;
 		}catch( Exception $e ){
 			throw new Exception($e->getMessage(), 102);
 		}

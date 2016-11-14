@@ -40,4 +40,13 @@ class PackageStore extends Store{
 		
 		throw new PackageNotFoundException($name);
 	}
+
+	/**
+	 * Isset method
+	 * @param string $name
+	 * @return
+	 */
+	public function __isset($name){
+		return isset($this->attributes[$name]);
+	}
 }

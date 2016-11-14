@@ -25,9 +25,9 @@ abstract class Model extends ActiveRecord implements IModel, JsonSerializable{
         $this->invalidErrors = Validator::validate($values , $rules);
 
         if(!empty($values['__key__'])){
-            Bag::myStore()->{"message_for_".$values['__key__']} = $this->invalidErrors;
+            Bag::store()->{"message_for_".$values['__key__']} = $this->invalidErrors;
         } else {
-            Bag::myStore()->message_for_default = $this->invalidErrors;
+            Bag::store()->message_for_default = $this->invalidErrors;
         }
         
         return $this;

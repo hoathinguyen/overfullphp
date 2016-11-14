@@ -30,10 +30,7 @@ class DbStore extends BaseObject{
 	 * @return void
 	 */
 	public function __get($name){
-		if(!isset($this->connections[$name])){
-			return null;
-		}
-		return $this->connections[$name];
+		return $this->get($name);
 	}
 
 	/**
@@ -54,5 +51,29 @@ class DbStore extends BaseObject{
      */
     public function __unset($key){
         unset($this->connections[$key]);
+    }
+
+    /**
+     * GEt an attribute on the db.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function get($name){
+    	if(!isset($this->connections[$name])){
+			return null;
+		}
+		return $this->connections[$name];
+    }
+
+    /**
+     * GEt an attribute on the db.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function set($name, $value){
+    	$this->connections[$name] = $value;
+    	return $this;
     }
 }

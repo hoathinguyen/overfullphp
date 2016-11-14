@@ -82,16 +82,16 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
             throw new DatabaseConfigException($use);
         }
 
-		if ( !isset(Bag::dbStore()->{$use}) ) {
+		if ( !isset(Bag::db()->{$use}) ) {
 			// Create new connect
-			Bag::dbStore()->{$use} = new \PDO("{$databases['connections'][$use]['type']}:dbname={$databases['connections'][$use]['dbname']};host={$databases['connections'][$use]['host']};charset={$databases['connections'][$use]['encoding']}", $databases['connections'][$use]['user'], $databases['connections'][$use]['password']);
+			Bag::db()->{$use} = new \PDO("{$databases['connections'][$use]['type']}:dbname={$databases['connections'][$use]['dbname']};host={$databases['connections'][$use]['host']};charset={$databases['connections'][$use]['encoding']}", $databases['connections'][$use]['user'], $databases['connections'][$use]['password']);
 
-			if(!Bag::dbStore()->{$use}){
+			if(!Bag::db()->{$use}){
 				throw new ConnectionException($use);
 			}
 		}
 
-        $this->connection = Bag::dbStore()->{$use};
+        $this->connection = Bag::db()->{$use};
 
         $this->connection->setAttribute( \PDO::ATTR_EMULATE_PREPARES, false );
 
@@ -191,9 +191,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public function findOrDefault($id){
         // Create query
-        $rs = $this->schema()
-            ->where([$this->primaryKey, '=', $id])
-            ->one();
+        $rs = $this->find($id);
 
         if(!$rs){
             return $this;
@@ -217,7 +215,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
             }
 
             // Creates
-            return $this->schema()
+            $rs = $this->schema()
                 ->columns(array_keys($values))
                 ->values($values)
                 ->insert($isExecute);
@@ -225,12 +223,28 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
             $values = $this->attributes;
             unset($values[$this->primaryKey]);
             // Update
-            return $this->schema()
+            $rs = $this->schema()
                 ->columns(array_keys($values))
                 ->values($values)
                 ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
                 ->update($isExecute);
         }
+
+        if($isExecute){
+            if($rs){
+                $lastInsert = $this->find($this->connection->lastInsertId());
+
+                foreach ($lastInsert->attributes() as $key => $value) {
+                    $this->attributes[$key] = $value;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        return $rs;
     }
 
     /**
@@ -318,5 +332,13 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
     public function __unset($key){
         //unset($this->attributes[$key], $this->relations[$key]);
         unset($this->attributes[$key]);
+    }
+
+    /**
+     * Get attributes
+     * @return array attributes
+     */
+    public function attributes(){
+        return $this->attributes;
     }
 }

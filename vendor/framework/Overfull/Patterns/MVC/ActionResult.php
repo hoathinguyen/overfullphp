@@ -34,9 +34,9 @@ class ActionResult{
 	public function withLastGet(){
 		if(!empty($data = Bag::request()->get())){
 			if(isset($data['__key__'])){
-				Bag::myStore()->{"value_for_".$data['__key__']} = $data;
+				Bag::store()->{"value_for_".$data['__key__']} = $data;
 			} else {
-				Bag::myStore()->value_for_default = $data;
+				Bag::store()->value_for_default = $data;
 			}
 		}
 
@@ -51,9 +51,9 @@ class ActionResult{
 	public function withLastPost(){
 		if(!empty($data = Bag::request()->post())){
 			if(isset($data['__key__'])){
-				Bag::myStore()->{"value_for_".$data['__key__']} = $data;
+				Bag::store()->{"value_for_".$data['__key__']} = $data;
 			} else {
-				Bag::myStore()->value_for_default = $data;
+				Bag::store()->value_for_default = $data;
 			}
 		}
 
@@ -68,9 +68,9 @@ class ActionResult{
 	public function withLastData(){
 		if(!empty($data = Bag::request()->any())){
 			if(isset($data['__key__'])){
-				Bag::myStore()->{"value_for_".$data['__key__']} = $data;
+				Bag::store()->{"value_for_".$data['__key__']} = $data;
 			} else {
-				Bag::myStore()->value_for_default = $data;
+				Bag::store()->value_for_default = $data;
 			}
 		}
 
@@ -89,7 +89,7 @@ class ActionResult{
 
 		foreach ($data as $key => $value) {
 			if(is_array($value) || is_object($value)){
-				Bag::myStore()->{"value_for_$key"} = $value;
+				Bag::store()->{"value_for_$key"} = $value;
 			}
 		}
 		

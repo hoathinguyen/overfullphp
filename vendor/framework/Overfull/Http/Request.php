@@ -94,22 +94,42 @@ class Request extends BaseRequest{
 	 * @date 2016/02/27
 	 * @return boolean
 	 */
-	public function isMethod( $rqs = false ){
+	public function is( $rqs = false ){
 		if ( $rqs == false ) {
 			return false;
 		} else if ( is_array($rqs) ) {
 			foreach ($rqs as $key => $value) {
-				if ( $_SERVER['REQUEST_METHOD'] == strtoupper($value) || strtoupper($value) == 'ANY') {
+				if ( $this->method() == strtoupper($value) || strtoupper($value) == 'ANY') {
 					return true;
 				}
 			}
 			return false;
 		} else {
-			if ( $_SERVER['REQUEST_METHOD'] == strtoupper($rqs) || strtoupper($rqs) == 'ANY') {
+			if ( $this->method() == strtoupper($rqs) || strtoupper($rqs) == 'ANY') {
 				return true;
 			}
 			return false;
 		}
+	}
+
+	/**
+	 * Check if request is from ajax
+	 *
+	 * @param string/array method
+	 * @return boolean
+	 */
+	public function isPost(){
+		return $this->is('POST');
+	}
+
+	/**
+	 * Check if request is from ajax
+	 *
+	 * @param string/array method
+	 * @return boolean
+	 */
+	public function isGet(){
+		return $this->is('GET');
 	}
 
 	/**
@@ -126,7 +146,7 @@ class Request extends BaseRequest{
 			}
 
 			// Call check method
-			return $this->isMethod($method);
+			return $this->is($method);
 		}
 
 		return false;
@@ -232,7 +252,7 @@ class Request extends BaseRequest{
 	 * @return string
 	 */
 	public function any($name = false){
-		if($this->isMethod("POST")){
+		if($this->is("POST")){
 			return $this->post($name);
 		}
 		

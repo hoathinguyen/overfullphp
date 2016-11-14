@@ -20,6 +20,7 @@ class PathUtil extends BaseUtil{
 	}
 
 	public static function convert( $string = '' ){
-		return str_replace('.', DS, $string);
+		$string = str_replace('.', DS, $string);
+		return str_replace('\\', DS, $string);
 	}
 }

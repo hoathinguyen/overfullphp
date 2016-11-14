@@ -72,7 +72,7 @@ class QueryBuilder extends BaseQueryBuilder{
 	 * @return string
 	 */
 	public function deleteSyntax(){
-		$sql = "DELETE FROM ". $this->attributes['table'].'';
+		$sql = "DELETE FROM ". $this->attributes['table'];
 		$sql = trim($sql, ',');
 
 		// Check if have where syntax

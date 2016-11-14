@@ -12,7 +12,8 @@
     	"files": [
     		"vendor/framework/Overfull/Foundation/constants.php",
             "vendor/framework/Overfull/Foundation/func.php",
-    		"vendor/framework/Overfull/Bag.php"
+    		"vendor/framework/Overfull/Bag.php",
+            "vendor/packages/Translate/func.php"
     	]
     }
 }

@@ -30,7 +30,7 @@ class RouteAlias extends BaseObject{
 	 */
 	public function isValid($uri){
 
-		if ( !Bag::request()->isMethod($this->data[1]) )
+		if ( !Bag::request()->is($this->data[1]) )
 			return false;
 
 		if(preg_match('/^'.$this->data['regex'].'$/', $uri, $this->matches)){
