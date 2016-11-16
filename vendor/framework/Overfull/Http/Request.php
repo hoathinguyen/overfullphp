@@ -12,6 +12,9 @@ use Overfull\Http\Foundation\BaseRequest;
 use Overfull\Utility\ArrayUtil;
 
 class Request extends BaseRequest{
+	public function full(){
+		return $this->protocol(true).$this->host().$this->uri();
+	}
 	/**
 	* Uri method
 	* This method will be return uri of request

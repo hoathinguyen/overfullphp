@@ -18,6 +18,10 @@ class URLUtil extends BaseUtil{
 	 * @return string
 	 */
 	public static function asset($name){
+		if(static::isUrl($name)){
+			return $name;
+		}
+		
 		if ( substr($name, 0, 1) != '/') {
 			$route = Bag::config()->get('app.route');
 
@@ -34,6 +38,10 @@ class URLUtil extends BaseUtil{
 	 * @return string
 	 */
 	public static function to($name, $inRoot = true){
+		if(static::isUrl($name)){
+			return $name;
+		}
+
 		if ( substr($name, 0, 1) != '/') {
 			$route = Bag::config()->get('app.route');
 
@@ -58,5 +66,18 @@ class URLUtil extends BaseUtil{
 		$string = str_replace(' ', '-', $string);
 		$string = str_replace('?', '-', $string);
 		return $string;
+	}
+
+	/**
+	 * Check is url method
+	 * @param string $string
+	 * @return boolean
+	 */
+	public static function isUrl($string){
+		if (filter_var($string, FILTER_VALIDATE_URL) === FALSE) {
+		    return false;
+		}
+
+		return true;
 	}
 }
