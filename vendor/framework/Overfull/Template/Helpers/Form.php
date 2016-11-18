@@ -149,7 +149,21 @@ class Form extends Helper{
 	 * @return string html
 	 */
 	public static function close(){
+		static::$data = false;
+		static::$messages = [];
 		return '</form>';
+	}
+
+	/**
+	 * input method
+	 * @return string html
+	 */
+	public static function get($name = false){
+		if(!$name){
+			return static::$data;
+		}
+
+		return ArrayUtil::access(static::$data, $name);
 	}
 
 	/**

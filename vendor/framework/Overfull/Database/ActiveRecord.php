@@ -232,8 +232,12 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
 
         if($isExecute){
             if($rs){
-                $lastInsert = $this->find($this->connection->lastInsertId());
-
+                if($this->isNew()){
+                    $lastInsert = $this->find($this->connection->lastInsertId());
+                } else {
+                    $lastInsert = $this->find($this->attributes[$this->primaryKey]);
+                }
+                
                 foreach ($lastInsert->attributes() as $key => $value) {
                     $this->attributes[$key] = $value;
                 }

@@ -8,14 +8,16 @@ return [
 			// Index of chanel
 			['(<:empty>|index.html)', 'any', 'controller=ChanelsController;method=index'],
 
-			// Create chanel
-			['create.html', 'any', 'controller=ChanelsController;method=create'],
-
 			['<:integer>/live.html', 'any', 'controller=ChanelsController;method=live;id={1}'],
 		],
 
 		'me' => [
-			['chanels.html', 'any', 'controller=MeController;method=myChanels']
+			['chanels.html', 'any', 'controller=MeController;method=myChanels'],
+
+			// Create chanel
+			['chanels/create.html', 'any', 'controller=MeController;method=create'],
+			['chanels/<:integer>/update.html', 'any', 'controller=MeController;method=update;id={1}'],
+			['chanels/<:integer>/live.html', 'any', 'controller=MeController;method=live;id={1}'],
 		],
 
 		['login.html', 'any', 'controller=MeController;method=login']

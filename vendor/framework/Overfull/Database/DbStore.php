@@ -76,4 +76,37 @@ class DbStore extends BaseObject{
     	$this->connections[$name] = $value;
     	return $this;
     }
+
+    /**
+     * beginTransaction all
+     *
+     * @return void
+     */
+    public function beginTransaction(){
+        foreach($this->connections as $value){
+            $value->beginTransaction();
+        }
+    }
+
+    /**
+    * beginTransaction all
+    *
+    * @return void
+    */
+    public function rollBack(){
+        foreach($this->connections as $value){
+            $value->rollBack();
+        }
+    }
+
+    /**
+    * beginTransaction all
+    *
+    * @return void
+    */
+    public function commit(){
+        foreach($this->connections as $value){
+            $value->commit();
+        }
+    }
 }

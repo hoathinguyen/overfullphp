@@ -1,6 +1,7 @@
 <?php
 return [
 	'Create chanel' => 'Tạo kênh',
+	'Update chanel' => 'Cập nhật kênh',
 	'Chanel title'	=> 'Tiêu đề kênh',
 	'Please input Chanel title' => 'Nhập tiêu đề của kênh',
 
