@@ -4,7 +4,6 @@
 * ----------------------------------------------------
 */
 namespace Overfull\Record;
-use Overfull\
 
 class Cookie extends BaseObject{
 

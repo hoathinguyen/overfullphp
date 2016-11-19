@@ -14,7 +14,7 @@ use Overfull\Exception\PageNotFoundException;
 class Route extends BaseObject{
 	private $alias = [];
 
-	private $validAlias = null;
+	private $validRouting = null;
 
 	private $url = '';
 
@@ -26,12 +26,12 @@ class Route extends BaseObject{
 	* This array contains all of key config on routes to parse to regex
 	*/
     private $regexKeys = [
-    	'<:all>' => '(.*)',
-    	'/' => '\/',
-    	'?' => '\?',
-    	'<:empty>' => '',
-    	'<:integer>' => '(0|[1-9][0-9]*)',
-    	'<:alphanumeric>' => '([a-zA-Z0-9]*)'
+    	'/\<(|([a-zA-Z0-9]+)):all\>/' => '(.*)',
+    	'/\//' => '\/',
+    	'/\?/' => '\?',
+    	'/\<:empty\>/' => '',
+    	'/\<(|([a-zA-Z0-9]+)):integer\>/' => '(0|[1-9][0-9]*)',
+    	'/\<(|([a-zA-Z0-9]+)):alphanumeric\>/' => '([a-zA-Z0-9]*)'
     ];
 
 	/**
@@ -65,11 +65,11 @@ class Route extends BaseObject{
 
 		$this->setAlias($configs['pages']);
 
-		if($this->validAlias == null){
+		if($this->validRouting == null){
 			throw new PageNotFoundException();
 		}
 
-		$data = $this->validAlias->get();
+		$data = $this->validRouting->get();
 
 		$this->attributes = array_merge($data, $this->attributes);
 
@@ -86,7 +86,8 @@ class Route extends BaseObject{
 	private function setAlias($pages, $prefix = '', $aliasName = ''){
 		foreach ($pages as $key => $value) {
 			if(is_numeric($key)){
-				$regex = $this->convertRegex($prefix.$value[0]);
+				$format = isset($value['format']) ? $value['format'] : $value[0];
+				$regex = $this->convertRegex($prefix.$format);
 
 				if(substr( $regex, -1 ) == '/'){
 					$regex = substr($regex, 0, -2);
@@ -94,17 +95,19 @@ class Route extends BaseObject{
 
 				$value['regex'] = $regex;
 
+				$value['prefix'] = $prefix;
+
 				$alias = new RouteAlias($value);
 
 				if(!empty($value['as'])){
-					$aliasName = $aliasName.'.'.$value['as'];
-					$this->alias[$aliasName] = $alias;
+					$_aliasName = ($aliasName ? $aliasName.'.' : '').$value['as'];
+					$this->alias[$_aliasName] = $alias;
 				}
 
-				if($this->validAlias == null 
+				if($this->validRouting == null 
 					&& ($alias->isValid($this->uri)
 					|| $alias->isValid($this->url)) ){
-					$this->validAlias = $alias;
+					$this->validRouting = $alias;
 				}
 			} else {
 				$this->setAlias($value, (!empty($prefix) ? $prefix : '').$key.'/', (!empty($prefix) ? $prefix.'.' : '').$key);
@@ -118,7 +121,11 @@ class Route extends BaseObject{
 	* @param string $name
 	* @return RouteAlias
 	*/
-	public function getAlias($name){
+	public function alias($name = false, $getAll = true){
+		if(!$name && $getAll){
+			return $this->alias;
+		}
+
 		return isset($this->alias[$name]) ? $this->alias[$name] : null;
 	}
 
@@ -205,7 +212,7 @@ class Route extends BaseObject{
 	private function convertRegex($str){
 		
 		foreach ($this->regexKeys as $key => $value) {
-			$str = str_replace($key, $value, $str);
+			$str = preg_replace($key, $value, $str);
 		}
 
 		return $str;

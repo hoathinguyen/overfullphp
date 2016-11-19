@@ -263,6 +263,22 @@ abstract class BaseSchema implements \JsonSerializable{
 	}
 
 	/**
+	 * join
+	 * @param string $table
+	 * @param array join
+	 * @return this
+	 */
+	public function outerJoin($table, $conditions){
+		$joins = $this->queryBuilder->joins;
+
+		$joins[] = ['type' => 'OUTER JOIN', 'table' => $table, 'on' => $conditions];
+
+		$this->queryBuilder->joins = $joins;
+
+		return $this;
+	}
+
+	/**
 	 * Set offset
 	 * @param int $offset
 	 * @return this

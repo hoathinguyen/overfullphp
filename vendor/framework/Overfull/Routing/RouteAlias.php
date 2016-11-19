@@ -30,7 +30,7 @@ class RouteAlias extends BaseObject{
 	 */
 	public function isValid($uri){
 
-		if ( !Bag::request()->is($this->data[1]) )
+		if ( !Bag::request()->is(isset($this->data['method']) ? $this->data['method'] : $this->data[1]) )
 			return false;
 
 		if(preg_match('/^'.$this->data['regex'].'$/', $uri, $this->matches)){
@@ -49,20 +49,50 @@ class RouteAlias extends BaseObject{
 	}
 
 	/**
+	 * setUrlParameters
+	 * @return $this
+	 */
+	public function getFormat($data = []){
+		$url = isset($this->data['format']) ? $this->data['format'] : $this->data[0];
+
+		if(is_array($data) && $url){
+			foreach ($data as $key => $value) {
+				if(is_numeric($key)){
+					$url = preg_replace('/\<:(.*?)\>/', $value, $url, 1);
+				} else {
+					$url = preg_replace('/\<'.$key.':(.*?)\>/', $value, $url);
+				}
+			}
+		}
+
+		return $url;
+	}
+
+	/**
+	 * setUrlParameters
+	 * @return $this
+	 */
+	public function getRoute($data = []){
+		return $this->data['prefix'].$this->getFormat($data);
+	}
+
+	/**
 	* Run method
 	*
 	* @return void
 	*/
 	public function get(){
-		if ( is_object($this->data[2]) ) {
+		$parameters = isset($this->data['parameters']) ? $this->data['parameters'] : $this->data[2];
+		
+		if ( is_object($parameters) ) {
 			// Call merge by object
-			$result = $this->mergeByObject($this->data[2], $this->data[0], $this->matches);
-		}else if( is_array($this->data[2]) ){
+			$result = $this->mergeByObject($parameters, isset($this->data['format']) ? $this->data['format'] : $this->data[0], $this->matches);
+		}else if( is_array($parameters) ){
 			// Call merge by array
-			$result = $this->mergeByArray($this->data[2], $this->matches);
+			$result = $this->mergeByArray($parameters, $this->matches);
 		}else{
 			// Call merge by array
-			$result = $this->mergeByString($this->data[2], $this->matches);
+			$result = $this->mergeByString($parameters, $this->matches);
 		}
 
 		return $this->setVariables($result);

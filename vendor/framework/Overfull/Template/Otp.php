@@ -18,7 +18,7 @@ class Otp{
 		"/@section\(([a-zA-Z0-9\"\']+)\)/" => '<?php echo $this->getSection($1); ?>',
 
 		// Foreach
-		"/@foreach\((.*)as(.*)\)/" => '<?php foreach($1as$2){ ?>',
+		"/@foreach\((.*?)as(.*?)\)/" => '<?php foreach($1as$2){ ?>',
 		'/@endforeach/' => '<?php } ?>',
 
 		// If

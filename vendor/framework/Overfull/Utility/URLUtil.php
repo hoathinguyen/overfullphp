@@ -32,6 +32,21 @@ class URLUtil extends BaseUtil{
 	}
 
 	/**
+	 * Get url by alias route
+	 * @param string $name
+	 * @return string
+	 */
+	public static function route($name, $params = []){
+		$alias = Bag::route()->alias($name, false);
+
+		if(!$alias){
+			throw new \Overfull\Exception\RouteAliasNotFoundException($name);
+		}
+
+		return Bag::request()->root().'/'.$alias->getRoute($params);
+	}
+
+	/**
 	 * asset method
 	 *
 	 * @param string $name

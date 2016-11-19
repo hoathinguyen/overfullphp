@@ -18,8 +18,8 @@ class HomeController extends ShareController{
 	}
 
 	public function index(){
-		$chanels = $this->chanelBusiness->getAllChanels();
-		$chanels = ArrayUtil::groupObjectByAttribute($chanels, 'category_name');
-		return $this->render()->with(compact("chanels"));
+            $chanels = $this->chanelBusiness->getAllChanels();
+            $chanels = ArrayUtil::groupObjectByAttribute($chanels, 'category_name');
+            return $this->render()->with(compact("chanels"));
 	}
 }

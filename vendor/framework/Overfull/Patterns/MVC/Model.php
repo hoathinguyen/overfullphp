@@ -7,7 +7,7 @@ namespace Overfull\Patterns\MVC;
 use Overfull\Patterns\MVC\Foundation\IModel;
 use Bag;
 use Overfull\Exception\DatabaseConfigException;
-use Overfull\Database\ActiveRecord;
+use Overfull\Database\Eloquent\ActiveRecord;
 use Overfull\Database\Query;
 use JsonSerializable;
 use Overfull\Utility\Validator;
