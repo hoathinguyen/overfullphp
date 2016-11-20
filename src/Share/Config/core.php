@@ -1,7 +1,7 @@
 <?php
 return [
 	// Set alway build the view disp for developer
-	//'alway-build-otp' => false,
+	//'develop' => false,
 
 	'pattern' => \Overfull\Patterns\MVC\PatternHandler::class,
 

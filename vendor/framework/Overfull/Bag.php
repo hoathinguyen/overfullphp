@@ -37,6 +37,8 @@ class Bag{
 	public static $store;
 
 	public static $config;
+        
+        public static $error;
 
 	/**
 	* The main application will call this method before use it.
@@ -55,7 +57,18 @@ class Bag{
 
 		static::config();
 	}
-
+        
+        /**
+         * GEt error
+         */
+        public static function error(){
+            if(!static::$error){
+                static::$error = new \Overfull\Exception\Handler\ErrorData();
+            }
+            
+            return static::$error;
+        }
+        
 	/**
 	 * Get DbStore
 	 * @return DbStore

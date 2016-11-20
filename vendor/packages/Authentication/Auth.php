@@ -94,7 +94,9 @@ class Auth extends BasePackage{
 			$pr = $model->getPrimaryKey();
 			$this->dbData = $model->find($this->get()->{$pr});
 		}
-
+                
+                unset($this->dbData->{$this->secret});
+                
 		return $this->dbData;
 	}
 }

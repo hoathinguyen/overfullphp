@@ -182,7 +182,7 @@ class View extends Otp implements IView{
 
 			$storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($appRoot.DS.$otp['file']).'.otp');
 
-			if ( !file_exists($storageFile) || Bag::config()->get('core.alway-build-otp')) {
+			if ( !file_exists($storageFile) || Bag::config()->get('core.develop')) {
 				$ext = Bag::config()->get('core.otp.ext');
 				
 				$fullFile = PathUtil::getFull($appRoot.DS.$otp['file'].'.'.($ext ? $ext : 'php'));

@@ -27,6 +27,12 @@ return [
 				'as' => 'chanels_live'],
 		],
 
-		['login.html', 'any', 'controller=MeController;method=login']
+		['login.html', 'any', 'controller=MeController;method=login'],
+            
+                'ajax' => [
+                    'chanels' => [
+                        ['videos.html', 'post', 'controller=ChanelsController;method=ajaxVideos', 'as' => 'videos']
+                    ]
+                ]
 	)
 ];

@@ -110,7 +110,7 @@ class Route extends BaseObject{
 					$this->validRouting = $alias;
 				}
 			} else {
-				$this->setAlias($value, (!empty($prefix) ? $prefix : '').$key.'/', (!empty($prefix) ? $prefix.'.' : '').$key);
+                            $this->setAlias($value, (!empty($prefix) ? $prefix : '').$key.'/', (!empty($prefix) ? str_replace('/', '', $prefix).'.' : '').$key);
 			}
 		}
 	}
@@ -161,7 +161,11 @@ class Route extends BaseObject{
 
 		return implode('/', $url);
 	}
-
+        
+        public function clearAttributes(){
+            $this->attributes = [];
+            return $this;
+        }
 
 	/**
 	* __get method

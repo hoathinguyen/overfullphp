@@ -11,7 +11,7 @@ namespace Overfull\Template;
 class Otp{
 	protected $tags = [
 		// Create section
-		"/@beginSection\(([a-zA-Z0-9\"\']+)\)/" => '<?php $this->setSection($1, function(){ ?>',
+		"/@beginSection\(([a-zA-Z0-9\"\']+?)\)(.*)/" => '<?php $this->setSection($1, function()$2{ ?>',
 		"/@endSection/" => '<?php }); ?>',
 
 		// Use section

@@ -1,9 +1,9 @@
 <?php
 return [
-	'alway-build-otp' => true,
+    'develop' => true,
 
-	'languages' => array(
-		'default' => 'vi',
-		'folder'	=> 'languages'
-	)
+    'languages' => array(
+            'default' => 'vi',
+            'folder'	=> 'languages'
+    )
 ];

@@ -29,7 +29,7 @@ class PatternHandler extends BaseObject{
 		$appNamespace = Bag::config()->get('app.namespace');
 
 		// Get controller name
-		$controller = Bag::$route->controller;
+		$controller = Bag::route()->controller;
 		if(!class_exists($controller)){
 			$controller = "{$appNamespace}\\Controllers\\{$controller}";
 			if(!class_exists($controller)){
@@ -50,8 +50,8 @@ class PatternHandler extends BaseObject{
 			}
 			
 			$this->view = new $view();
-		}elseif(Bag::$route->view){
-			$view = Bag::$route->view;
+		}elseif(Bag::route()->view){
+			$view = Bag::route()->view;
 
 			if(!class_exists($view)){
 				$view = "{$appNamespace}\\Views\\{$view}";

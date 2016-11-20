@@ -32,9 +32,9 @@ abstract class BaseSchema implements \JsonSerializable{
 	 * @return void
 	 */
 	function __construct($connection = null, $record = null, $queryBuilder = null){
-		$this->connection($connection);
-		$this->activeRecord($record);
-		$this->queryBuilder = $queryBuilder;
+            $this->connection($connection);
+            $this->activeRecord($record);
+            $this->queryBuilder($queryBuilder);
 	}
 
 	/**
@@ -43,11 +43,11 @@ abstract class BaseSchema implements \JsonSerializable{
 	 * @param $connection
 	 */
 	public function connection($connection = null){
-		if(!$connection){
-			return $this->connection;
-		}
-		$this->connection = $connection;
-		return $this;
+            if(!$connection){
+                return $this->connection;
+            }
+            $this->connection = $connection;
+            return $this;
 	}
 
 	/**
@@ -56,11 +56,11 @@ abstract class BaseSchema implements \JsonSerializable{
 	 * @param Record object $record
 	 */
 	public function activeRecord($record = null){
-		if(!$record){
-			return $this->activeRecord;
-		}
-		$this->activeRecord = $record;
-		return $this;
+            if(!$record){
+                return $this->activeRecord;
+            }
+            $this->activeRecord = $record;
+            return $this;
 	}
 
 	/**
@@ -69,12 +69,12 @@ abstract class BaseSchema implements \JsonSerializable{
 	 * @param queryBuilder
 	 */
 	public function queryBuilder($queryBuilder = null){
-		if(!$queryBuilder){
-			return $this->queryBuilder;
-		}
+            if(!$queryBuilder){
+                return $this->queryBuilder;
+            }
 
-		$this->queryBuilder = $queryBuilder;
-		return $this;
+            $this->queryBuilder = $queryBuilder;
+            return $this;
 	}
 
 	/**
@@ -83,18 +83,18 @@ abstract class BaseSchema implements \JsonSerializable{
 	 * @return array
 	 */
 	public function query($sql){
-		try {
-			$this->connection->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
-			$result = $this->connection->query($sql);
+            try {
+                $this->connection->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
+                $result = $this->connection->query($sql);
 
-			if(!$this->activeRecord){
-				return $result->fetchAll();
-			}
+                if(!$this->activeRecord){
+                    return $result->fetchAll();
+                }
 
-			return $result->fetchAll(\PDO::FETCH_CLASS, $this->activeRecord);
-		}catch (\PDOException $err) {
-		    throw $err;
-		}
+                return $result->fetchAll(\PDO::FETCH_CLASS, $this->activeRecord);
+            }catch (\PDOException $err) {
+                throw $err;
+            }
 	}
 
 	/**

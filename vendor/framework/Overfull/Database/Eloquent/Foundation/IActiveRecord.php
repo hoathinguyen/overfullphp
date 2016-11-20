@@ -50,7 +50,7 @@ interface IActiveRecord{
          * @param string $relative They key of relation object
          * @param string $locale They key of relation object
          */
-        function hasMany($activeRecord, $relative, $locale);
+        function hasMany($activeRecord, $relative);
         
         /**
          * HasMany method
@@ -58,7 +58,7 @@ interface IActiveRecord{
          * @param string $relative They key of relation object
          * @param string $locale They key of relation object
          */
-        function hasOne($activeRecord, $relative, $locale);
+        function hasOne($activeRecord, $relative);
         
         /**
          * HasMany method
@@ -66,5 +66,5 @@ interface IActiveRecord{
          * @param string $relative They key of relation object
          * @param string $locale They key of relation object
          */
-        function belongsTo($activeRecord, $relative, $locale);
+        function belongsTo($activeRecord, $relative);
 }

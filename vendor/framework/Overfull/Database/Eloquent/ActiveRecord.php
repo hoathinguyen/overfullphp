@@ -53,10 +53,15 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param string $relative They key of relation object
      * @param string $locale They key of relation object
      */
-    public final function hasMany($activeRecord, $relative, $locale){
+    public final function hasMany($activeRecord, $relative){
         $name = debug_backtrace()[1]['function'];
-        $this->relations[$name] = new HasMany($this->connection, $activeRecord, $relative, $locale);
-        return $this->relations[$name]->schema();
+        $this->relations[$name] = new HasMany(
+                $this->connection,
+                clone $this->schema,
+                $activeRecord,
+                $this,
+                $relative);
+        return $this->relations[$name]->parse()->schema();
     }
 
     /**
@@ -65,10 +70,16 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param string $relative They key of relation object
      * @param string $locale They key of relation object
      */
-    public final function hasOne($activeRecord, $relative, $locale){
+    public final function hasOne($activeRecord, $relative){
         $name = debug_backtrace()[1]['function'];
-        $this->relations[$name] = new HasOne($this->connection, $activeRecord, $relative, $locale);
-        return $this->relations[$name]->schema();
+        $this->relations[$name] = new HasOne(
+                $this->connection,
+                clone $this->schema,
+                $activeRecord,
+                $this,
+                $relative);
+                        
+        return $this->relations[$name]->parse()->schema();
     }
 
     /**
@@ -77,10 +88,16 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param string $relative They key of relation object
      * @param string $locale They key of relation object
      */
-    public final function belongsTo($activeRecord, $relative, $locale){
+    public final function belongsTo($activeRecord, $relative){
         $name = debug_backtrace()[1]['function'];
-        $this->relations[$name] = new BelongsTo($this->connection, $activeRecord, $relative, $locale);
-        return $this->relations[$name]->schema();
+        $this->relations[$name] = new BelongsTo(
+                $this->connection,
+                clone $this->schema,
+                $activeRecord,
+                $this,
+                $relative);
+                
+        return $this->relations[$name]->parse()->schema();
     }
 
 /**
@@ -203,6 +220,22 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public function getTableName(){
         return $this->tableName;
+    }
+    
+    /**
+     * Get primary key method
+     *
+     */
+    public function isAttribute($name){
+        return isset($this->attributes[$name]);
+    }
+    
+    /**
+     * Get primary key method
+     *
+     */
+    public function isRelation($name){
+        return isset($this->relations['get'.ucfirst($name)]);
     }
 
     /**
@@ -353,14 +386,13 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
             
             $this->{$__name}();
             
-            $this->relations[$__name]->execute();
-            
-            return $this->relations[$__name]->data();
+            return $this->relations[$__name]->run()->data();
         }
         
         if(!isset($this->attributes[$name])){
             return null;
         }
+        
         return $this->attributes[$name];
     }
 
@@ -371,9 +403,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @return bool
      */
     public function __isset($key){
-        //return (isset($this->attributes[$key]) || isset($this->relations[$key])) ||
-          //      ($this->hasGetMutator($key) && ! is_null($this->getAttributeValue($key)));
-    	return (isset($this->attributes[$key]) || isset($this->relations[$key]));
+    	return ($this->isAttribute($key) || $this->isRelation($key));
     }
 
     /**
@@ -383,8 +413,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @return void
      */
     public function __unset($key){
-        //unset($this->attributes[$key], $this->relations[$key]);
-        unset($this->attributes[$key]);
+        unset($this->attributes[$key], $this->relations['get'.ucfirst($key)]);
     }
 
     /**
@@ -393,5 +422,13 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public function attributes(){
         return $this->attributes;
+    }
+    
+    /**
+     * Get relations
+     * @return array relations
+     */
+    public function relations(){
+        return $this->relations;
     }
 }

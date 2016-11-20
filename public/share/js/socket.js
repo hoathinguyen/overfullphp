@@ -7,10 +7,10 @@ socket.on('connected', function(msg){
 	});
 
 	socket.on('message', function(data){
-		$('.media-list').append('<li class="media">'
+		$('#chat .media-list').append('<li class="media">'
             + '<div class="media-left">'
             + '<a href="#">'
-            + '<img class="media-object" src="'+data.from.avatar+'" alt="..." style="height: 30px; width: 30px;">'
+            + '<img class="media-object" src="'+data.from.user.avatar+'" alt="..." style="height: 30px; width: 30px;">'
             + '</a>'
             + '</div>'
             + '<div class="media-body">'
@@ -21,13 +21,13 @@ socket.on('connected', function(msg){
 
 	socket.on('typing', function(data){
 		if(data.from.id != me.id){
-			$('.typing').text(data.from.username + ' is typing...');
+			$('.typing').text(data.from.user.username + ' is typing...');
 		}
 	});
 
 	$('#chat form').submit(function(e){
-    	e.preventDefault();
-    	socket.emit('message', {msg: $(this).find('input').val(), to: {room: me.room}, from: me});
+            e.preventDefault();
+            socket.emit('message', {msg: $(this).find('input').val(), to: {room: me.room}, from: me});
   		$(this).find('input').val('');
   	});
 

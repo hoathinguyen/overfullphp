@@ -9,5 +9,8 @@
 namespace Overfull\Database\Eloquent\Relations;
 
 class BelongsTo extends \Overfull\Database\Eloquent\Relations\Relation{
-    
+    public function run(){
+        $this->data($this->schema()->one());
+        return $this;
+    }
 }
