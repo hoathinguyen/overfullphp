@@ -17,214 +17,214 @@ use Bag;
 use Overfull\Template\Otp;
 
 class View extends Otp implements IView{
-	public $template = null;
+    public $template = null;
 
-	protected $contentPath = null;
+    protected $contentPath = null;
 
-	protected $layoutPath = null;
+    protected $layoutPath = null;
 
-	protected $helpers = [];
+    protected $helpers = [];
 
-	protected $variables = [];
+    protected $variables = [];
 
-	protected $content = '';
+    protected $content = '';
 
-	protected $layout = false;
-	
-	function __construct(){
-		$this->contentPath = 'Views'.DS.'Contents';
-		$this->layoutPath = 'Views'.DS.'Layouts';
-	}
+    protected $layout = false;
 
-	/**
-	* Run method
-	* This handle something to get view result
-	*/
-	public function run($actionResult){
-		// Check if view type is exist
-		if(!method_exists($this, $actionResult->get('type'))){
-			throw new ViewTypeNotFoundException($actionResult->get('type'));
-		}
+    protected $actionResult = null;
 
-		return $this->{$actionResult->get('type')}($actionResult->get('gift'));
-	}
+    function __construct(){
+            $this->contentPath = 'Views'.DS.'Contents';
+            $this->layoutPath = 'Views'.DS.'Layouts';
+    }
 
-	/**
-	 * Handle view with render view
-	 *
-	 * @date 2016/05/21
-	 * @param mixed $gift
-	 * @param array $variables
-	 * @return string
-	 */
-	protected function render($gift, $variables = []){
-		if(is_array($gift)){
-			if(!empty($gift['otp']['helpers'])){
-				$this->helpers = $gift['otp']['helpers'];
-			}
+    /**
+    * Run method
+    * This handle something to get view result
+    */
+    public function run($actionResult){
+        // Check if view type is exist
+        if(!method_exists($this, $actionResult->type)){
+            throw new ViewTypeNotFoundException($actionResult->type);
+        }
 
-			if(!empty($gift['data'])){
-				$this->variables = $gift['data'];
-			}
+        $this->actionResult = $actionResult;
 
-			// Set layout
-			$this->layout = !empty($gift['otp']['layout']) ? $gift['otp']['layout'] : false;
+        foreach ($this->actionResult->attributes() as $key => $value){
+            $this->$key = $value;
+        }
 
-			$this->content = $this->__readOtp([
-				'file' => $this->contentPath.DS.(!empty($gift['otp']['root']) ? $gift['otp']['root'].DS : '' ).$gift['otp']['content'],
-				'variables' => $this->variables]);
+        return $this->{$actionResult->type}($actionResult->get());
+    }
 
-			if($this->layout){
-				return $this->__readOtp([
-				'file' => $this->layoutPath.DS.$this->layout,
-				'variables' => $this->variables]);
-			}
+    /**
+     * Handle view with render view
+     *
+     * @date 2016/05/21
+     * @param mixed $gift
+     * @param array $variables
+     * @return string
+     */
+    protected function render($gift, $variables = []){
+        if(is_array($gift)){
+            $this->variables = $gift;
 
-			return $this->content;
-		}
+            $this->content = $this->__readOtp([
+                'file' => $this->contentPath.DS.(!empty($this->root) ? $this->root.DS : '' ).$this->content,
+                'variables' => $this->variables]);
 
-		return $this->__readOtp([
-			'file' => $this->contentPath.DS.$gift,
-			'variables' => $variables]);
-	}
+            if($this->layout){
+                return $this->__readOtp([
+                'file' => $this->layoutPath.DS.$this->layout,
+                'variables' => $this->variables]);
+            }
 
-	/**
-	 * Get content
-	 *
-	 * @date 2016/05/21
-	 * @param mixed $gift
-	 * @return string
-	 */
-	protected final function content(){
-		return $this->content;
-	}
+            return $this->content;
+        }
 
-	/**
-	 * Handle view with json
-	 *
-	 * @date 2016/05/21
-	 * @param mixed $gift
-	 * @return string
-	 */
-	protected final function json($gift){
-		Bag::$response->format = ResponseFormat::JSON;
-		return json_encode($gift['data']);
-	}
+        return $this->__readOtp([
+                'file' => $this->contentPath.DS.$gift,
+                'variables' => $variables]);
+    }
 
-	/**
-	 * Hanlde view and return view as text
-	 *
-	 * @date 2016/05/21
-	 * @param mixed $gift
-	 * @return string
-	 */
-	protected final function html($gift){
-		Bag::$response->format = ResponseFormat::HTML;
-		return $gift['data'];
-	}
+    /**
+     * Get content
+     *
+     * @date 2016/05/21
+     * @param mixed $gift
+     * @return string
+     */
+    protected final function content(){
+        return $this->content;
+    }
 
-	/**
-	 * Hanlde view and return value as xml
-	 *
-	 * @date 2016/05/21
-	 * @param mixed $gift
-	 * @return string
-	 */
-	protected final function xml($gift){
-		Bag::$response->format = ResponseFormat::XML;
-		return 'render';
-	}
+    /**
+     * Handle view with json
+     *
+     * @date 2016/05/21
+     * @param mixed $gift
+     * @return string
+     */
+    protected final function json($gift){
+        Bag::$response->format = ResponseFormat::JSON;
+        return json_encode($gift);
+    }
 
-	/**
-	 * __file method
-	 *
-	 * @date 2016/05/21
-	 * @param mixed $gift
-	 * @return string
-	 */
-	protected final function file($gift){
-		return 'render';
-	}
+    /**
+     * Hanlde view and return view as text
+     *
+     * @date 2016/05/21
+     * @param mixed $gift
+     * @return string
+     */
+    protected final function html($gift){
+        Bag::$response->format = ResponseFormat::HTML;
+        return $gift;
+    }
 
-	/**
-	 * Handle view as redirect
-	 *
-	 * @date 2016/05/21
-	 * @param mixed $gift
-	 * @return string
-	 */
-	protected final function redirect($gift){
-		Bag::$response->format = ResponseFormat::HTML;
-		$html = '<!DOCTYPE html>
-				<html><head><title>Redirecting...</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift['data']).'" /></head><body></body></html>';
+    /**
+     * Hanlde view and return value as xml
+     *
+     * @date 2016/05/21
+     * @param mixed $gift
+     * @return string
+     */
+    protected final function xml($gift){
+        Bag::$response->format = ResponseFormat::XML;
+        return 'render';
+    }
 
-		return $html;
-	}
+    /**
+     * __file method
+     *
+     * @date 2016/05/21
+     * @param mixed $gift
+     * @return string
+     */
+    protected final function file($gift){
+        return 'render';
+    }
 
-	/**
-	 * read file otp
-	 *
-	 * @date 2016/05/21
-	 * @param array $otp
-	 * @return string
-	 */
-	protected final function __readOtp($otp){
-		try{
-			$____content = '';
-			// Create variable
-			foreach ($otp['variables'] as $key => $value) {
-				$$key = $value;
-			}
+    /**
+     * Handle view as redirect
+     *
+     * @date 2016/05/21
+     * @param mixed $gift
+     * @return string
+     */
+    protected final function redirect($gift){
+        Bag::$response->format = ResponseFormat::HTML;
+        $html = '<!DOCTYPE html>
+                        <html><head><title>Redirecting...</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift).'" /></head><body></body></html>';
 
-			$otp['file'] = PathUtil::convert($otp['file']);
+        return $html;
+    }
 
-			$appRoot = Bag::config()->get('app.root');
+    /**
+     * read file otp
+     *
+     * @date 2016/05/21
+     * @param array $otp
+     * @return string
+     */
+    protected final function __readOtp($otp){
+        try{
+            $____content = '';
+            
+            // Create variable
+            foreach ($otp['variables'] as $key => $value) {
+                $$key = $value;
+            }
 
-			$storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($appRoot.DS.$otp['file']).'.otp');
+            $otp['file'] = PathUtil::convert($otp['file']);
 
-			if ( !file_exists($storageFile) || Bag::config()->get('core.develop')) {
-				$ext = Bag::config()->get('core.otp.ext');
-				
-				$fullFile = PathUtil::getFull($appRoot.DS.$otp['file'].'.'.($ext ? $ext : 'php'));
+            $appRoot = Bag::config()->get('app.root');
 
-				// Get content of view
-				if ( !file_exists($fullFile) ) {
-					throw new FileNotFoundException($fullFile);
-				}
+            $storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($appRoot.DS.$otp['file']).'.otp');
 
-				$____content = file_get_contents($fullFile);
+            if ( !file_exists($storageFile) || Bag::config()->get('core.develop')) {
+                $ext = Bag::config()->get('core.otp.ext');
 
-				foreach ($this->tags as $key => $value) {
-					//dd($key);
-					$____content = preg_replace($key, $value, $____content);
-				}
+                $fullFile = PathUtil::getFull($appRoot.DS.$otp['file'].'.'.($ext ? $ext : 'php'));
 
-				$namespace = "";
+                // Get content of view
+                if ( !file_exists($fullFile) ) {
+                    throw new FileNotFoundException($fullFile);
+                }
 
-				$helpers = Bag::config()->get('core.otp.helpers');
-				$helpers = !empty($helpers) ? $helpers : [];
+                $____content = file_get_contents($fullFile);
 
-				foreach ( $helpers as $key => $value) {
-					$namespace .= "use {$value} as {$key};";
-				}
+                foreach ($this->tags as $key => $value) {
+                    //dd($key);
+                    $____content = preg_replace($key, $value, $____content);
+                }
 
-				foreach ( $this->helpers as $key => $value) {
-					$namespace .= "use {$value} as {$key}; ";
-				}
+                $namespace = "";
 
-				file_put_contents($storageFile, "<?php {$namespace} ?>".$____content);
-			}
+                $helpers = Bag::config()->get('core.otp.helpers');
+                $helpers = !empty($helpers) ? $helpers : [];
 
-			ob_start();
+                foreach ( $helpers as $key => $value) {
+                    $namespace .= "use {$value} as {$key};";
+                }
 
-			require $storageFile;
+                foreach ( $this->helpers as $key => $value) {
+                    $namespace .= "use {$value} as {$key}; ";
+                }
 
-			$____content = ob_get_clean();
+                file_put_contents($storageFile, "<?php {$namespace} ?>".$____content);
+            }
 
-			return $____content;
-		} catch (Exception $e) {
-			//ob_end_clean();
-			throw $e;
-		}
-	}
+            ob_start();
+
+            require $storageFile;
+
+            $____content = ob_get_clean();
+
+            return $____content;
+        } catch (Exception $e) {
+            //ob_end_clean();
+            throw $e;
+        }
+    }
 }

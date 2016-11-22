@@ -17,7 +17,7 @@ class HomeController extends ShareController{
         $this->chanelBusiness = new ChanelBusiness();
     }
 
-    public function index(){
+    public function actionIndex(){
         $chanels = $this->chanelBusiness->getAllChanels();
         $chanels = ArrayUtil::groupObjectByAttribute($chanels, 'category_name');
         return $this->render()->with(compact("chanels"));

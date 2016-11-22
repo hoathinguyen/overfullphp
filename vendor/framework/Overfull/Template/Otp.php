@@ -11,11 +11,11 @@ namespace Overfull\Template;
 class Otp{
 	protected $tags = [
 		// Create section
-		"/@beginSection\(([a-zA-Z0-9\"\']+?)\)(.*)/" => '<?php $this->setSection($1, function()$2{ ?>',
+		"/@beginSection\(([a-zA-Z0-9\"\'\-_]+?)\)(.*)/" => '<?php $this->setSection($1, function()$2{ ?>',
 		"/@endSection/" => '<?php }); ?>',
 
 		// Use section
-		"/@section\(([a-zA-Z0-9\"\']+)\)/" => '<?php echo $this->getSection($1); ?>',
+		"/@section\(([a-zA-Z0-9\"\'\-_]+)\)/" => '<?php echo $this->getSection($1); ?>',
 
 		// Foreach
 		"/@foreach\((.*?)as(.*?)\)/" => '<?php foreach($1as$2){ ?>',
@@ -25,7 +25,13 @@ class Otp{
 		"/@if\((.*)\)/" => '<?php if($1){ ?>',
 		'/@elseif\((.*)\)/' => '<?php }elseif($1){ ?>',
 		'/@else/' => '<?php }else{ ?>',
-		'/@endif/' => '<?php } ?>'
+		'/@endif/' => '<?php } ?>',
+            
+                '/\{\{/' => '<?php echo ',
+                '/\}\}/' => '?>',
+                
+                '/\{\[/' => '<?php print_r( ',
+                '/\]\}/' => '); ?>'
 	];
 
 	protected $sections = [];

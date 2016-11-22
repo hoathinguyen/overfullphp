@@ -13,46 +13,72 @@ use Overfull\Patterns\MVC\ActionResult;
 use Overfull\Foundation\Base\BaseObject;
 
 abstract class Controller extends BaseObject implements IController{
-	protected $layout = false;
-	protected $helpers = [];
-	protected $root = '';
-	protected $handler = null;
+        protected $actionResult = null;
 
-	public function beforeAction(){}
+        public function beforeAction(){}
 	public function beforeFilter(){}
 	public function beforeRender(){}
-
-	/**
-	 * Set type to view is render
-	 *
-	 * @param string/array $view
-	 * @param mixed $data
-	 * @return array
-	 */
-	public final function otp($name = false, $value = null){
-		if(!$name){
-			$otp = [
-				'layout' => !empty($this->layout) ? $this->layout : false,
-				'helpers' => !empty($this->helpers) ? $this->helpers : [],
-				'handler' => !empty($this->hanlder) ? $this->hanlder : null,
-				'root' => !empty($this->root) ? $this->root : str_replace('Controller', '', Bag::$route->controller),
-				'content' => !empty($this->content) ? $this->content : Bag::$route->method
-			];
-
-			return $otp;
-		}
-
-		if(is_array($name)){
-			foreach ($name as $key => $value) {
-				$this->$key = $value;
-			}
-
-			return $this;
-		}
-
-		$this->$name = $value;
-		return $this;
-	}
+        
+        /**
+         * set helpers
+         * @param type $name
+         * @param type $data
+         */
+        protected final function helpers($name, $data = []){
+            if(is_string($name)){
+                $helpers = $this->actionResult->helpers;
+                $helpers[$name] = $data;
+                $this->actionResult->helpers = $helpers;
+            }
+            
+            $this->actionResult->helpers = $name;
+            return $this;
+        }
+        
+        /**
+         * layout
+         * @param type $name
+         */
+        protected final function layout($name){
+            $this->actionResult->layout = $name;
+            return $this;
+        }
+        
+        /**
+         * set helpers
+         * @param type $name
+         * @param type $data
+         */
+        protected final function root($name){
+            $this->actionResult->root = $name;
+            return $this;
+        }
+        
+        /**
+         * handler
+         * @param type $name
+         */
+        protected final function handler($name){
+            if(is_object($name)){
+                $this->actionResult->handler = $name;
+                return $this;
+            }
+        }
+        
+        /**
+         * actionResult
+         * @param type $name
+         */
+        protected final function actionResult($name = false){
+            if(!$name){
+                return $this->actionResult;
+            }
+            
+            if(is_object($name)){
+                $this->actionResult = $name;
+                return $this;
+            }
+        }
 
 	/**
 	 * Set type to view is render
@@ -62,20 +88,17 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function render($view = false, $data = []){
-		if(is_array($view)){
-			$this->layout = $view[0];
-			$this->content = $view[1];
-		} else if($view){
-			$this->content = $view;
-		}
+            if(is_array($view)){
+                $this->actionResult->layout = $view[0];
+                $this->actionResult->content = $view[1];
+            } else if($view){
+                $this->actionResult->content = $view;
+            }
+                
+            $this->actionResult->type = 'render';
+            $this->actionResult->set($data);
 
-		return new ActionResult([
-			'type' => 'render',
-			'gift' => [
-				'otp' => $this->otp(),
-				'data' => $data
-			]
-		]);
+            return $this->actionResult;
 	}
 
 	/**
@@ -86,19 +109,17 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function renderAjax($view = false, $data = []){
-		$this->layout = false;
+            $this->actionResult->layout = false;
 
-		if($view){
-			$this->content = $view;
-		}
-
-		return new ActionResult([
-			'type' => 'render',
-			'gift' => [
-				'otp' => $this->otp(),
-				'data' => $data
-			]
-		]);
+            if($view){
+                $this->actionResult->content = $view;
+            }
+            
+            $this->actionResult->type = 'render';
+            
+            $this->actionResult->set($data);
+            
+            return $this->actionResult;
 	}
 
 	/**
@@ -108,13 +129,11 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function redirect($url){
-		return new ActionResult([
-			'type' => 'redirect',
-			'gift' => [
-				'data' => $url,
-				'otp' => $this->otp(),
-			]
-		]);
+            $this->actionResult->type = 'redirect';
+            
+            $this->actionResult->set($url);
+            
+            return $this->actionResult;
 	}
 
 	/**
@@ -124,13 +143,11 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function json($data){
-		return new ActionResult([
-			'type' => 'json',
-			'gift' => [
-				'otp' => $this->otp(),
-				'data' => $data,
-			]
-		]);
+            $this->actionResult->type = 'json';
+            
+            $this->actionResult->set($data);
+            
+            return $this->actionResult;
 	}
 	
 	/**
@@ -139,43 +156,43 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return void
 	 */
 	public final function run(){
-		$method = Bag::$route->method;
+            $method = Bag::route()->action;
+            $__method = 'action'.ucfirst($method);
+            
+            if(!method_exists($this, $__method)){
+                    throw new MethodNotFoundException($__method);
+            }
 
-		if(!method_exists($this, $method)){
-			throw new MethodNotFoundException($method);
-		}
+            $this->actionResult = new ActionResult();
 
-		// Event before
-		$this->beforeFilter();
+            // Event before
+            $this->beforeFilter();
 
-		// Get filter before
+            // Get filter before
 
-		$this->beforeAction();
+            $this->beforeAction();
 
-		$ActionResult = $this->{$method}(Bag::route()->parameters);
+            $actionResult = $this->{$__method}(Bag::route()->parameters);
 
-		$this->beforeRender();
+            $this->beforeRender();
 
-		if (is_a($ActionResult, ActionResult::class)){
-			return $ActionResult;
-		} elseif(is_array($ActionResult)){
-			return new ActionResult([
-					'type' => 'json',
-					'gift' => [
-						'otp' => $this->otp(),
-						'data' => $ActionResult,
-					]
-				]);
-		} elseif(is_object($ActionResult)){
-			return new ActionResult($ActionResult->run());
-		} else{
-			return new ActionResult([
-				'type' => 'html',
-				'gift' => [
-					'otp' => $this->otp(),
-					'data' => $ActionResult,
-				]
-			]);
-		}
+            if (is_a($actionResult, ActionResult::class)){
+                $actionResult->review();
+                return $actionResult;
+            } elseif(is_array($actionResult)){
+                $this->actionResult->review();
+                $this->actionResult->type = 'json';
+                $this->actionResult->set($ActionResult);
+                return $this->actionResult;
+            } elseif(is_object($ActionResult)){
+                $this->actionResult->review();
+                $ActionResult->run($this->actionResult);
+                return $this->actionResult;
+            } else{
+                $this->actionResult->review();
+                $this->actionResult->type = 'html';
+                $this->actionResult->set($ActionResult);
+                return $this->actionResult;
+            }
 	}
 }
