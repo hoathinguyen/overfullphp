@@ -9,15 +9,44 @@ use Overfull\Patterns\MVC\Foundation\IController;
 use Overfull\Patterns\MVC\Exception\MethodNotFoundException;
 use Bag;
 use Overfull\Http\Response\ResponseFormat;
-use Overfull\Patterns\MVC\ActionResult;
+use Overfull\Patterns\MVC\DataTransfer;
 use Overfull\Foundation\Base\BaseObject;
 
 abstract class Controller extends BaseObject implements IController{
-        protected $actionResult = null;
+        protected $dataTransfer = null;
 
         public function beforeAction(){}
 	public function beforeFilter(){}
 	public function beforeRender(){}
+        
+        /**
+	 * Set type to view is render
+	 *
+	 * @param string/array $view
+	 * @param mixed $data
+	 * @return array
+	 */
+	public final function defaultDataTransfer($name = false, $value = null){
+            if(!$name){
+                $this->dataTransfer->layout = !empty($this->dataTransfer->layout) ? $this->dataTransfer->layout : false;
+                $this->dataTransfer->helpers = !empty($this->dataTransfer->helpers) ? $this->dataTransfer->helpers : [];
+                $this->dataTransfer->handler = !empty($this->dataTransfer->handler) ? $this->dataTransfer->handler : null;
+                $this->dataTransfer->root = !empty($this->dataTransfer->root) ? $this->dataTransfer->root : str_replace('Controller', '', Bag::$route->controller);
+                $this->dataTransfer->content = !empty($this->dataTransfer->content) ? $this->dataTransfer->content : Bag::$route->action;
+                return $this;
+            }
+
+            if(is_array($name)){
+                foreach ($name as $key => $value) {
+                    $this->dataTransfer->$key = $value;
+                }
+
+                return $this;
+            }
+
+            $this->dataTransfer->$name = $value;
+            return $this;
+	}
         
         /**
          * set helpers
@@ -26,12 +55,12 @@ abstract class Controller extends BaseObject implements IController{
          */
         protected final function helpers($name, $data = []){
             if(is_string($name)){
-                $helpers = $this->actionResult->helpers;
+                $helpers = $this->dataTransfer->helpers;
                 $helpers[$name] = $data;
-                $this->actionResult->helpers = $helpers;
+                $this->dataTransfer->helpers = $helpers;
             }
             
-            $this->actionResult->helpers = $name;
+            $this->dataTransfer->helpers = $name;
             return $this;
         }
         
@@ -40,7 +69,7 @@ abstract class Controller extends BaseObject implements IController{
          * @param type $name
          */
         protected final function layout($name){
-            $this->actionResult->layout = $name;
+            $this->dataTransfer->layout = $name;
             return $this;
         }
         
@@ -50,7 +79,7 @@ abstract class Controller extends BaseObject implements IController{
          * @param type $data
          */
         protected final function root($name){
-            $this->actionResult->root = $name;
+            $this->dataTransfer->root = $name;
             return $this;
         }
         
@@ -60,22 +89,22 @@ abstract class Controller extends BaseObject implements IController{
          */
         protected final function handler($name){
             if(is_object($name)){
-                $this->actionResult->handler = $name;
+                $this->dataTransfer->handler = $name;
                 return $this;
             }
         }
         
         /**
-         * actionResult
+         * dataTransfer
          * @param type $name
          */
-        protected final function actionResult($name = false){
+        protected final function dataTransfer($name = false){
             if(!$name){
-                return $this->actionResult;
+                return $this->dataTransfer;
             }
             
             if(is_object($name)){
-                $this->actionResult = $name;
+                $this->dataTransfer = $name;
                 return $this;
             }
         }
@@ -88,17 +117,18 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function render($view = false, $data = []){
+            $this->defaultDataTransfer();
             if(is_array($view)){
-                $this->actionResult->layout = $view[0];
-                $this->actionResult->content = $view[1];
+                $this->dataTransfer->layout = $view[0];
+                $this->dataTransfer->content = $view[1];
             } else if($view){
-                $this->actionResult->content = $view;
+                $this->dataTransfer->content = $view;
             }
                 
-            $this->actionResult->type = 'render';
-            $this->actionResult->set($data);
+            $this->dataTransfer->type = 'render';
+            $this->dataTransfer->set($data);
 
-            return $this->actionResult;
+            return $this->dataTransfer;
 	}
 
 	/**
@@ -109,17 +139,18 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function renderAjax($view = false, $data = []){
-            $this->actionResult->layout = false;
+            $this->defaultDataTransfer();
+            $this->dataTransfer->layout = false;
 
             if($view){
-                $this->actionResult->content = $view;
+                $this->dataTransfer->content = $view;
             }
             
-            $this->actionResult->type = 'render';
+            $this->dataTransfer->type = 'render';
             
-            $this->actionResult->set($data);
+            $this->dataTransfer->set($data);
             
-            return $this->actionResult;
+            return $this->dataTransfer;
 	}
 
 	/**
@@ -129,11 +160,12 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function redirect($url){
-            $this->actionResult->type = 'redirect';
+            $this->defaultDataTransfer();
+            $this->dataTransfer->type = 'redirect';
             
-            $this->actionResult->set($url);
+            $this->dataTransfer->set($url);
             
-            return $this->actionResult;
+            return $this->dataTransfer;
 	}
 
 	/**
@@ -143,11 +175,12 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function json($data){
-            $this->actionResult->type = 'json';
+            $this->defaultDataTransfer();
+            $this->dataTransfer->type = 'json';
             
-            $this->actionResult->set($data);
+            $this->dataTransfer->set($data);
             
-            return $this->actionResult;
+            return $this->dataTransfer;
 	}
 	
 	/**
@@ -163,7 +196,7 @@ abstract class Controller extends BaseObject implements IController{
                     throw new MethodNotFoundException($__method);
             }
 
-            $this->actionResult = new ActionResult();
+            $this->dataTransfer = new DataTransfer();
 
             // Event before
             $this->beforeFilter();
@@ -172,27 +205,30 @@ abstract class Controller extends BaseObject implements IController{
 
             $this->beforeAction();
 
-            $actionResult = $this->{$__method}(Bag::route()->parameters);
+            $dataTransfer = $this->{$__method}(Bag::route()->parameters);
 
             $this->beforeRender();
 
-            if (is_a($actionResult, ActionResult::class)){
-                $actionResult->review();
-                return $actionResult;
-            } elseif(is_array($actionResult)){
-                $this->actionResult->review();
-                $this->actionResult->type = 'json';
-                $this->actionResult->set($ActionResult);
-                return $this->actionResult;
-            } elseif(is_object($ActionResult)){
-                $this->actionResult->review();
-                $ActionResult->run($this->actionResult);
-                return $this->actionResult;
+            if (is_a($dataTransfer, DataTransfer::class)){
+                //$dataTransfer->review();
+                return $dataTransfer;
+            } elseif(is_array($dataTransfer)){
+                //$this->dataTransfer->review();
+                $this->defaultDataTransfer();
+                $this->dataTransfer->type = 'json';
+                $this->dataTransfer->set($dataTransfer);
+                return $this->dataTransfer;
+            } elseif(is_object($dataTransfer)){
+                //$this->dataTransfer->review();
+                $this->defaultDataTransfer();
+                $dataTransfer->run($this->dataTransfer);
+                return $this->dataTransfer;
             } else{
-                $this->actionResult->review();
-                $this->actionResult->type = 'html';
-                $this->actionResult->set($ActionResult);
-                return $this->actionResult;
+                //$this->dataTransfer->review();
+                $this->defaultDataTransfer();
+                $this->dataTransfer->type = 'html';
+                $this->dataTransfer->set($dataTransfer);
+                return $this->dataTransfer;
             }
 	}
 }

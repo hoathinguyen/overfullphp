@@ -390,6 +390,17 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         }
         
         if(!isset($this->attributes[$name])){
+            $__name = 'get'. ucfirst($name).'Attribute';
+            if(method_exists($this, $__name) && 'get'.$name.'Attribute' != $__name){
+                if(!empty($this->attributes[$name])){
+                    return $this->attributes[$name];
+                }
+
+                $this->attributes[$name] = $this->{$__name}();
+
+                return $this->attributes[$name];
+            }
+            
             return null;
         }
         

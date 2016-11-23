@@ -32,7 +32,7 @@ return [
 		'namespace' => 'Src\Share'
 	],
 
-	'192.168.0.111' => [
+	'192.168.0.107' => [
 		'root' => 'src/Share',
 		'namespace' => 'Src\Share'
 	],

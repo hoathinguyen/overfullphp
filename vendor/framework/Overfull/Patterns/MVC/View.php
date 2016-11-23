@@ -31,7 +31,7 @@ class View extends Otp implements IView{
 
     protected $layout = false;
 
-    protected $actionResult = null;
+    protected $dataTransfer = null;
 
     function __construct(){
             $this->contentPath = 'Views'.DS.'Contents';
@@ -42,19 +42,19 @@ class View extends Otp implements IView{
     * Run method
     * This handle something to get view result
     */
-    public function run($actionResult){
+    public function run($dataTransfer){
         // Check if view type is exist
-        if(!method_exists($this, $actionResult->type)){
-            throw new ViewTypeNotFoundException($actionResult->type);
+        if(!method_exists($this, $dataTransfer->type)){
+            throw new ViewTypeNotFoundException($dataTransfer->type);
         }
 
-        $this->actionResult = $actionResult;
+        $this->dataTransfer = $dataTransfer;
 
-        foreach ($this->actionResult->attributes() as $key => $value){
+        foreach ($this->dataTransfer->attributes() as $key => $value){
             $this->$key = $value;
         }
 
-        return $this->{$actionResult->type}($actionResult->get());
+        return $this->{$dataTransfer->type}($dataTransfer->get());
     }
 
     /**

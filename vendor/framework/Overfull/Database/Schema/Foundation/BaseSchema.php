@@ -451,4 +451,35 @@ abstract class BaseSchema implements \JsonSerializable{
 			throw $e;
 		}
 	}
+        
+        /**
+         * count
+         * @return type
+         * @throws \Exception
+         */
+        public function count($isExecute = true){
+            try{
+                // Set limit as 1
+                $this->limit(1);
+                
+                $this->columns('COUNT(*) AS count');
+
+                $sql = $this->queryBuilder->selectSyntax();
+
+                if($isExecute){
+                    $sql = $this->query($sql);
+                    if(!$sql || count($sql) == 0){
+                            return 0;
+                    } else {
+                            $sql = $sql[0];
+                    }
+                }
+
+                $this->queryBuilder->clear();
+
+                return $sql->count;
+            } catch (\Exception $e){
+                throw $e;
+            }
+	}
 } 

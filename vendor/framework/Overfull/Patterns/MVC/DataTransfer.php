@@ -1,6 +1,6 @@
 <?php
 /*----------------------------------------------------
-* Filename: ActionResult.php
+* Filename: DataTransfer.php
 * Author: Overfull.net
 * Date: 2016/10/25
 * Description: CtrlResult between controller and view
@@ -10,38 +10,9 @@ namespace Overfull\Patterns\MVC;
 use Overfull\Utility\ArrayUtil;
 use Bag;
 
-class ActionResult{
+class DataTransfer{
 	protected $data = null;
         protected $attributes = [];
-        
-        /**
-	 * Set type to view is render
-	 *
-	 * @param string/array $view
-	 * @param mixed $data
-	 * @return array
-	 */
-	public final function review($name = false, $value = null){
-            if(!$name){
-                $this->attributes['layout'] = !empty($this->attributes['layout']) ? $this->attributes['layout'] : false;
-                $this->attributes['helpers'] = !empty($this->attributes['helpers']) ? $this->attributes['helpers'] : [];
-                $this->attributes['handler'] = !empty($this->attributes['handler']) ? $this->attributes['handler'] : null;
-                $this->attributes['root'] = !empty($this->attributes['root']) ? $this->attributes['root'] : str_replace('Controller', '', Bag::$route->controller);
-                $this->attributes['content'] = !empty($this->attributes['content']) ? $this->attributes['content'] : Bag::$route->action;
-                return $this;
-            }
-
-            if(is_array($name)){
-                foreach ($name as $key => $value) {
-                        $this->attributes[$key] = $value;
-                }
-
-                return $this;
-            }
-
-            $this->attributes[$name] = $value;
-            return $this;
-	}
         
         /**
          * __construct
@@ -70,6 +41,26 @@ class ActionResult{
         }
         
         /**
+         * Determine if an attribute exists on the model.
+         *
+         * @param  string  $key
+         * @return bool
+         */
+        public function __isset($key){
+            return isset($this->attributes[$key]);
+        }
+
+        /**
+         * Unset an attribute on the model.
+         *
+         * @param  string  $key
+         * @return void
+         */
+        public function __unset($key){
+            unset($this->attributes[$key]);
+        }
+        
+        /**
          * __call is not exists method
          * @param type $name
          * @param type $arguments
@@ -80,7 +71,17 @@ class ActionResult{
                 return $this->{'__'.$name}($arguments);
             }
             
-            return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+            if(count($arguments) == 0){
+                return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+            }
+            
+            if(count($arguments) == 1){
+                $this->attributes[$name] = $arguments[0];
+            } else {
+                $this->attributes[$name] = $arguments;
+            }
+            
+            return $this;
         }
         
         /**
