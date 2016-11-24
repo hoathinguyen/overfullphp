@@ -2,7 +2,6 @@
 .tab-contents{
 	margin-bottom: 10px;
 }
-
 .nav-tabs li, .nav-tabs li a{
 	border-radius: 0;
 }
@@ -10,6 +9,7 @@
 .tab-contents > div{
 	border: 1px solid #ddd;
 	border-top: 0;
+        background: #fff;
 }
 
 .btn{

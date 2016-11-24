@@ -53,8 +53,7 @@ class ExceptionHandler extends BaseObject{
 
             // return result
             Bag::response()->send();
-            
-            die();
+            exit();
         }else{
             $isShowDetail = Bag::config()->get('errors.display-errors');
             

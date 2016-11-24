@@ -17,6 +17,15 @@ socket.on('connected', function(msg){
             + data.msg
             + '</div>'
             + '</li>');
+    
+            var count = parseInt($('#chat .chat-count').text());
+            
+            if(isNaN(count)){
+                count = 0;
+            }
+            
+            count++;
+            $('#chat .chat-count').text(count);
 	});
 
 	socket.on('typing', function(data){

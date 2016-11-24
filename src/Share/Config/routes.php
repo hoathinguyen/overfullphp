@@ -8,7 +8,7 @@ return [
 			// Index of chanel
 			['(<:empty>|index.html)', 'any', 'controller=ChanelsController;action=index'],
 
-			['<:integer>/live.html', 'any', 'controller=ChanelsController;action=live;id={1}', 'as' => 'live'],
+			['<id:integer>/live.html', 'any', 'controller=ChanelsController;action=live;id={1}', 'as' => 'live'],
 		],
 
 		'me' => [
@@ -28,10 +28,12 @@ return [
 		],
 
 		['login.html', 'any', 'controller=MeController;action=login'],
+                ['logout.html', 'any', 'controller=MeController;action=logout'],
             
                 'ajax' => [
                     'chanels' => [
-                        ['videos.html', 'post', 'controller=ChanelsController;action=ajaxVideos', 'as' => 'videos']
+                        ['videos.html', 'post', 'controller=ChanelsController;action=ajaxVideos', 'as' => 'videos'],
+                        ['subscribe.html', 'post', 'controller=ChanelsController;action=ajaxSubscribe', 'as' => 'subscribe']
                     ]
                 ]
 	)
