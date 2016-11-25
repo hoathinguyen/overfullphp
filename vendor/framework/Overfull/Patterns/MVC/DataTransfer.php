@@ -9,6 +9,7 @@
 namespace Overfull\Patterns\MVC;
 use Overfull\Utility\ArrayUtil;
 use Bag;
+use Overfull\Template\Helpers\Form;
 
 class DataTransfer{
 	protected $data = null;
@@ -139,10 +140,10 @@ class DataTransfer{
 	 */
 	public function withLastGet(){
             if(!empty($data = Bag::request()->get())){
-                if(isset($data['__key__'])){
-                    Bag::store()->{"value_for_".$data['__key__']} = $data;
+                if(isset($data[Form::MODEL_KEY])){
+                    Bag::store()->{Form::VALUE_KEY.$data[Form::MODEL_KEY]} = $data;
                 } else {
-                    Bag::store()->value_for_default = $data;
+                    Bag::store()->{Form::VALUE_KEY.Form::generateModelKey('default')} = $data;
                 }
             }
 
@@ -156,10 +157,10 @@ class DataTransfer{
 	 */
 	public function withLastPost(){
             if(!empty($data = Bag::request()->post())){
-                if(isset($data['__key__'])){
-                    Bag::store()->{"value_for_".$data['__key__']} = $data;
+                if(isset($data[Form::MODEL_KEY])){
+                    Bag::store()->{Form::VALUE_KEY.$data[Form::MODEL_KEY]} = $data;
                 } else {
-                    Bag::store()->value_for_default = $data;
+                    Bag::store()->{Form::VALUE_KEY.Form::generateModelKey('default')} = $data;
                 }
             }
 
@@ -173,10 +174,10 @@ class DataTransfer{
 	 */
 	public function withLastData(){
             if(!empty($data = Bag::request()->any())){
-                if(isset($data['__key__'])){
-                    Bag::store()->{"value_for_".$data['__key__']} = $data;
+                if(isset($data[Form::MODEL_KEY])){
+                    Bag::store()->{Form::VALUE_KEY.$data[Form::MODEL_KEY]} = $data;
                 } else {
-                    Bag::store()->value_for_default = $data;
+                    Bag::store()->{Form::VALUE_KEY.Form::generateModelKey('default')} = $data;
                 }
             }
 
@@ -195,7 +196,7 @@ class DataTransfer{
 
             foreach ($data as $key => $value) {
                 if(is_array($value) || is_object($value)){
-                    Bag::store()->{"value_for_$key"} = $value;
+                    Bag::store()->{Form::VALUE_KEY.Form::generateModelKey($key)} = $value;
                 }
             }
 

@@ -14,7 +14,22 @@ use Overfull\Template\Foundation\Helper;
 class Form extends Helper{
 	protected static $data = false;
 	protected static $messages = [];
+        protected static $key = null;
 
+        const MODEL_KEY = '__key__';
+        const CSRF_KEY = '__csrf__';
+        const VALUE_KEY = 'value_';
+        const MESSAGE_KEY = 'message_';
+        
+        /**
+         * generateModelKey
+         * @param type $model
+         * @return type
+         */
+        public static function generateModelKey($model){
+            return base64_encode($model.'_overfull.net');
+        }
+        
 	/**
 	 * Parse name to name in HTML
 	 * @param $name
@@ -45,12 +60,15 @@ class Form extends Helper{
 		// Create open form and get model data
 		$__key__ = '';
 		if(is_string($model)){
-			static::$data = Bag::store()->{"value_for_$model"};
+			static::$data = Bag::store()->{Form::VALUE_KEY.$model};
 
 			if (is_object(static::$data)){
 				static::$data = json_decode(json_encode(static::$data), true);
 			}
-			$__key__ = "<input name=\"__key__\" value=\"$model\" type=\"hidden\"/>";
+
+                        $model = static::generateModelKey($model);
+                        
+			$__key__ = "<input name=\"".Form::MODEL_KEY."\" value=\"$model\" type=\"hidden\"/>";
 		} elseif (is_object($model)){
 			static::$data = json_decode(json_encode($model), true);
 		}
@@ -59,7 +77,7 @@ class Form extends Helper{
 		if(!empty($messages)){
 			static::$messages = $messages;
 		} elseif(is_string($model)){
-			static::$messages = Bag::store()->{"message_for_$model"};
+			static::$messages = Bag::store()->{Form::MESSAGE_KEY.$model};
 		}
 
 		if (is_object(static::$messages)){
@@ -73,77 +91,10 @@ class Form extends Helper{
 			$propertiesHTML .= " $key=\"$value\"";
 		}
 
-		return '<form method="'. (isset($properties['method']) ? $properties['method'] : 'POST') .'" '.$propertiesHTML.'>' . $__key__;
+		return '<form method="'. (isset($properties['method']) ? $properties['method'] : 'POST') .'" '.$propertiesHTML.'>' . $__key__.static::csrf($model);
 		// object-save="'.$model.'"
 	}
-
-	/**
-	 * Open method
-	 * @param array config
-	 * @return form open
-	 */
-	// public static function open($model = 'default', $properties = [], $messages = []){
-	// 	if(!$model){
-	// 		$model = 'default';
-	// 	}
-
-	// 	// Create message for model
-	// 	if(!empty($messages)){
-	// 		static::$messages = $messages;
-	// 	} else {
-	// 		static::$messages = Bag::store()->{"message_for_$model"};
-	// 	}
-
-	// 	if (is_object(static::$messages)){
-	// 		static::$messages = json_decode(json_encode(static::$messages), true);
-	// 	}
-
-	// 	// Generate html
-	// 	$propertiesHTML = '';
-
-	// 	$properties['method'] = isset($properties['method']) ? $properties['method'] : 'POST';
-
-	// 	$__key__ = '';
-	// 	if(strtoupper($properties['method']) == 'GET'){
-	// 		if(empty($properties['action'])){
-	// 			$properties['action'] = '?__key__='.$model;
-	// 		} else {
-	// 			$action = explode('#', $properties['action']);
-	// 			// Create open form and get model data
-	// 			if (strpos($action[0], '?') !== false) {
-	// 				if ( substr($action[0], 0, 1) != '?') {
-	// 					$action[0] .= '&__key__='.$model;
-	// 				} else {
-	// 					$action[0] .= '__key__='.$model;
-	// 				}
-	// 			}else{
-	// 				$action[0] .= '?'.$model;
-	// 			}
-
-	// 			$properties['action'] = implode('#', $action);
-	// 		}
-	// 	} else {
-	// 		if(is_string($model)){
-	// 			static::$data = Bag::store()->{"value_for_$model"};
-
-	// 			if (is_object(static::$data)){
-	// 				static::$data = json_decode(json_encode(static::$data), true);
-	// 			}
-	// 			$__key__ = "<input name=\"__key__\" value=\"$model\" type=\"hidden\"/>";
-	// 		} elseif (is_object($model)){
-	// 			static::$data = json_decode(json_encode($model), true);
-	// 		}
-	// 	}
-
-	// 	foreach ($properties as $key => $value) {
-	// 		$propertiesHTML .= " $key=\"$value\"";
-	// 	}
-
-	// 	return '<form '.$propertiesHTML.'>' . $__key__;
-	// 	// object-save="'.$model.'"
-	// }
-
-
+        
 	/**
 	 * Close method
 	 * @return string html
@@ -165,7 +116,15 @@ class Form extends Helper{
 
 		return ArrayUtil::access(static::$data, $name);
 	}
-
+        
+        /**
+         * Get key of csrf
+         * return string
+         */
+        public static function csrf($model){
+            return static::hidden(Form::CSRF_KEY, ['value' => base64_encode($model)]);
+        }
+        
 	/**
 	 * input method
 	 * @return string html
@@ -178,6 +137,50 @@ class Form extends Helper{
 		$properties['name'] = static::parseName($name);
 
 		$propertiesHTML = '';
+
+		foreach ($properties as $key => $value) {
+			$propertiesHTML .= " $key=\"$value\"";
+		}
+
+		return "<input $propertiesHTML/>";
+	}
+        
+        /**
+	 * input method
+	 * @return string html
+	 */
+	public static function checkbox($name, $properties = []){
+		if(!isset($properties['value'])){
+			$properties['value'] = ArrayUtil::access(static::$data, $name);
+		}
+
+		$properties['name'] = static::parseName($name);
+
+		$propertiesHTML = '';
+                
+                $properties['type'] = 'checkbox';
+
+		foreach ($properties as $key => $value) {
+			$propertiesHTML .= " $key=\"$value\"";
+		}
+
+		return "<input $propertiesHTML/>";
+	}
+        
+        /**
+	 * input method
+	 * @return string html
+	 */
+	public static function radio($name, $properties = []){
+		if(!isset($properties['value'])){
+			$properties['value'] = ArrayUtil::access(static::$data, $name);
+		}
+
+		$properties['name'] = static::parseName($name);
+
+		$propertiesHTML = '';
+                
+                $properties['type'] = 'radio';
 
 		foreach ($properties as $key => $value) {
 			$propertiesHTML .= " $key=\"$value\"";

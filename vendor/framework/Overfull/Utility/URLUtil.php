@@ -36,14 +36,14 @@ class URLUtil extends BaseUtil{
 	 * @param string $name
 	 * @return string
 	 */
-	public static function route($name, $params = []){
-		$alias = Bag::route()->alias($name, false);
+	public static function route($name, $params = [], $skipNoParameter = false){
+            $alias = Bag::route()->alias($name, false);
 
-		if(!$alias){
-			throw new \Overfull\Exception\RouteAliasNotFoundException($name);
-		}
+            if(!$alias){
+                throw new \Overfull\Exception\RouteAliasNotFoundException($name);
+            }
 
-		return Bag::request()->root().'/'.$alias->getRoute($params);
+            return Bag::request()->root().'/'.$alias->getRoute($params, $skipNoParameter);
 	}
 
 	/**
@@ -53,22 +53,22 @@ class URLUtil extends BaseUtil{
 	 * @return string
 	 */
 	public static function to($name, $inRoot = true){
-		if(static::isUrl($name)){
-			return $name;
-		}
+            if(static::isUrl($name)){
+                    return $name;
+            }
 
-		if ( substr($name, 0, 1) != '/') {
-			$route = Bag::config()->get('app.route');
+            if ( substr($name, 0, 1) != '/') {
+                    $route = Bag::config()->get('app.route');
 
-			$name = ($route == '' ? '' : '/'.$route).'/'.$name;
+                    $name = ($route == '' ? '' : '/'.$route).'/'.$name;
 
-		} else if($inRoot){
-			$route = Bag::config()->get('app.route');
+            } else if($inRoot){
+                    $route = Bag::config()->get('app.route');
 
-			$name = ($route == '' ? '' : '/'.$route).$name;
-		}
+                    $name = ($route == '' ? '' : '/'.$route).$name;
+            }
 
-		return Bag::request()->root().$name;
+            return Bag::request()->root().$name;
 	}
 
 	/**
@@ -78,9 +78,9 @@ class URLUtil extends BaseUtil{
 	 * @date 2016/02/26
 	 */
 	public static function toAlpha( $string ){
-		$string = str_replace(' ', '-', $string);
-		$string = str_replace('?', '-', $string);
-		return $string;
+            $string = str_replace(' ', '-', $string);
+            $string = str_replace('?', '-', $string);
+            return $string;
 	}
 
 	/**
@@ -89,10 +89,10 @@ class URLUtil extends BaseUtil{
 	 * @return boolean
 	 */
 	public static function isUrl($string){
-		if (filter_var($string, FILTER_VALIDATE_URL) === FALSE) {
-		    return false;
-		}
+            if (filter_var($string, FILTER_VALIDATE_URL) === FALSE) {
+                return false;
+            }
 
-		return true;
+            return true;
 	}
 }

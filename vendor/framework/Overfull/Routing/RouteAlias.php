@@ -52,20 +52,38 @@ class RouteAlias extends BaseObject{
 	 * setUrlParameters
 	 * @return $this
 	 */
-	public function getFormat($data = []){
-		$url = isset($this->data['format']) ? $this->data['format'] : $this->data[0];
+	public function getFormat($data = [], $skipNoParameter = false){
+            $url = isset($this->data['format']) ? $this->data['format'] : $this->data[0];
 
-		if(is_array($data) && $url){
-			foreach ($data as $key => $value) {
-				if(is_numeric($key)){
-					$url = preg_replace('/\<:(.*?)\>/', $value, $url, 1);
-				} else {
-					$url = preg_replace('/\<'.$key.':(.*?)\>/', $value, $url);
-				}
-			}
-		}
+            if(is_array($data) && $url){
+                foreach ($data as $key => $value) {
+                    $old = $url;
+                    if(is_numeric($key)){
+                        $url = preg_replace('/\<:(.*?)\>/', $value, $url, 1);
+                    } else {
+                        $url = preg_replace('/\<'.$key.':(.*?)\>/', $value, $url);
+                        if($old == $url){
+                            $query = parse_url($url, PHP_URL_QUERY);
 
-		return $url;
+                            // Returns a string if the URL has parameters or NULL if not
+                            if ($query) {
+                                $url .= '&'.$key.'='.$value;
+                            } else {
+                                $url .= '?'.$key.'='.$value;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if($skipNoParameter){
+                // Replace all
+                $url = preg_replace('/\<:(.*?)\>/', '', $url);
+                $url = preg_replace('/\<(.*?):(.*?)\>/', '', $url);
+                $url = preg_replace('/\/\//', '/', $url);
+            }
+            
+            return $url;
 	}
 
 	/**

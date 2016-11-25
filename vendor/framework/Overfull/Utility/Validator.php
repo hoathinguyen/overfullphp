@@ -9,6 +9,8 @@
 namespace Overfull\Utility;
 use Overfull\Utility\Foundation\BaseUtil;
 use Overfull\Utility\ArrayUtil;
+use Bag;
+use Overfull\Template\Helpers\Form;
 
 class Validator extends BaseUtil{
 	protected static $regex = [
@@ -105,6 +107,13 @@ class Validator extends BaseUtil{
 				}
 			}
 		}
+                
+                if(!empty($values['__key__'])){
+                    Bag::store()->{Form::MESSAGE_KEY.$values[Form::MODEL_KEY]} = $messsages;
+                } else {
+                    Bag::store()->{Form::MESSAGE_KEY.Form::generateModelKey('default')} = $messsages;
+                }
+        
 		return $messsages;
 	}
 }
