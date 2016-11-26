@@ -11,88 +11,88 @@ use Overfull\Utility\Foundation\BaseUtil;
 use Bag;
 
 class URLUtil extends BaseUtil{
-	/**
-	 * asset method
-	 *
-	 * @param string $name
-	 * @return string
-	 */
-	public static function asset($name){
-		if(static::isUrl($name)){
-			return $name;
-		}
-		
-		if ( substr($name, 0, 1) != '/') {
-			$route = Bag::config()->get('app.route');
+    /**
+     * asset method
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function asset($name){
+        if(static::isUrl($name)){
+            return $name;
+        }
 
-			$name = ($route == '' ? '' : '/'.$route).'/'.$name;
-		}
+        if ( substr($name, 0, 1) != '/') {
+            $route = Bag::config()->get('app.route');
 
-		return Bag::request()->root().$name;
-	}
+            $name = ($route == '' ? '' : '/'.$route).'/'.$name;
+        }
 
-	/**
-	 * Get url by alias route
-	 * @param string $name
-	 * @return string
-	 */
-	public static function route($name, $params = [], $skipNoParameter = false){
-            $alias = Bag::route()->alias($name, false);
+        return Bag::request()->root().$name;
+    }
 
-            if(!$alias){
-                throw new \Overfull\Exception\RouteAliasNotFoundException($name);
-            }
+    /**
+     * Get url by alias route
+     * @param string $name
+     * @return string
+     */
+    public static function route($name, $params = [], $skipNoParameter = false){
+        $alias = Bag::route()->alias($name, false);
 
-            return Bag::request()->root().'/'.$alias->getRoute($params, $skipNoParameter);
-	}
+        if(!$alias){
+            throw new \Overfull\Exception\RouteAliasNotFoundException($name);
+        }
 
-	/**
-	 * asset method
-	 *
-	 * @param string $name
-	 * @return string
-	 */
-	public static function to($name, $inRoot = true){
-            if(static::isUrl($name)){
-                    return $name;
-            }
+        return Bag::request()->root().'/'.$alias->getRoute($params, $skipNoParameter);
+    }
 
-            if ( substr($name, 0, 1) != '/') {
-                    $route = Bag::config()->get('app.route');
+    /**
+     * asset method
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function to($name, $inRoot = true){
+        if(static::isUrl($name)){
+                return $name;
+        }
 
-                    $name = ($route == '' ? '' : '/'.$route).'/'.$name;
+        if ( substr($name, 0, 1) != '/') {
+                $route = Bag::config()->get('app.route');
 
-            } else if($inRoot){
-                    $route = Bag::config()->get('app.route');
+                $name = ($route == '' ? '' : '/'.$route).'/'.$name;
 
-                    $name = ($route == '' ? '' : '/'.$route).$name;
-            }
+        } else if($inRoot){
+                $route = Bag::config()->get('app.route');
 
-            return Bag::request()->root().$name;
-	}
+                $name = ($route == '' ? '' : '/'.$route).$name;
+        }
 
-	/**
-	 * noneUnicode method
-	 *
-	 * @author ToiTL
-	 * @date 2016/02/26
-	 */
-	public static function toAlpha( $string ){
-            $string = str_replace(' ', '-', $string);
-            $string = str_replace('?', '-', $string);
-            return $string;
-	}
+        return Bag::request()->root().$name;
+    }
 
-	/**
-	 * Check is url method
-	 * @param string $string
-	 * @return boolean
-	 */
-	public static function isUrl($string){
-            if (filter_var($string, FILTER_VALIDATE_URL) === FALSE) {
-                return false;
-            }
+    /**
+     * noneUnicode method
+     *
+     * @author ToiTL
+     * @date 2016/02/26
+     */
+    public static function toAlpha( $string ){
+        $string = str_replace(' ', '-', $string);
+        $string = str_replace('?', '-', $string);
+        return $string;
+    }
 
-            return true;
-	}
+    /**
+     * Check is url method
+     * @param string $string
+     * @return boolean
+     */
+    public static function isUrl($string){
+        if (filter_var($string, FILTER_VALIDATE_URL) === FALSE) {
+            return false;
+        }
+
+        return true;
+    }
 }
