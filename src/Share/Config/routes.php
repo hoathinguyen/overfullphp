@@ -23,13 +23,14 @@ return [
                 'as' => 'chanels_update'
             ],
 
-            ['chanels/<:integer>/live.html', 'any', 'controller=MeController;action=live;id={1}',
-                        'as' => 'chanels_live'],
+            ['chanels/<id:integer>/live.html', 'any', 'controller=MeController;action=live;id={1}',
+                        'as' => 'live'],
         ],
 
-        ['login.html', 'any', 'controller=MeController;action=login'],
-        ['logout.html', 'any', 'controller=MeController;action=logout'],
-
+        ['login.html', 'any', 'controller=MeController;action=login', 'as' => 'login'],
+        ['logout.html', 'any', 'controller=MeController;action=logout', 'as' => 'logout'],
+        ['register.html', 'any', 'controller=MeController;action=register', 'as' => 'register'],
+        
         'ajax' => [
             'chanels' => [
                 ['videos.html', 'post', 'controller=ChanelsController;action=ajaxVideos', 'as' => 'videos'],

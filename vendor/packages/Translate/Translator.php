@@ -21,18 +21,22 @@ class Translator extends BasePackage{
 	 * @return string
 	 */
 	public function get($domain, $text, $parameters = []){
-		$languages = Bag::config()->get('languages');
+            $languages = Bag::config()->get('languages');
 
-		if(empty($languages)){
-			$lang = 'en';
-			$folder = Bag::config()->get('core.languages.folder');
-			$languages = Bag::config()->set('languages', ROOT.DS.PathUtil::convert($folder).DS.$lang.DS.$domain.'.php', true, false);
-		}
+            if(empty($languages)){
+                    $lang = 'en';
+                    $folder = Bag::config()->get('core.languages.folder');
+                    $languages = Bag::config()->set('languages', ROOT.DS.PathUtil::convert($folder).DS.$lang.DS.$domain.'.php', true, false);
+            }
 
-		if($rs = ArrayUtil::access($languages, $text)){
-			return $rs;
-		}
+            if(isset($languages[$text])){
+                return $languages[$text];
+            }
 
-		return $text;
+            if($rs = ArrayUtil::access($languages, $text)){
+                    return $rs;
+            }
+
+            return $text;
 	}
 }

@@ -24,6 +24,6 @@ class HomeController extends ShareController{
     public function actionIndex(){
         $chanels = $this->chanelBusiness->getAllChanels(\Bag::request()->get());
         $chanels = ArrayUtil::groupObjectByAttribute($chanels, 'category_name');
-        return $this->render()->with(compact("chanels"));
+        return $this->render()->with(compact("chanels"))->withLastGet();
     }
 }
