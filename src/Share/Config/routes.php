@@ -9,6 +9,12 @@ return [
             ['(<:empty>|index.html)', 'any', 'controller=ChanelsController;action=index'],
 
             ['<id:integer>/live.html', 'any', 'controller=ChanelsController;action=live;id={1}', 'as' => 'live'],
+            
+            ['<id:integer>/videos.html', 'any', 'controller=ChanelsController;action=live;id={1}', 'as' => 'videos'],
+        ],
+        
+        'videos' => [
+            ['<id:integer>/view.html', 'any', 'controller=VideosController;action=view;id={1}', 'as' => 'view'],
         ],
 
         'me' => [
@@ -25,11 +31,18 @@ return [
 
             ['chanels/<id:integer>/live.html', 'any', 'controller=MeController;action=live;id={1}',
                         'as' => 'live'],
+            
+            ['chanels/<id:integer>/updatelive.html', 'any', 'controller=MeController;action=updateLive;id={1}',
+                        'as' => 'updatelive'],
+            
+            ['chanels/<id:integer>/endlive.html', 'any', 'controller=MeController;action=endLive;id={1}',
+                        'as' => 'endlive'],
         ],
 
         ['login.html', 'any', 'controller=MeController;action=login', 'as' => 'login'],
         ['logout.html', 'any', 'controller=MeController;action=logout', 'as' => 'logout'],
         ['register.html', 'any', 'controller=MeController;action=register', 'as' => 'register'],
+        ['forget.html', 'any', 'controller=MeController;action=forget', 'as' => 'forget'],
         
         'ajax' => [
             'chanels' => [

@@ -23,9 +23,9 @@
 			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo isset($value['file']) ? $value['file'] : null ?></span>
 			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo isset($value['function']) ? $value['function'] : null ?></span>
 			<span style="display: inline-block; padding: 2px 5px; font-weight: bold; border: 1px solid #eee"><?php echo isset($value['line']) ? $value['line'] : null ?></span>
-			<div>
+			<code>
 				<?php var_dump($value['args']); ?>				
-			</div>
+			</code>
 		</div>
 	
 	<?php } ?>

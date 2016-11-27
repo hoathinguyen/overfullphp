@@ -22,7 +22,7 @@ class Validator extends BaseUtil{
 	 * @param $values
 	 * @param $rules
 	 */
-	public static function validate($values , $colrules){
+	public static function validate($values , $colrules, $parent){
 		$messsages = [];
 		// Loop all columns in rules
 		foreach ($colrules as $column => $rules) {
@@ -30,9 +30,9 @@ class Validator extends BaseUtil{
 			$data = ArrayUtil::access($values, $column);
 
 			// Loop all rules of a column
-			foreach ($rules as $regex => $messsage) {
+			foreach ($rules as $__regex => $messsage) {
 				// GEt regex
-				$regex = explode(':', $regex);
+				$regex = explode(':', $__regex);
 
 				if(isset($regex[1])){
 					// Check with some regex key
@@ -74,32 +74,39 @@ class Validator extends BaseUtil{
 							}
 							break;
 					}
-				} else {
-					$regex = isset(static::$regex[$regex[0]]) ? static::$regex[$regex[0]] : $regex[0];
-					// Check with some regex key
-					switch ($regex) {
-						case 'require':
-							if($data === ''){
-								$messsages[$column] = str_replace(':field', $column, $messsage);
-							}
-							break;
-						case 'numeric':
-							if(!is_numeric($data)){
-								$messsages[$column] = str_replace(':field', $column, $messsage);
-							}
-							break;
-						case 'alphanumeric':
-							if(!ctype_alnum($data)){
-								$messsages[$column] = str_replace(':field', $column, $messsage);
-							}
-							break;
-						default:
-							// Compare
-							if(!preg_match('/^'.$regex.'$/', $data)){
-								$messsages[$column] = str_replace(':field', $column, $messsage);
-							}
-							break;
-					}
+				}else {
+                                    $regex = isset(static::$regex[$regex[0]]) ? static::$regex[$regex[0]] : $regex[0];
+                                    // Check with some regex key
+                                    switch ($regex) {
+                                            case 'require':
+                                                    if($data === ''){
+                                                            $messsages[$column] = str_replace(':field', $column, $messsage);
+                                                    }
+                                                    break;
+                                            case 'numeric':
+                                                    if(!is_numeric($data)){
+                                                            $messsages[$column] = str_replace(':field', $column, $messsage);
+                                                    }
+                                                    break;
+                                            case 'alphanumeric':
+                                                    if(!ctype_alnum($data)){
+                                                            $messsages[$column] = str_replace(':field', $column, $messsage);
+                                                    }
+                                                    break;
+                                            default:
+                                                if(method_exists($parent, $__regex)){
+                                                    $status = $parent->$__regex($column, $data);
+                                                    if(!$status){
+                                                        $messsages[$column] = str_replace(':field', $column, $messsage);
+                                                    }
+                                                } else {
+                                                    // Compare
+                                                    if(!preg_match('/^'.$regex.'$/', $data)){
+                                                            $messsages[$column] = str_replace(':field', $column, $messsage);
+                                                    }
+                                                }
+                                                break;
+                                    }
 				}
 
 				if(!empty($messsages[$column])){
@@ -108,7 +115,7 @@ class Validator extends BaseUtil{
 			}
 		}
                 
-                if(!empty($values['__key__'])){
+                if(!empty($values[Form::MODEL_KEY])){
                     Bag::store()->{Form::MESSAGE_KEY.$values[Form::MODEL_KEY]} = $messsages;
                 } else {
                     Bag::store()->{Form::MESSAGE_KEY.Form::generateModelKey('default')} = $messsages;

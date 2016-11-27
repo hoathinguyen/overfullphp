@@ -9,12 +9,15 @@
 namespace Src\Share\Controllers;
 use Src\Share\Controllers\ShareController;
 use Src\Share\Business\ChanelBusiness;
+use Src\Share\Business\SlideBusiness;
 use Overfull\Utility\ArrayUtil;
 
 class HomeController extends ShareController{
     protected $chanelBusiness;
-    function __construct(){
+    protected $slideBusiness;
+            function __construct(){
         $this->chanelBusiness = new ChanelBusiness();
+        $this->slideBusiness = new SlideBusiness();
     }
     
     /**
@@ -24,6 +27,10 @@ class HomeController extends ShareController{
     public function actionIndex(){
         $chanels = $this->chanelBusiness->getAllChanels(\Bag::request()->get());
         $chanels = ArrayUtil::groupObjectByAttribute($chanels, 'category_name');
-        return $this->render()->with(compact("chanels"))->withLastGet();
+        
+        // Get slide
+        $slides = $this->slideBusiness->getAllSlides();
+        
+        return $this->render()->with(compact("chanels", "slides"))->withLastGet();
     }
 }

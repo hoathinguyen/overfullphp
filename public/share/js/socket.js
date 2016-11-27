@@ -1,4 +1,4 @@
-var socket = io('http://localhost:8080');
+var socket = io('https://chat-share-overfull.herokuapp.com/');
 socket.on('connected', function(msg){
 	socket.emit('sign', me);
 

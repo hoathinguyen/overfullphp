@@ -38,6 +38,9 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
     protected $schema = null;
     
     protected $relations = [];
+    
+    // All of columns in this table will be save here
+    protected $moreAttributes = [];
 
     // The connection, which connect between db and php
     protected $connection = null;
@@ -55,6 +58,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public final function hasMany($activeRecord, $relative){
         $name = debug_backtrace()[1]['function'];
+        $name = str_replace('relation', '', $name);
+        $name = lcfirst($name);
         $this->relations[$name] = new HasMany(
                 $this->connection,
                 clone $this->schema,
@@ -72,6 +77,9 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public final function hasOne($activeRecord, $relative){
         $name = debug_backtrace()[1]['function'];
+        $name = str_replace('relation', '', $name);
+        $name = lcfirst($name);
+        
         $this->relations[$name] = new HasOne(
                 $this->connection,
                 clone $this->schema,
@@ -90,6 +98,9 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public final function belongsTo($activeRecord, $relative){
         $name = debug_backtrace()[1]['function'];
+        $name = str_replace('relation', '', $name);
+        $name = lcfirst($name);
+        
         $this->relations[$name] = new BelongsTo(
                 $this->connection,
                 clone $this->schema,
@@ -227,7 +238,15 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      */
     public function isAttribute($name){
-        return isset($this->attributes[$name]);
+        return array_key_exists($name, $this->attributes);
+    }
+    
+    /**
+     * Get primary key method
+     *
+     */
+    public function isMoreAttribute($name){
+        return array_key_exists($name, $this->moreAttributes);
     }
     
     /**
@@ -235,7 +254,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      */
     public function isRelation($name){
-        return isset($this->relations['get'.ucfirst($name)]);
+        return array_key_exists($name, $this->relations);
     }
 
     /**
@@ -351,7 +370,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @return array
      */
     public function jsonSerialize(){
-        return $this->attributes;
+        return array_merge($this->attributes, $this->relations, $this->moreAttributes);
     }
 
     /**
@@ -360,7 +379,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @return array
      */
     public function __debugInfo() {
-        return $this->attributes;
+        return array_merge($this->attributes, $this->relations, $this->moreAttributes);
     }
 
     /**
@@ -381,31 +400,34 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @return mixed
      */
     public function __get($name){
-        $__name = 'get'. ucfirst($name);
-        
-        if(method_exists($this, $__name) && 'get'.$name != $__name){
-            if(!empty($this->relations[$__name])){
-                return $this->relations[$__name]->data();
-            }
+        if(!$this->isAttribute($name)){
             
-            $this->{$__name}();
-            
-            return $this->relations[$__name]->run()->data();
-        }
-        
-        if(!isset($this->attributes[$name])){
-            $__name = 'get'. ucfirst($name).'Attribute';
-            if(method_exists($this, $__name) && 'get'.$name.'Attribute' != $__name){
-                if(!empty($this->attributes[$name])){
-                    return $this->attributes[$name];
+            // Get attribute
+            $__name = 'attribute'. ucfirst($name);
+            if(method_exists($this, $__name) && 'attribute'.$name != $__name){
+
+                if($this->isMoreAttribute($name)){
+                    return $this->moreAttributes[$name];
                 }
 
-                $this->attributes[$name] = $this->{$__name}();
-
-                return $this->attributes[$name];
+                $this->moreAttributes[$name] = $this->{$__name}();
+                
+                return $this->moreAttributes[$name];
             }
             
-            return null;
+            // Get relation
+            $__name = 'relation'. ucfirst($name);
+            if(method_exists($this, $__name) && 'relation'.$name != $__name){
+                if($this->isRelation($name)){
+                    return $this->relations[$name]->data();
+                }
+                
+                $this->{$__name}();
+
+                return $this->relations[$name]->run()->data();
+            }
+            
+            throw new \Overfull\Exception\UndefinedAttributeException($name, get_called_class());
         }
         
         return $this->attributes[$name];
@@ -418,7 +440,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @return bool
      */
     public function __isset($key){
-    	return ($this->isAttribute($key) || $this->isRelation($key));
+    	return ($this->isAttribute($key) || $this->isRelation($key) || $this->isMoreAttribute($key));
     }
 
     /**
@@ -428,7 +450,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @return void
      */
     public function __unset($key){
-        unset($this->attributes[$key], $this->relations['get'.ucfirst($key)]);
+        unset($this->attributes[$key], $this->relations[$key], $this->moreAttributes[$key]);
     }
 
     /**
@@ -445,5 +467,13 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public function relations(){
         return $this->relations;
+    }
+    
+    /**
+     * Get relations
+     * @return array relations
+     */
+    public function moreAttributes(){
+        return $this->moreAttributes;
     }
 }

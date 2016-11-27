@@ -22,7 +22,7 @@ abstract class Model extends ActiveRecord implements IModel, JsonSerializable{
      * @param $rules
      */
     public final function validate($values , $rules){
-        $this->invalidErrors = Validator::validate($values , $rules);
+        $this->invalidErrors = Validator::validate($values , $rules, $this);
         return $this;
     }
 
