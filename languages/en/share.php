@@ -10,6 +10,7 @@ return [
     'Update chanel' => 'Cập nhật kênh',
     'Chanel title'	=> 'Tiêu đề kênh',
     'Chanel\'s video' => 'Video cùng kênh',
+    'All' => 'Tất cả',
     
     'Video title'	=> 'Tiêu đề video',
     'Update live video' => 'Cập nhật video trực tuyến',

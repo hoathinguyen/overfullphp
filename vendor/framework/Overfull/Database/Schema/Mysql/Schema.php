@@ -49,7 +49,7 @@ class Schema extends \Overfull\Database\Schema\Foundation\BaseSchema{
     * @return type
     * @throws \Exception
     */
-   public function count($isExecute = true){
+   public function count($isExecute = true, $clear = false){
        try{
            // Set limit as 1
            $this->limit(1);
@@ -65,11 +65,15 @@ class Schema extends \Overfull\Database\Schema\Foundation\BaseSchema{
                } else {
                        $sql = $sql[0];
                }
+               
+               if($clear){
+                   $this->queryBuilder->clear();
+               }
+
+                return $sql->count;
            }
-
-           $this->queryBuilder->clear();
-
-           return $sql->count;
+            
+           return $sql;
        } catch (\Exception $e){
            throw $e;
        }

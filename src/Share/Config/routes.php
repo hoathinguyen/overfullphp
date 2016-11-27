@@ -10,7 +10,7 @@ return [
 
             ['<id:integer>/live.html', 'any', 'controller=ChanelsController;action=live;id={1}', 'as' => 'live'],
             
-            ['<id:integer>/videos.html', 'any', 'controller=ChanelsController;action=live;id={1}', 'as' => 'videos'],
+            ['<id:integer>/videos.html', 'any', 'controller=ChanelsController;action=videos;id={1}', 'as' => 'videos'],
         ],
         
         'videos' => [

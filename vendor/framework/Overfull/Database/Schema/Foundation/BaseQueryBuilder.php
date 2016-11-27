@@ -105,6 +105,7 @@ abstract class BaseQueryBuilder implements IBaseQueryBuilder{
 		$this->attributes['joins'] = [];
 		$this->attributes['offset'] = false;
 		$this->attributes['limit'] = false;
+                $this->attributes['orders'] = [];
 		return $this;
 	}
 }

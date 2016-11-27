@@ -19,7 +19,8 @@
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    position: relative
+    position: relative;
+    background-color: #eee
 }
 
 .chanel-box .desc{

@@ -245,6 +245,26 @@ abstract class BaseSchema implements \JsonSerializable{
 
 		return $this;
 	}
+        
+        /**
+         * orderBy
+         * @param type $type
+         * @param type $columns
+         */
+        public function orderBy($type, $columns){
+
+            $orders = $this->queryBuilder->orders;
+            
+            if(is_string($columns)){
+                $columns = [$columns];
+            }
+            
+            $orders[] = ['type' => $type, 'columns' => $columns];
+            
+            $this->queryBuilder->orders = $orders;
+
+            return $this;
+        }
 
 	/**
 	 * join
@@ -342,7 +362,7 @@ abstract class BaseSchema implements \JsonSerializable{
      * After then exc this sql string by dbconnection
      * @return array
      */
-    public function update($isExecute = true){
+    public function update($isExecute = true, $clear = false){
     	// Get sql string from query
     	$sql = $this->queryBuilder->updateSyntax();
 
@@ -352,7 +372,9 @@ abstract class BaseSchema implements \JsonSerializable{
     	}
     	
     	// Clear all after excute
-    	$this->queryBuilder->clear();
+    	if($clear){
+            $this->queryBuilder->clear();
+        }
 
     	return $sql;
     }
@@ -363,7 +385,7 @@ abstract class BaseSchema implements \JsonSerializable{
      * After then exc this sql string by dbconnection
      * @return array
      */
-    public function delete($isExecute = true){
+    public function delete($isExecute = true, $clear = false){
     	// Get sql string from query
     	$sql = $this->queryBuilder->deleteSyntax();
 
@@ -373,7 +395,9 @@ abstract class BaseSchema implements \JsonSerializable{
     	}
     	
     	// Clear all after excute
-    	$this->queryBuilder->clear();
+    	if($clear){
+                   $this->queryBuilder->clear();
+               }
 
     	return $sql;
     }
@@ -384,7 +408,7 @@ abstract class BaseSchema implements \JsonSerializable{
      * After then exc this sql string by dbconnection
      * @return array
      */
-    public function insert($isExecute = true){
+    public function insert($isExecute = true, $clear = false){
     	// Get sql string from query
     	$sql = $this->queryBuilder->insertSyntax();
     	
@@ -394,7 +418,9 @@ abstract class BaseSchema implements \JsonSerializable{
     	}
     	
     	// Clear all after excute
-    	$this->queryBuilder->clear();
+    	if($clear){
+                   $this->queryBuilder->clear();
+               }
 
     	return $sql;
     }
@@ -403,7 +429,7 @@ abstract class BaseSchema implements \JsonSerializable{
 	 *
 	 * @return void
 	 */
-	public function all($isExecute = true){
+	public function all($isExecute = true, $clear = false){
 		try{
 			$sql = $this->queryBuilder->selectSyntax();
 
@@ -414,7 +440,9 @@ abstract class BaseSchema implements \JsonSerializable{
 				}
 			}
 
-			$this->queryBuilder->clear();
+			if($clear){
+                   $this->queryBuilder->clear();
+               }
 
 			return $sql;
 		} catch (\Exception $e){
@@ -428,7 +456,7 @@ abstract class BaseSchema implements \JsonSerializable{
 	 * Before select, check if get query or execute
 	 * @return void
 	 */
-	public function one($isExecute = true){
+	public function one($isExecute = true, $clear = false){
 		try{
 			// Set limit as 1
 			$this->limit(1);
@@ -444,7 +472,9 @@ abstract class BaseSchema implements \JsonSerializable{
 				}
 			}
 
-			$this->queryBuilder->clear();
+			if($clear){
+                   $this->queryBuilder->clear();
+               }
 
 			return $sql;
 		} catch (\Exception $e){

@@ -28,7 +28,8 @@ class QueryBuilder extends BaseQueryBuilder{
 			//['type' => 'inner', 'table' => '', 'on' => '']
 		],
 		'offset' => false,
-		'limit' => false
+		'limit' => false,
+                'orders' => []
 	];
 
 	protected $operators = [
@@ -120,6 +121,7 @@ class QueryBuilder extends BaseQueryBuilder{
 	 * @return string
 	 */
 	public function selectSyntax(){
+            
 		$sql = "SELECT ".implode(',', $this->attributes['columns'])." FROM ". $this->attributes['table'];
 
 		// Check if have joins syntax
@@ -138,7 +140,18 @@ class QueryBuilder extends BaseQueryBuilder{
 				$isFirst = false;
 			}
 		}
-
+                
+                // Check offset and limit
+		if(!empty($this->attributes['orders'])){
+			$sql .= " ORDER BY ";
+                        foreach ($this->attributes['orders'] as $order){
+                            foreach ($order['columns'] as $col){
+                                 $sql .= " {$col} {$order['type']},";
+                            }
+                        }
+                        $sql = rtrim($sql, ",");
+		}
+                
 		// Check offset and limit
 		if($this->attributes['offset'] !== false){
 			$sql .= " offset {$this->attributes['offset']}";
