@@ -13,7 +13,7 @@ use Overfull\Template\Foundation\Helper;
 
 class Form extends Helper{
 	protected static $data = false;
-	protected static $messages = [];
+	protected static $messages = false;
         protected static $key = null;
 
         const MODEL_KEY = '__key__';
@@ -52,14 +52,16 @@ class Form extends Helper{
 	 * @param array config
 	 * @return form open
 	 */
-	public static function open($data = 'default', $properties = [], $messages = []){
+	public static function open($data = 'default', $properties = []){
+            if (is_object($data)){
+                $data = json_decode(json_encode($data), true);
+            }
+            
             if (is_array($data)){
                 $model = isset($data['model']) ? $data['model'] : 'default';
                 static::$data = isset($data['data']) ? $data['data'] : false;
-            }elseif (is_object($data)){
-                $model = 'default';
-                static::$data = json_decode(json_encode($data), true);
-            }elseif(!$data){
+                static::$messages = isset($data['messages']) ? $data['messages'] : false;
+            } elseif(!$data){
                 $model = 'default';
             } else {
                 $model = $data;
@@ -68,13 +70,20 @@ class Form extends Helper{
             // Create open form and get model data
             $model = static::generateModelKey($model);
             
-            
             if(static::$data === false){
-                static::$data = Bag::store()->{Form::VALUE_KEY.$model};
-
-                if (is_object(static::$data)){
-                    static::$data = json_decode(json_encode(static::$data), true);
-                }
+                static::$data = Bag::store()->{Form::VALUE_KEY.$model}; 
+            }
+            if (is_object(static::$data)){
+                static::$data = json_decode(json_encode(static::$data), true);
+            }
+            
+            // Create message for model
+            if(static::$messages === false){
+                static::$messages = Bag::store()->{Form::MESSAGE_KEY.$model};
+            }
+            
+            if (is_object(static::$messages)){
+                static::$messages = json_decode(json_encode(static::$messages), true);
             }
             
             $__key__  = '';
@@ -85,17 +94,6 @@ class Form extends Helper{
             $__csrf  = '';
             if(!(isset($data['csrf']) && !$data['csrf'])){
                 $__csrf = static::csrf($model);
-            }
-
-            // Create message for model
-            if(!empty($messages)){
-                    static::$messages = $messages;
-            } else{
-                static::$messages = Bag::store()->{Form::MESSAGE_KEY.$model};
-            }
-
-            if (is_object(static::$messages)){
-                    static::$messages = json_decode(json_encode(static::$messages), true);
             }
 
             // Generate html

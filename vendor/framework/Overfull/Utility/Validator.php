@@ -95,7 +95,7 @@ class Validator extends BaseUtil{
                                                     break;
                                             default:
                                                 if(method_exists($parent, $__regex)){
-                                                    $status = $parent->$__regex($column, $data);
+                                                    $status = $parent->$__regex($column, $data, $values);
                                                     if(!$status){
                                                         $messsages[$column] = str_replace(':field', $column, $messsage);
                                                     }

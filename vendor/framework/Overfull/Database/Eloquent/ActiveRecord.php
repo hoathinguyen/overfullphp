@@ -100,7 +100,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         $name = debug_backtrace()[1]['function'];
         $name = str_replace('relation', '', $name);
         $name = lcfirst($name);
-        
+                
         $this->relations[$name] = new BelongsTo(
                 $this->connection,
                 clone $this->schema,
