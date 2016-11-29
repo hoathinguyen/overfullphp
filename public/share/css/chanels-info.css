@@ -58,6 +58,7 @@
                 background-position: center;
                 background-repeat: no-repeat;
                 display: block;
+                background-size: contain
             }
 
             .img-cover{

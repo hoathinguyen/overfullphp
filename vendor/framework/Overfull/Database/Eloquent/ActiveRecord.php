@@ -245,6 +245,14 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get primary key method
      *
      */
+    public function isOldAttribute($name){
+        return array_key_exists($name, $this->oldAttributes);
+    }
+    
+    /**
+     * Get primary key method
+     *
+     */
     public function isMoreAttribute($name){
         return array_key_exists($name, $this->moreAttributes);
     }
@@ -307,14 +315,14 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
                 ->values($values)
                 ->insert($isExecute);
         } else {
-            $values = $this->attributes;
+            $values = $this->compareAttributes()->attributes;
             unset($values[$this->primaryKey]);
             // Update
             $rs = $this->schema()
                 ->columns(array_keys($values))
                 ->values($values)
                 ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
-                ->update($isExecute);
+                ->update($isExecute, true);
         }
 
         if($isExecute){
@@ -457,23 +465,80 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get attributes
      * @return array attributes
      */
-    public function attributes(){
-        return $this->attributes;
+    public function attributes($name = false){
+        if(!$name){
+            return $this->attributes;
+        }
+        if($this->isAttribute($name)){
+            return $this->attributes[$name];
+        }
+        return null;
+    }
+    
+    /**
+     * Get attributes
+     * @return array attributes
+     */
+    public function oldAttributes($name = false){
+        if(!$name){
+            return $this->oldAttributes;
+        }
+        if($this->isOldAttribute($name)){
+            return $this->oldAttributes[$name];
+        }
+        return null;
     }
     
     /**
      * Get relations
      * @return array relations
      */
-    public function relations(){
-        return $this->relations;
+    public function relations($name = false){
+        if(!$name){
+            return $this->relations;
+        }
+        if($this->isRelation($name)){
+            return $this->relations[$name];
+        }
+        return null;
     }
     
     /**
      * Get relations
      * @return array relations
      */
-    public function moreAttributes(){
-        return $this->moreAttributes;
+    public function moreAttributes($name = false){
+        if(!$name){
+            return $this->moreAttributes;
+        }
+        if($this->isMoreAttribute($name)){
+            return $this->moreAttributes[$name];
+        }
+        return null;
+    }
+    
+    /**
+     * makeOldAttributes
+     */
+    public function makeOldAttributes(){
+        $this->oldAttributes = $this->attributes;
+        return $this;
+    }
+    
+    /**
+     * compareAttributes
+     * @return $this
+     */
+    public function compareAttributes(){
+        
+        foreach($this->oldAttributes as $key => $value){
+            if($key != $this->primaryKey
+                    && $this->attributes($key) == $value
+                    ){
+                unset($this->attributes[$key]);
+            }
+        }
+
+        return $this;
     }
 }

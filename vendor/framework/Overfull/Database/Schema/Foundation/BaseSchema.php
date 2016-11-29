@@ -91,7 +91,15 @@ abstract class BaseSchema implements \JsonSerializable{
                     return $result->fetchAll();
                 }
 
-                return $result->fetchAll(\PDO::FETCH_CLASS, $this->activeRecord);
+                $objects = $result->fetchAll(\PDO::FETCH_CLASS, $this->activeRecord);
+                
+                if($objects != null && count($objects) > 0){
+                    foreach ($objects as $value){
+                        $value->makeOldAttributes();
+                    }
+                }
+                
+                return $objects;
             }catch (\PDOException $err) {
                 throw $err;
             }
