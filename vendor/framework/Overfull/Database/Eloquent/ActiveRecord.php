@@ -302,11 +302,9 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         $this->beforeSave();
         
         if($this->isNew()){
+            $values = $this->attributes;
             if($this->autoIncrement){
-                $values = $this->attributes;
                 unset($values[$this->primaryKey]);
-            } else {
-                $values = $this->attributes;
             }
 
             // Creates
@@ -315,8 +313,14 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
                 ->values($values)
                 ->insert($isExecute);
         } else {
-            $values = $this->compareAttributes()->attributes;
-            unset($values[$this->primaryKey]);
+            $values = $this->attributes;
+            foreach($values as $key => $value){
+                if($key != $this->primaryKey
+                        && $this->oldAttributes($key) == $value
+                        ){
+                    unset($values[$key]);
+                }
+            }
             // Update
             $rs = $this->schema()
                 ->columns(array_keys($values))
@@ -522,23 +526,6 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public function makeOldAttributes(){
         $this->oldAttributes = $this->attributes;
-        return $this;
-    }
-    
-    /**
-     * compareAttributes
-     * @return $this
-     */
-    public function compareAttributes(){
-        
-        foreach($this->oldAttributes as $key => $value){
-            if($key != $this->primaryKey
-                    && $this->attributes($key) == $value
-                    ){
-                unset($this->attributes[$key]);
-            }
-        }
-
         return $this;
     }
 }

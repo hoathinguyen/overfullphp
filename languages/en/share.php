@@ -3,6 +3,9 @@ return [
     'Login' => 'Đăng nhập',
     'Register' => 'Đăng kí',
     'Logout' => 'Thoát',
+    'Username' => 'Tên đăng nhập',
+    'Password' => 'Mật khẩu',
+    'Confirm password' => 'Mật khẩu nhập lại',
     'Login to your account' => 'Đăng nhập tài khoản của bạn',
     'Create new account' => 'Tạo tài khoản mới',
     'Created your account' => 'Tạo tài khoản thành công',
@@ -24,7 +27,7 @@ return [
     'Forget password?' => 'Quên mật khẩu?',
     'Get password' => 'Lấy lại mật khẩu',
     'Sent new password to your mail, please check' => 'Đã gửi mật khẩu mới đến mail của bạn, vui lòng kiểm tra',
-
+    'Profile' => 'Lí lịch',
     'Avatar' => 'Ảnh đại diện',
     'Please input url of avatar' => 'Nhập url của ảnh đại diện',
 

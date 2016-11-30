@@ -38,13 +38,14 @@ return [
                         'as' => 'updatelive'],
             
             ['chanels/<id:integer>/endlive.html', 'any', 'controller=MeController;action=endLive;id={1}',
-                        'as' => 'endlive'],
+                        'as' => 'endlive']
         ],
 
         ['login.html', 'any', 'controller=MeController;action=login', 'as' => 'login'],
         ['logout.html', 'any', 'controller=MeController;action=logout', 'as' => 'logout'],
         ['register.html', 'any', 'controller=MeController;action=register', 'as' => 'register'],
         ['forget.html', 'any', 'controller=MeController;action=forget', 'as' => 'forget'],
+        ['profile.html', 'any', 'controller=MeController;action=profile', 'as' => 'profile'],
         
         'ajax' => [
             'chanels' => [

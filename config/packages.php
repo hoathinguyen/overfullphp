@@ -6,6 +6,7 @@ return [
 		'id' => ['username'],
 		'secret' => 'password',
 		'session' => 'auth',
-		'hasher' => \Overfull\Security\Hasher\SimpleHasher::class
+		'hasher' => \Overfull\Security\Hasher\SimpleHasher::class,
+                
 	]
 ];

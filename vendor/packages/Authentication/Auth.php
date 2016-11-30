@@ -59,8 +59,16 @@ class Auth extends BasePackage{
 			$logged = new LoggedData();
 			$pri = $result->getPrimaryKey();
 			$logged->{$pri} = $result->{$pri};
-
+                        
 			Bag::session()->write($this->session, $logged);
+
+                        if(!empty($this->afterLogin)){
+                            $afterEvent = $this->afterLogin;
+                            if(is_object($afterEvent)){
+                                $afterEvent();
+                            }
+                        }
+                        
 			return true;
 		}
 		return false;
