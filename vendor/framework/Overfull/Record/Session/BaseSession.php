@@ -22,7 +22,8 @@ class BaseSession extends BaseObject{
 	public function start( $uid = "overfull" ){
 		if(session_id() === ''){
 			$this->uid = $uid;
-			session_start($uid);
+			//session_start($uid);
+                        session_start();
 		}
 	}
 

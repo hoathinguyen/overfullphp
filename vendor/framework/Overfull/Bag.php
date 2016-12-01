@@ -39,6 +39,8 @@ class Bag{
 	public static $config;
         
         public static $error;
+        
+        public static $system;
 
 	/**
 	* The main application will call this method before use it.
@@ -56,6 +58,8 @@ class Bag{
 		static::store();
 
 		static::config();
+                
+                static::system();
 	}
         
         /**
@@ -185,5 +189,17 @@ class Bag{
 		}
 
 		return static::$pattern;
+	}
+        
+        /**
+	 * Get MyStore
+	 * @return Config
+	 */
+	public static function system(){
+            if(!static::$system){
+                static::$system = new Overfull\System\System();
+            }
+
+            return static::$system;
 	}
 }

@@ -15,7 +15,7 @@ use Overfull\Utility\ArrayUtil;
 class HomeController extends ShareController{
     protected $chanelBusiness;
     protected $slideBusiness;
-            function __construct(){
+    function __construct(){
         $this->chanelBusiness = new ChanelBusiness();
         $this->slideBusiness = new SlideBusiness();
     }

@@ -11,12 +11,18 @@ use Bag;
 
 class ExceptionHandler extends BaseObject{
     
-    public static function exceptionHandler($code, $message, $file, $line){
-        static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
+    public static function exceptionHandler($code = null, $message = null, $file = null, $line = null){
+        if(is_object($code))
+            static::showExceptionObject ($code);
+        else
+            static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
     }
 
-    public static function errorHandler($code, $message, $file, $line){
-        static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
+    public static function errorHandler($code = null, $message = null, $file = null, $line = null){
+        if(is_object($code))
+            static::showExceptionObject ($code);
+        else
+            static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
     }
 
     public static function shutdown(){
