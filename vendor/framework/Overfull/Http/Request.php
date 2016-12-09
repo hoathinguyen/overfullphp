@@ -13,7 +13,7 @@ use Overfull\Utility\ArrayUtil;
 
 class Request extends BaseRequest{
 	public function full(){
-		return $this->protocol(true).$this->host().$this->uri();
+            return $this->url(true);
 	}
 	/**
 	* Uri method
@@ -22,8 +22,22 @@ class Request extends BaseRequest{
 	*
 	* @return string $uri
 	*/
-	public function uri(){
-		return $_SERVER['REQUEST_URI'];
+	public function uri($withParameter = true){
+            if(!$withParameter)
+		return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+            else
+                return $_SERVER['REQUEST_URI'];
+	}
+        
+        /**
+	* Uri method
+	* This method will be return uri of request
+	* @date 2016/05/21
+	*
+	* @return string $uri
+	*/
+	public function url($withParameter = true){
+            return $this->protocol(true).$this->host().$this->uri($withParameter);
 	}
 
 	/**

@@ -12,7 +12,7 @@ return [
             
             ['<id:integer>/videos.html', 'any', 'controller=ChanelsController;action=videos;id={1}', 'as' => 'videos'],
             
-            ['<id:integer>/info.html', 'any', 'controller=ChanelsController;action=info;id={1}', 'as' => 'info'],
+            ['<id:integer>/info.html', 'any', 'controller=ChanelsController;action=info;id={1}', 'as' => 'info']
         ],
         
         'videos' => [
@@ -50,8 +50,14 @@ return [
         'ajax' => [
             'chanels' => [
                 ['videos.html', 'post', 'controller=ChanelsController;action=ajaxVideos', 'as' => 'videos'],
-                ['subscribe.html', 'post', 'controller=ChanelsController;action=ajaxSubscribe', 'as' => 'subscribe']
+                ['subscribe.html', 'post', 'controller=ChanelsController;action=ajaxSubscribe', 'as' => 'subscribe'],
+                ['questions.html', 'any', 'controller=ChanelsController;action=ajaxQuestions', 'as' => 'questions'],
+                ['add-question.html', 'any', 'controller=ChanelsController;action=ajaxAddQuestion', 'as' => 'add-question']
             ]
+        ],
+        
+        'advertising' => [
+            ['<page:alphanumeric>/<group:alphanumeric>/<type:alphanumeric>.html', 'any', 'controller=AdvertisingController;action=get;page={1};group={2};type={3}', 'as' => 'get']
         ]
     )
 ];

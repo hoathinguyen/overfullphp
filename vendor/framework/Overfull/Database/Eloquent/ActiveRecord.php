@@ -332,9 +332,9 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         if($isExecute){
             if($rs){
                 if($this->isNew()){
-                    $lastInsert = $this->find($this->schema->lastInsertPrimaryKey($this->primaryKey));
+                    $lastInsert = $this->instance()->find($this->schema->lastInsertPrimaryKey($this->primaryKey));
                 } else {
-                    $lastInsert = $this->find($this->attributes[$this->primaryKey]);
+                    $lastInsert = $this->instance()->find($this->attributes[$this->primaryKey]);
                 }
                 
                 if(!$lastInsert){
@@ -344,7 +344,9 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
                 foreach ($lastInsert->attributes() as $key => $value) {
                     $this->attributes[$key] = $value;
                 }
-
+                
+                $this->makeOldAttributes();
+                
                 return true;
             }
 

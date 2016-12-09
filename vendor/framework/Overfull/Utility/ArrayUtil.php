@@ -45,7 +45,7 @@ class ArrayUtil extends BaseUtil{
 	 * @param string $attribute
 	 * @return array with grouped
 	 */
-	public final static function groupObjectByAttribute( $objects = null , $attribute = false ){
+	public final static function groupObject( $objects = null , $attribute = false ){
 		$resultList = [];
 
 		foreach ($objects as $key => $object) {

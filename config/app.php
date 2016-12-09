@@ -31,6 +31,11 @@ return [
 		'root' => 'src/Share',
 		'namespace' => 'Src\Share'
 	],
+	
+	'share.overfull.net' => [
+		'root' => 'src/Share',
+		'namespace' => 'Src\Share'
+	],
 
 	'192.168.0.107' => [
 		'root' => 'src/Share',

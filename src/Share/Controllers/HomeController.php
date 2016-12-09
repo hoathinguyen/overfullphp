@@ -26,7 +26,7 @@ class HomeController extends ShareController{
      */
     public function actionIndex(){
         $chanels = $this->chanelBusiness->getAllChanels(\Bag::request()->get());
-        $chanels = ArrayUtil::groupObjectByAttribute($chanels, 'category_name');
+        //$chanels = ArrayUtil::groupObject($chanels, 'category_name');
         
         // Get slide
         $slides = $this->slideBusiness->getAllSlides();

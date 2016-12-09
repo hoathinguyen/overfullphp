@@ -1,6 +1,6 @@
 <?php
 return [
-    'develop' => true,
+    'develop' => false,
 
     'languages' => array(
             'default' => 'vi',
@@ -24,5 +24,11 @@ return [
          * Example: my ucfirst is TRUE and action is "index" the MVC will call actionIndex in controller
          */
         'action-ucfirst' => true
-    ]
+    ],
+    
+    /**
+     * My custom setting
+     */
+    //'socket-url' => 'https://chat-share-overfull.herokuapp.com',
+    'socket-url' => 'http://localhost:8080'
 ];

@@ -14,6 +14,8 @@ return [
     'Chanel title'	=> 'Tiêu đề kênh',
     'Chanel\'s video' => 'Video cùng kênh',
     'All' => 'Tất cả',
+    'Chanel\'s URL' => 'URL kênh',
+    'Video\'s URL' => 'URL video',
     
     'Video title'	=> 'Tiêu đề video',
     'Update live video' => 'Cập nhật video trực tuyến',
@@ -30,9 +32,15 @@ return [
     'Profile' => 'Lí lịch',
     'Avatar' => 'Ảnh đại diện',
     'Please input url of avatar' => 'Nhập url của ảnh đại diện',
+    'Keywords' => 'Từ khóa',
+    'Please input keywords' => 'Vui lòng nhập từ khóa <example: tu khoa, từ khóa>',
 
     'Banner'	=> 'Ảnh bìa',
     'Please input url of banner' => 'Nhập url của ảnh bìa',
+    
+    'Please input url of video' => 'Nhập url của video',
+    
+    'Please input video\'s title' => 'Nhập tiêu đề video',
 
     'Description' => 'Miêu tả',
     'Please input description' => 'Miêu tả',
