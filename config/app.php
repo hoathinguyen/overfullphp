@@ -36,6 +36,16 @@ return [
 		'root' => 'src/Share',
 		'namespace' => 'Src\Share'
 	],
+    
+        'game.overfull.dev' => [
+		'root' => 'src/Game',
+		'namespace' => 'Src\Game'
+	],
+    
+        'game.overfull.net' => [
+		'root' => 'src/Game',
+		'namespace' => 'Src\Game'
+	],
 
 	'192.168.0.107' => [
 		'root' => 'src/Share',

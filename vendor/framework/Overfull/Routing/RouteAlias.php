@@ -52,11 +52,18 @@ class RouteAlias extends BaseObject{
      * setUrlParameters
      * @return $this
      */
-    public function getFormat($data = [], $skipNoParameter = false){
-        $url = isset($this->data['format']) ? $this->data['format'] : $this->data[0];
-
-        if(is_array($data) && $url){
-            foreach ($data as $key => $value) {
+    public function getFormat(){
+        return isset($this->data['format']) ? $this->data['format'] : $this->data[0];
+    }
+    
+    /**
+     * setParameterToUrl
+     * @param type $url
+     * @param type $parameters
+     */
+    private function setParameterForUrl($url, $parameters = [], $skipNoParameter = false){
+        if(is_array($parameters) && $url){
+            foreach ($parameters as $key => $value) {
                 $old = $url;
                 if(is_numeric($key)){
                     $url = preg_replace('/\<:(.*?)\>/', $value, $url, 1);
@@ -75,7 +82,7 @@ class RouteAlias extends BaseObject{
                 }
             }
         }
-
+        
         if($skipNoParameter){
             // Replace all
             $url = preg_replace('/\<:(.*?)\>/', '', $url);
@@ -90,8 +97,8 @@ class RouteAlias extends BaseObject{
      * setUrlParameters
      * @return $this
      */
-    public function getRoute($data = []){
-            return $this->data['prefix'].$this->getFormat($data);
+    public function getRoute($data = [], $skipNoParameter = false){
+        return $this->setParameterForUrl($this->data['prefix'].$this->getFormat(), $data, $skipNoParameter);
     }
 
     /**

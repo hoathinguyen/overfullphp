@@ -100,8 +100,9 @@ class Route extends BaseObject{
 				$alias = new RouteAlias($value);
 
 				if(!empty($value['as'])){
-					$_aliasName = ($aliasName ? $aliasName.'.' : '').$value['as'];
-					$this->alias[$_aliasName] = $alias;
+					//$_aliasName = ($aliasName ? $aliasName.'.' : '').$value['as'];
+					//$this->alias[$_aliasName] = $alias;
+                                    $this->alias[$value['as']] = $alias;
 				}
 
 				if($this->validRouting == null 
