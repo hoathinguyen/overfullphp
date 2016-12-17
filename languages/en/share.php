@@ -13,6 +13,7 @@ return [
     'Update chanel' => 'Cập nhật kênh',
     'Chanel title'	=> 'Tiêu đề kênh',
     'Chanel\'s video' => 'Video cùng kênh',
+    'Chanel\'s information' => 'Thông tin kênh',
     'All' => 'Tất cả',
     'Chanel\'s URL' => 'URL kênh',
     'Video\'s URL' => 'URL video',

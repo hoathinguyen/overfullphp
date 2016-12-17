@@ -28,11 +28,11 @@ abstract class Controller extends BaseObject implements IController{
 	 */
 	public final function defaultDataTransfer($name = false, $value = null){
             if(!$name){
-                $this->dataTransfer->layout = !empty($this->dataTransfer->layout) ? $this->dataTransfer->layout : false;
+                $this->dataTransfer->appendFile = !empty($this->dataTransfer->appendFile) ? $this->dataTransfer->appendFile : false;
                 $this->dataTransfer->helpers = !empty($this->dataTransfer->helpers) ? $this->dataTransfer->helpers : [];
                 $this->dataTransfer->handler = !empty($this->dataTransfer->handler) ? $this->dataTransfer->handler : null;
-                $this->dataTransfer->root = !empty($this->dataTransfer->root) ? $this->dataTransfer->root : str_replace('Controller', '', Bag::$route->controller);
-                $this->dataTransfer->content = !empty($this->dataTransfer->content) ? $this->dataTransfer->content : Bag::$route->action;
+                //$this->dataTransfer->root = !empty($this->dataTransfer->root) ? $this->dataTransfer->root : str_replace('Controller', '', Bag::$route->controller);
+                $this->dataTransfer->file = !empty($this->dataTransfer->file) ? $this->dataTransfer->file : Bag::$route->action;
                 return $this;
             }
 
@@ -68,8 +68,8 @@ abstract class Controller extends BaseObject implements IController{
          * layout
          * @param type $name
          */
-        protected final function layout($name){
-            $this->dataTransfer->layout = $name;
+        protected final function appendTo($name){
+            $this->dataTransfer->appendFile = $name;
             return $this;
         }
         
@@ -119,10 +119,10 @@ abstract class Controller extends BaseObject implements IController{
 	protected final function render($view = false, $data = []){
             $this->defaultDataTransfer();
             if(is_array($view)){
-                $this->dataTransfer->layout = $view[0];
-                $this->dataTransfer->content = $view[1];
+                $this->dataTransfer->appendFile = $view[0];
+                $this->dataTransfer->file = $view[1];
             } else if($view){
-                $this->dataTransfer->content = $view;
+                $this->dataTransfer->file = $view;
             }
                 
             $this->dataTransfer->type = 'render';
@@ -140,10 +140,10 @@ abstract class Controller extends BaseObject implements IController{
 	 */
 	protected final function renderAjax($view = false, $data = []){
             $this->defaultDataTransfer();
-            $this->dataTransfer->layout = false;
+            $this->dataTransfer->appendFile = false;
 
             if($view){
-                $this->dataTransfer->content = $view;
+                $this->dataTransfer->file = $view;
             }
             
             $this->dataTransfer->type = 'render';

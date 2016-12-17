@@ -1,27 +1,6 @@
 <?php
 return [
     'pages' => array(
-//        'me' => [
-//            ['chanels.html', 'any', 'controller=MeController;action=myChanels','as' => 'chanels'],
-//            ['chanels/create.html', 'any', 'controller=MeController;action=create'],
-//
-//            // Create chanel
-//            [
-//                'chanels/<:integer>/update.html',
-//                'any',
-//                'controller=MeController;action=update;id={1}',
-//                'as' => 'chanels_update'
-//            ],
-//
-//            ['chanels/<id:integer>/live.html', 'any', 'controller=MeController;action=live;id={1}',
-//                        'as' => 'live'],
-//            
-//            ['chanels/<id:integer>/updatelive.html', 'any', 'controller=MeController;action=updateLive;id={1}',
-//                        'as' => 'updatelive'],
-//            
-//            ['chanels/<id:integer>/endlive.html', 'any', 'controller=MeController;action=endLive;id={1}',
-//                        'as' => 'endlive']
-//        ],
         
         /**
          * Route for page
@@ -43,7 +22,9 @@ return [
             array('format' => 'videos.html', 'method' => 'any', 'parameters' => 'controller=Site\ChanelController;action=videos;chanelId={1}', 'as' => 'chanel.videos'),
             array('format' => 'wall.html', 'method' => 'any', 'parameters' => 'controller=Site\ChanelController;action=wall;chanelId={1}', 'as' => 'chanel.wall'),
             array('format' => '<:empty>', 'method' => 'any', 'parameters' => 'controller=Site\ChanelController;action=wall;chanelId={1}', 'as' => 'chanel.index'),
-            array('format' => 'video-<videoId:alphanumeric>.html', 'method' => 'any', 'parameters' => 'controller=Site\ChanelController;action=video;chanelId={1};videoId={2}', 'as' => 'chanel.video')
+            array('format' => 'video-<videoId:alphanumeric>.html', 'method' => 'any', 'parameters' => 'controller=Site\ChanelController;action=video;chanelId={1};videoId={2}', 'as' => 'chanel.video'),
+            array('format' => 'posts.html', 'method' => 'any', 'parameters' => 'controller=Site\ChanelController;action=posts;chanelId={1}', 'as' => 'chanel.posts'),
+            array('format' => 'post-<postId:alphanumeric>.html', 'method' => 'any', 'parameters' => 'controller=Site\ChanelController;action=post;chanelId={1};postId={2}', 'as' => 'chanel.post')
         ],
         
         /**
@@ -51,6 +32,7 @@ return [
          */
         'ajax' => [
             'chanel' => [
+                array('format' => 'posts.html', 'method' => 'post', 'parameters' => 'controller=Site\ChanelController;action=ajaxPosts', 'as' => 'ajax.chanel.posts'),
                 array('format' => 'videos.html', 'method' => 'post', 'parameters' => 'controller=Site\ChanelController;action=ajaxVideos', 'as' => 'ajax.chanel.videos'),
                 array('format' => 'subscribe.html', 'method' => 'post', 'parameters' => 'controller=Site\ChanelController;action=ajaxSubscribe', 'as' => 'ajax.chanel.subscribe'),
                 array('format' => 'questions.html', 'method' => 'any', 'parameters' => 'controller=Site\ChanelController;action=ajaxQuestions', 'as' => 'ajax.chanel.questions'),

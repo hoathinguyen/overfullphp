@@ -1,6 +1,6 @@
 <?php
 return [
-    'display-errors' => false,
+    'display-errors' => true,
     
 //    'handler-settings' => [
 //        'controller' => 'ErrorsController',

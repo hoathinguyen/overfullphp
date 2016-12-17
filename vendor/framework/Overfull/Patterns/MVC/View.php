@@ -1,11 +1,14 @@
 <?php
-/*___________________________________________________________________________
-* The View object class
-* ___________________________________________________________________________
-*/
+/**
+ * View.php
+ * View object class
+ * This object handle the view of site
+ * 
+ * @author overfull.net
+ * @date 2016/01/01
+ */
 namespace Overfull\Patterns\MVC;
 
-use Overfull\Patterns\MVC\Foundation\IView;
 use Overfull\Patterns\MVC\Exception\ViewTypeNotFoundException;
 use Overfull\Utility\PathUtil;
 use Overfull\Utility\URLUtil;
@@ -16,32 +19,27 @@ use Overfull\Http\Response\Response;
 use Bag;
 use Overfull\Template\Otp;
 
-class View extends Otp implements IView{
-    public $template = null;
-
+class View extends Otp implements \Overfull\Patterns\MVC\Foundation\IView{
     protected $contentPath = null;
+    protected $appendFile = null;
+    protected $useTemplate = true;
 
-    protected $layoutPath = null;
 
-    protected $helpers = [];
-
-    protected $variables = [];
-
-    protected $content = '';
-
-    protected $layout = false;
-
-    protected $dataTransfer = null;
-
+    protected $tempBag = null;
+    /***
+     * Construct
+     * This method set some default for view
+     */
     function __construct(){
-            $this->contentPath = 'Views'.DS.'Contents';
-            $this->layoutPath = 'Views'.DS.'Layouts';
+        $this->contentPath = 'Views'.DS.'Contents';
     }
-
+    
     /**
-    * Run method
-    * This handle something to get view result
-    */
+     * Run method
+     * This method will be call from Handle pattern
+     * @param DataTransfer $dataTransfer
+     * @return this
+     */
     public function run($dataTransfer){
         // Check if view type is exist
         if(!method_exists($this, $dataTransfer->type)){
@@ -56,48 +54,47 @@ class View extends Otp implements IView{
 
         return $this->{$dataTransfer->type}($dataTransfer->get());
     }
-
+    
     /**
-     * Handle view with render view
-     *
-     * @date 2016/05/21
-     * @param mixed $gift
-     * @param array $variables
-     * @return string
+     * Append to
+     * @param type $file
+     * @return this
      */
-    protected function render($gift, $variables = []){
-        if(is_array($gift)){
-            $this->variables = $gift;
-
-            $this->content = $this->__readOtp([
-                'file' => $this->contentPath.DS.(!empty($this->root) ? $this->root.DS : '' ).$this->content,
-                'variables' => $this->variables]);
-
-            if($this->layout){
-                return $this->__readOtp([
-                'file' => $this->layoutPath.DS.$this->layout,
-                'variables' => $this->variables]);
-            }
-
-            return $this->content;
+    public function appendTo($file){
+        $this->appendFile = $file;
+        return $this;
+    }
+    /**
+     * Render
+     * @param type $file
+     * @param type $variables
+     */
+    protected function render($file, $variables = []){
+        // Check if the file is array
+        if(is_array($file)){
+            $this->variables = $file;
+            return $this->recursive($this->file, $this->variables);
         }
-
-        return $this->__readOtp([
-                'file' => $this->contentPath.DS.$gift,
-                'variables' => $variables]);
+        
+        $this->variables = $variables;
+        return $this->recursive($file, $this->variables);
     }
-
+    
     /**
-     * Get content
+     * Handle view as redirect
      *
      * @date 2016/05/21
      * @param mixed $gift
      * @return string
      */
-    protected final function content(){
-        return $this->content;
-    }
+    protected final function redirect($gift){
+        Bag::$response->format = ResponseFormat::HTML;
+        $html = '<!DOCTYPE html>
+                        <html><head><title>Redirecting...</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift).'" /></head><body></body></html>';
 
+        return $html;
+    }
+    
     /**
      * Handle view with json
      *
@@ -144,61 +141,63 @@ class View extends Otp implements IView{
     protected final function file($gift){
         return 'render';
     }
-
+    
     /**
-     * Handle view as redirect
-     *
-     * @date 2016/05/21
-     * @param mixed $gift
-     * @return string
+     * recursive method
+     * This method will be call recursive the file
+     * @param type $name Description
+     * @return $this;
      */
-    protected final function redirect($gift){
-        Bag::$response->format = ResponseFormat::HTML;
-        $html = '<!DOCTYPE html>
-                        <html><head><title>Redirecting...</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift).'" /></head><body></body></html>';
-
-        return $html;
+    protected function recursive($file, $variables = []){
+        // read view
+        $__content = $this->readFile($this->contentPath.DS.(!empty($this->root) ? $this->root.DS : '' ).$file, $variables);
+        
+        $__appendFile = $this->appendFile;
+        $this->appendFile = null;
+        
+        if($__appendFile){
+            $__content = $this->recursive($__appendFile, $variables);
+        }
+        
+        return $__content;
     }
-
     /**
-     * read file otp
-     *
-     * @date 2016/05/21
-     * @param array $otp
-     * @return string
+     * Render
+     * @param type $file
+     * @param type $variables
      */
-    protected final function __readOtp($otp){
-        try{
-            $____content = '';
-            
-            // Create variable
-            foreach ($otp['variables'] as $key => $value) {
-                $$key = $value;
-            }
-
-            $otp['file'] = PathUtil::convert($otp['file']);
-
+    protected function append($file, $variables = []){
+        return $this->readFile($this->contentPath.DS.$file, $variables);
+    }
+    
+    /**
+     * Read file method
+     * @param type $file
+     * @param type $variables
+     * @return string $content
+     */
+    protected function readFile($file, $variables = []){
+        try{            
+            // Convert file
+            $file = PathUtil::convert($file);
             $appRoot = Bag::config()->get('app.root');
+            $ext = Bag::config()->get('core.otp.ext');
+            
+            $fullFile = PathUtil::getFull($appRoot.DS.$file.'.'.($ext ? $ext : 'php'));
+            $this->tempBag = $fullFile;
+            // Check if file is not exists
+            if ( !file_exists($fullFile) ) {
+                throw new FileNotFoundException($fullFile);
+            }
+            
+            $storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($appRoot.DS.$file).'.otp');
 
-            $storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($appRoot.DS.$otp['file']).'.otp');
-
-            if ( !file_exists($storageFile) || Bag::config()->get('core.develop')) {
-                $ext = Bag::config()->get('core.otp.ext');
-
-                $fullFile = PathUtil::getFull($appRoot.DS.$otp['file'].'.'.($ext ? $ext : 'php'));
-
-                // Get content of view
-                if ( !file_exists($fullFile) ) {
-                    throw new FileNotFoundException($fullFile);
-                }
-
-                $____content = file_get_contents($fullFile);
-
+            if($this->useTemplate && (!file_exists($storageFile) || Bag::config()->get('core.develop'))){
+                $fileContent = file_get_contents($fullFile);
                 foreach ($this->tags as $key => $value) {
-                    //dd($key);
-                    $____content = preg_replace($key, $value, $____content);
+                    $fileContent = preg_replace($key, $value, $fileContent);
                 }
-
+                
                 $namespace = "";
 
                 $helpers = Bag::config()->get('core.otp.helpers');
@@ -212,19 +211,23 @@ class View extends Otp implements IView{
                     $namespace .= "use {$value} as {$key}; ";
                 }
 
-                file_put_contents($storageFile, "<?php {$namespace} ?>".$____content);
+                file_put_contents($storageFile, "<?php {$namespace} ?>".$fileContent);
+                
+                $this->tempBag = $storageFile;
             }
-
+            
+            // Create variable
+            foreach ($variables as $key => $value) {
+                $$key = $value;
+            }
+            
             ob_start();
 
-            require $storageFile;
+            require $this->tempBag;
 
-            $____content = ob_get_clean();
-
-            return $____content;
-        } catch (Exception $e) {
-            //ob_end_clean();
-            throw $e;
+            return ob_get_clean();
+        } catch (Exception $ex) {
+            throw $ex;
         }
     }
 }
