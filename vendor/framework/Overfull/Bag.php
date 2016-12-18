@@ -137,10 +137,14 @@ class Bag{
 	 * Get package
 	 * @return PackageStore
 	 */
-	public static function package(){
+	public static function package($name = null){
 		if(!static::$package){
 			static::$package = new PackageStore();
 		}
+                
+                if($name){
+                    return static::$package->{$name};
+                }
 
 		return static::$package;
 	}

@@ -16,7 +16,7 @@ use Overfull\Http\Response\Response;
 use Bag;
 use Overfull\Template\Otp;
 
-class View extends Otp implements IView{
+class _View extends Otp implements IView{
     public $template = null;
 
     protected $contentPath = null;

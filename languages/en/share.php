@@ -73,7 +73,8 @@ return [
     'Ended your stream video' => 'Đã kết thúc trực tuyến',
     'Cant not end your stream video' => 'Không thể kết thúc trực tuyến',
     'No video is found' => 'Chưa có video nào',
-    
+    'You are denied join this chanel' => 'Bạn bị từ chối tham gia kênh này',
     'View' => 'Xem',
-    'Manage' => 'Quản lí'
+    'Manage' => 'Quản lí',
+    'Posts' => 'Bài viết'
 ];

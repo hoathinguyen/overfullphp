@@ -10,9 +10,10 @@
     		"vendor/framework/Overfull"
     	],
     	"files": [
-    		"vendor/framework/Overfull/Foundation/constants.php",
-            "vendor/framework/Overfull/Foundation/func.php",
-    		"vendor/framework/Overfull/Bag.php",
+            "vendor/func/debug.php",
+            "vendor/func/shortcut.php",
+            "vendor/framework/Overfull/Foundation/constants.php",
+            "vendor/framework/Overfull/Bag.php",
             "vendor/packages/Translate/func.php"
     	]
     }

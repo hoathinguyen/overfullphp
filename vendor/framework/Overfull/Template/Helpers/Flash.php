@@ -47,9 +47,9 @@ class Flash extends Helper{
 		unset($data[$type]);
 
 		if(!$data){
-			Bag::session()->delete("flash");
+                    Bag::session()->delete("flash");
 		} else {
-			Bag::session()->write("flash", $data);
+                    Bag::session()->write("flash", $data);
 		}
 
 		return $typeData;
@@ -72,4 +72,15 @@ class Flash extends Helper{
 			Bag::session()->delete("flash");
 		}
 	}
+        
+        /**
+         * 
+         */
+        public static function check(){
+            $data = Bag::session()->read("flash");
+            if($data){
+                return true;
+            }
+            return false;
+        }
 }
