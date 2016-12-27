@@ -51,6 +51,16 @@ return [
 		'root' => 'src/Share',
 		'namespace' => 'Src\Share'
 	],
+    
+        'gift.overfull.dev' => [
+            'root' => 'src/Gift',
+            'namespace' => 'Src\Gift'
+	],
+	
+	'gift.overfull.net' => [
+            'root' => 'src/Gift',
+            'namespace' => 'Src\Gift'
+	],
 
 	'admin.overfull.dev' => 'root=src/FirstAdmin;namespace=Src\FirstAdmin',
 
