@@ -24,7 +24,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
 
     // The flag as auto increment in database
     protected $autoIncrement = true;
-	
+
     // The table name in database
     protected $tableName = null;
 
@@ -36,9 +36,9 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
 
     // The schema which will access database
     protected $schema = null;
-    
+
     protected $relations = [];
-    
+
     // All of columns in this table will be save here
     protected $moreAttributes = [];
 
@@ -49,7 +49,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
     }
 
     protected function beforeSave(){}
-    
+
     /**
      * HasMany method
      * @param activeRecord $activeRecord object
@@ -79,14 +79,14 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         $name = debug_backtrace()[1]['function'];
         $name = str_replace('relation', '', $name);
         $name = lcfirst($name);
-        
+
         $this->relations[$name] = new HasOne(
                 $this->connection,
                 clone $this->schema,
                 $activeRecord,
                 $this,
                 $relative);
-                        
+
         return $this->relations[$name]->parse()->schema();
     }
 
@@ -100,14 +100,14 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         $name = debug_backtrace()[1]['function'];
         $name = str_replace('relation', '', $name);
         $name = lcfirst($name);
-                
+
         $this->relations[$name] = new BelongsTo(
                 $this->connection,
                 clone $this->schema,
                 $activeRecord,
                 $this,
                 $relative);
-                
+
         return $this->relations[$name]->parse()->schema();
     }
 
@@ -144,7 +144,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
             || empty($databases['connections'][$use]["dbname"])
             || empty($databases['connections'][$use]["user"])
             || !isset($databases['connections'][$use]["password"])){
-            throw new DatabaseConfigException($use);
+            throw new \Overfull\Exception\DatabaseConfigException($use);
         }
 
         if ( !isset(Bag::db()->{$use}) ) {
@@ -232,7 +232,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
     public function getTableName(){
         return $this->tableName;
     }
-    
+
     /**
      * Get primary key method
      *
@@ -240,7 +240,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
     public function isAttribute($name){
         return array_key_exists($name, $this->attributes);
     }
-    
+
     /**
      * Get primary key method
      *
@@ -248,7 +248,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
     public function isOldAttribute($name){
         return array_key_exists($name, $this->oldAttributes);
     }
-    
+
     /**
      * Get primary key method
      *
@@ -256,7 +256,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
     public function isMoreAttribute($name){
         return array_key_exists($name, $this->moreAttributes);
     }
-    
+
     /**
      * Get primary key method
      *
@@ -276,7 +276,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         return $this->schema()
             ->where([$this->primaryKey, '=', $id])
             ->one();
-    } 
+    }
 
     /**
      * Get find object or new empty object
@@ -300,7 +300,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public function save($isExecute = true){
         $this->beforeSave();
-        
+
         if($this->isNew()){
             $values = $this->attributes;
             if($this->autoIncrement){
@@ -336,17 +336,17 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
                 } else {
                     $lastInsert = $this->instance()->find($this->attributes[$this->primaryKey]);
                 }
-                
+
                 if(!$lastInsert){
                     return true;
                 }
-                
+
                 foreach ($lastInsert->attributes() as $key => $value) {
                     $this->attributes[$key] = $value;
                 }
-                
+
                 $this->makeOldAttributes();
-                
+
                 return true;
             }
 
@@ -415,7 +415,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      */
     public function __get($name){
         if(!$this->isAttribute($name)){
-            
+
             // Get attribute
             $__name = 'attribute'. ucfirst($name);
             if(method_exists($this, $__name) && 'attribute'.$name != $__name){
@@ -425,25 +425,25 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
                 }
 
                 $this->moreAttributes[$name] = $this->{$__name}();
-                
+
                 return $this->moreAttributes[$name];
             }
-            
+
             // Get relation
             $__name = 'relation'. ucfirst($name);
             if(method_exists($this, $__name) && 'relation'.$name != $__name){
                 if($this->isRelation($name)){
                     return $this->relations[$name]->data();
                 }
-                
+
                 $this->{$__name}();
 
                 return $this->relations[$name]->run()->data();
             }
-            
+
             throw new \Overfull\Exception\UndefinedAttributeException($name, get_called_class());
         }
-        
+
         return $this->attributes[$name];
     }
 
@@ -480,7 +480,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         }
         return null;
     }
-    
+
     /**
      * Get attributes
      * @return array attributes
@@ -494,7 +494,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         }
         return null;
     }
-    
+
     /**
      * Get relations
      * @return array relations
@@ -508,7 +508,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         }
         return null;
     }
-    
+
     /**
      * Get relations
      * @return array relations
@@ -522,7 +522,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         }
         return null;
     }
-    
+
     /**
      * makeOldAttributes
      */

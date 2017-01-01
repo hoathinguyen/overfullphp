@@ -120,85 +120,105 @@ class Application extends BaseObject{
     * This method will be call config object and set value config to this config object.
     */
     private function getDirectionConfig(){
-        Bag::config()->set('app-config', ROOT.DS.'config'.DS.'app.php', true);
+        Bag::config()->set('domain-config', ROOT.DS.'config'.DS.'domain.php', true);
 
         // Check if have config in app
-        if(!empty($app = Bag::config()->get('app-config'))){
-                $uri = Bag::request()->uriArray();
-                $domain = strtolower(Bag::request()->host());
-                foreach ($app as $key => $value) {
-                        if(is_object($value)){
-                                $value = $value();
-                        }
-
-                        if(is_string($value)){
-                                $keyValDo = explode(";", $value);
-                                $value = [];
-                                foreach ($keyValDo as $appOrRootValue) {
-                                        $appExplode = explode('=', $appOrRootValue);
-                                        $value[$appExplode[0]] = $appExplode[1];
-                                }
-                        }
-
-                        $regex = str_replace('{sub}', '([a-zA-Z0-9\-]+)', $key);
-                        $regex = str_replace('{domain}', '([a-zA-Z0-9\-]+)', $regex);
-                        $regex = str_replace('{ext}', '([a-zA-Z0-9]+)', $regex);
-                        $regex = str_replace('{folder}', '([a-zA-Z0-9\-]+)', $regex);
-                        $regex = str_replace('[', '|(', $regex);
-                        $regex = str_replace(']', ')', $regex);
-
-                        $exRegex = explode('/', $regex);
-                        $base = count($exRegex) - 1;
-
-                        // Check if correct domain
-                        if(preg_match("/^".$exRegex[0]."$/", $domain)){
-                                array_shift($exRegex);
-                                if(count($exRegex) > 0){
-                                        $isValid = true;
-                                        $route = '';
-                                        foreach ($exRegex as $index => $folder) {
-                                                if(empty($uri[$index]) || !preg_match("/^".$folder."$/", strtolower($uri[$index]))){
-                                                        $isValid = false;
-                                                        break;
-                                                }
-                                                $route = ($route != '') ? $route.'/'.$uri[$index] : $uri[$index];
-                                        }
-
-                                        if($isValid){
-                                                //$route = explode('/', $key);
-                                                $this->root = $value['root'];
-                                                $this->namespace = $value['namespace'];
-                                                Bag::config()->set('app', [
-                                                        'root' => $this->root,
-                                                        'namespace' => $this->namespace,
-                                                        'base' => $base,
-                                                        'route' => $route
-                                                ]);
-                                                return;
-                                        }
-                                } else {
-                                        $this->root = $value['root'];
-                                        $this->namespace = $value['namespace'];
-                                        Bag::config()->set('app', [
-                                                'root' => $this->root,
-                                                'namespace' => $this->namespace,
-                                                'base' => $base,
-                                                'route' => ''
-                                        ]);
-                                        return;
-                                }
-                        }
+        if(!empty($app = Bag::config()->get('domain-config'))){
+            $uri = Bag::request()->uriArray();
+            $currentDomain = strtolower(Bag::request()->host());
+            foreach ($app as $key => $config) {
+                if(is_object($config)){
+                    $config = $config();
                 }
+
+                // Check if is list of domain
+                if(is_numeric($key)){
+                    foreach ($config['domain'] as $domain) {
+                        if($this->isValidDomain($domain, $currentDomain, $uri, $config)){
+                            return;
+                        }
+                    }
+                } else {
+                    if($this->isValidDomain($key, $currentDomain, $uri, $config)){
+                        return;
+                    }
+                }
+            }
         }
 
         Bag::config()->set('app', [
-                'root' => $this->root,
-                'namespace' => $this->namespace,
-                'base' => 0,
-                'route' => ''
+            'root' => $this->root,
+            'namespace' => $this->namespace,
+            'base' => 0,
+            'route' => ''
         ]);
     }
 
+    /*
+    * Get config method
+    * This method will be call config object and set value config to this config object.
+    */
+    private function isValidDomain($domain, $currentDomain, $uri, $config){
+        if(is_string($config)){
+                $keyValDo = explode(";", $config);
+                $config = [];
+                foreach ($keyValDo as $appOrRootValue) {
+                    $appExplode = explode('=', $appOrRootValue);
+                    $config[$appExplode[0]] = $appExplode[1];
+                }
+        }
+
+        $regex = str_replace('{sub}', '([a-zA-Z0-9\-]+)', $domain);
+        $regex = str_replace('{domain}', '([a-zA-Z0-9\-]+)', $regex);
+        $regex = str_replace('{ext}', '([a-zA-Z0-9]+)', $regex);
+        $regex = str_replace('{folder}', '([a-zA-Z0-9\-]+)', $regex);
+        $regex = str_replace('[', '|(', $regex);
+        $regex = str_replace(']', ')', $regex);
+
+        $exRegex = explode('/', $regex);
+        $base = count($exRegex) - 1;
+
+        // Check if correct domain
+        if(preg_match("/^".$exRegex[0]."$/", $currentDomain)){
+            array_shift($exRegex);
+            if(count($exRegex) > 0){
+                    $isValid = true;
+                    $route = '';
+                    foreach ($exRegex as $index => $folder) {
+                        if(empty($uri[$index]) || !preg_match("/^".$folder."$/", strtolower($uri[$index]))){
+                            $isValid = false;
+                            break;
+                        }
+                        $route = ($route != '') ? $route.'/'.$uri[$index] : $uri[$index];
+                    }
+
+                    if($isValid){
+                        //$route = explode('/', $key);
+                        $this->root = $config['root'];
+                        $this->namespace = $config['namespace'];
+                        Bag::config()->set('app', [
+                            'root' => $this->root,
+                            'namespace' => $this->namespace,
+                            'base' => $base,
+                            'route' => $route
+                        ]);
+                        return true;
+                    }
+            } else {
+                $this->root = $config['root'];
+                $this->namespace = $config['namespace'];
+                Bag::config()->set('app', [
+                    'root' => $this->root,
+                    'namespace' => $this->namespace,
+                    'base' => $base,
+                    'route' => ''
+                ]);
+                return true;
+            }
+        }
+
+        return false;
+    }
     /*
     * Get config method
     * This method will be call config object and set value config to this config object.

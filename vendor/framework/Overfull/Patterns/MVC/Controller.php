@@ -9,16 +9,16 @@ use Overfull\Patterns\MVC\Foundation\IController;
 use Overfull\Patterns\MVC\Exception\MethodNotFoundException;
 use Bag;
 use Overfull\Http\Response\ResponseFormat;
-use Overfull\Patterns\MVC\DataTransfer;
+use Overfull\Bridge\DataTransfer;
 use Overfull\Foundation\Base\BaseObject;
 
 abstract class Controller extends BaseObject implements IController{
-        protected $dataTransfer = null;
+    protected $dataTransfer = null;
 
-        public function beforeAction(){}
+    public function beforeAction(){}
 	public function beforeFilter(){}
 	public function beforeRender(){}
-        
+
         /**
 	 * Set type to view is render
 	 *
@@ -47,7 +47,7 @@ abstract class Controller extends BaseObject implements IController{
             $this->dataTransfer->$name = $value;
             return $this;
 	}
-        
+
         /**
          * set helpers
          * @param type $name
@@ -59,11 +59,11 @@ abstract class Controller extends BaseObject implements IController{
                 $helpers[$name] = $data;
                 $this->dataTransfer->helpers = $helpers;
             }
-            
+
             $this->dataTransfer->helpers = $name;
             return $this;
         }
-        
+
         /**
          * layout
          * @param type $name
@@ -72,7 +72,7 @@ abstract class Controller extends BaseObject implements IController{
             $this->dataTransfer->appendFile = $name;
             return $this;
         }
-        
+
         /**
          * set helpers
          * @param type $name
@@ -82,7 +82,7 @@ abstract class Controller extends BaseObject implements IController{
             $this->dataTransfer->root = $name;
             return $this;
         }
-        
+
         /**
          * handler
          * @param type $name
@@ -93,7 +93,7 @@ abstract class Controller extends BaseObject implements IController{
                 return $this;
             }
         }
-        
+
         /**
          * dataTransfer
          * @param type $name
@@ -102,7 +102,7 @@ abstract class Controller extends BaseObject implements IController{
             if(!$name){
                 return $this->dataTransfer;
             }
-            
+
             if(is_object($name)){
                 $this->dataTransfer = $name;
                 return $this;
@@ -124,7 +124,7 @@ abstract class Controller extends BaseObject implements IController{
             } else if($view){
                 $this->dataTransfer->file = $view;
             }
-                
+
             $this->dataTransfer->type = 'render';
             $this->dataTransfer->set($data);
 
@@ -145,11 +145,11 @@ abstract class Controller extends BaseObject implements IController{
             if($view){
                 $this->dataTransfer->file = $view;
             }
-            
+
             $this->dataTransfer->type = 'render';
-            
+
             $this->dataTransfer->set($data);
-            
+
             return $this->dataTransfer;
 	}
 
@@ -162,9 +162,9 @@ abstract class Controller extends BaseObject implements IController{
 	protected final function redirect($url){
             $this->defaultDataTransfer();
             $this->dataTransfer->type = 'redirect';
-            
+
             $this->dataTransfer->set($url);
-            
+
             return $this->dataTransfer;
 	}
 
@@ -177,12 +177,12 @@ abstract class Controller extends BaseObject implements IController{
 	protected final function json($data){
             $this->defaultDataTransfer();
             $this->dataTransfer->type = 'json';
-            
+
             $this->dataTransfer->set($data);
-            
+
             return $this->dataTransfer;
 	}
-	
+
 	/**
 	 * Run controller
 	 *
@@ -198,15 +198,12 @@ abstract class Controller extends BaseObject implements IController{
             } else{
                 $__method = $firstUC ? ucfirst($method) : $method;
             }
-            
+
             if(!method_exists($this, $__method)){
                     throw new MethodNotFoundException($__method);
             }
 
             $this->dataTransfer = new DataTransfer();
-
-            // Event before
-            $this->beforeFilter();
 
             // Get filter before
 

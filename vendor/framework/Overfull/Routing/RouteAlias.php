@@ -55,7 +55,7 @@ class RouteAlias extends BaseObject{
     public function getFormat(){
         return isset($this->data['format']) ? $this->data['format'] : $this->data[0];
     }
-    
+
     /**
      * setParameterToUrl
      * @param type $url
@@ -82,7 +82,7 @@ class RouteAlias extends BaseObject{
                 }
             }
         }
-        
+
         if($skipNoParameter){
             // Replace all
             $url = preg_replace('/\<:(.*?)\>/', '', $url);
@@ -107,7 +107,7 @@ class RouteAlias extends BaseObject{
     * @return void
     */
     public function get(){
-            $parameters = isset($this->data['parameters']) ? $this->data['parameters'] : $this->data[2];
+            $parameters = isset($this->data['data']) ? $this->data['data'] : $this->data[2];
 
             if ( is_object($parameters) ) {
                     // Call merge by object
@@ -161,8 +161,8 @@ class RouteAlias extends BaseObject{
             }
 
             // Set parameters
-            if (!isset($attributes['parameters'])){
-                    $attributes['parameters'] = $matches;
+            if (!isset($attributes['data'])){
+                    $attributes['data'] = $matches;
             }
 
             return $attributes;
@@ -185,8 +185,8 @@ class RouteAlias extends BaseObject{
             }
 
             // Set parameters
-            if (!isset($attributes['parameters'])){
-                    $attributes['parameters'] = $matches;
+            if (!isset($attributes['data'])){
+                    $attributes['data'] = $matches;
             }
 
             return $attributes;

@@ -34,7 +34,8 @@ abstract class Otp{
         '/@endArea/' => '<?php $this->endArea($1); ?>',
         '/@readArea\((.*)\)/' => '<?php echo $this->readArea($1); ?>',
         
-        '/@appendTo\((.*)\)/' => '<?php $this->appendTo($1); ?>'
+        '/@appendTo\((.*)\)/' => '<?php $this->appendTo($1); ?>',
+        '/@append\((.*)\)/' => '<?php echo $this->append($1); ?>'
     ];
     
     protected $currentAreaName = '';

@@ -38,6 +38,20 @@ class PatternHandler extends BaseObject{
         }
 
         $this->controller = new $controller();
+        // Filter
+        // Call method beforeFilter
+        $this->controller->beforeFilter();
+        $filter = Bag::route()->filter;
+
+        if($filter){
+            // Check filter
+            if(!class_exists($filter)){
+                $filter = "{$appNamespace}\\Filters\\{$filter}";
+                if(!class_exists($filter)){
+                    throw new \Overfull\Patterns\MVC\Exception\FilterNotFoundException($filter);
+                }
+            }
+        }
 
         // Call view
         $dataTransfer = $this->controller->run();
@@ -45,7 +59,7 @@ class PatternHandler extends BaseObject{
             if(!class_exists($view)){
                 $view = "{$appNamespace}\\Views\\{$view}";
                 if(!class_exists($view)){
-                        throw new ViewNotFoundException($view);	
+                    throw new ViewNotFoundException($view);
                 }
             }
 
@@ -54,7 +68,7 @@ class PatternHandler extends BaseObject{
             if(!class_exists($view)){
                 $view = "{$appNamespace}\\Views\\{$view}";
                 if(!class_exists($view)){
-                        throw new ViewNotFoundException($view);	
+                        throw new ViewNotFoundException($view);
                 }
             }
 

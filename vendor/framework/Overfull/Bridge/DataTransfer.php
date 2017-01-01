@@ -6,7 +6,7 @@
 * Description: CtrlResult between controller and view
 * ----------------------------------------------------
 */
-namespace Overfull\Patterns\MVC;
+namespace Overfull\Bridge;
 use Overfull\Utility\ArrayUtil;
 use Bag;
 use Overfull\Template\Helpers\Form;
@@ -14,7 +14,7 @@ use Overfull\Template\Helpers\Form;
 class DataTransfer{
 	protected $data = null;
         protected $attributes = [];
-        
+
         /**
          * __construct
          * @param type $data
@@ -22,7 +22,7 @@ class DataTransfer{
 	function __construct($data = []){
             $this->data = $data;
 	}
-        
+
         /**
          * __get attributes
          * @param type $name
@@ -31,7 +31,7 @@ class DataTransfer{
         function __get($name){
             return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
         }
-        
+
         /**
          * __set attributes
          * @param type $name
@@ -40,7 +40,7 @@ class DataTransfer{
         function __set($name, $value){
             $this->attributes[$name] = $value;
         }
-        
+
         /**
          * Determine if an attribute exists on the model.
          *
@@ -60,7 +60,7 @@ class DataTransfer{
         public function __unset($key){
             unset($this->attributes[$key]);
         }
-        
+
         /**
          * __call is not exists method
          * @param type $name
@@ -71,20 +71,20 @@ class DataTransfer{
             if(method_exists($this, '__'.$name)){
                 return $this->{'__'.$name}($arguments);
             }
-            
+
             if(count($arguments) == 0){
                 return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
             }
-            
+
             if(count($arguments) == 1){
                 $this->attributes[$name] = $arguments[0];
             } else {
                 $this->attributes[$name] = $arguments;
             }
-            
+
             return $this;
         }
-        
+
         /**
          * Attributes
          * @return type
@@ -101,7 +101,7 @@ class DataTransfer{
 	public function get($name = ''){
             return ArrayUtil::access($this->data, $name);
 	}
-        
+
         /**
          * Set data method
          * @param type $value
@@ -111,7 +111,7 @@ class DataTransfer{
             $this->data = $value;
             return $this;
         }
-        
+
         /**
          * Remove data method
          * @param type $name
@@ -121,7 +121,7 @@ class DataTransfer{
             unset($this->data[$name]);
             return $this;
         }
-        
+
         /**
          * Add data method
          * @param type $name
