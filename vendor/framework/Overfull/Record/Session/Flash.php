@@ -6,16 +6,15 @@
 * Description: The Flash helper
 * ----------------------------------------------------
 */
-namespace Overfull\Template\Helpers;
-use Overfull\Template\Foundation\Helper;
+namespace Overfull\Record\Session;
 use Bag;
 
-class Flash extends Helper{
+class Flash{
 	/**
 	 * Set message method
 	 * @return void
 	 */
-	public static function write($type, $message){
+	public function write($type, $message){
 		$messages = Bag::session()->read("flash");
 		if(empty($messages[$type])){
 			$messages[$type] = [];
@@ -27,7 +26,7 @@ class Flash extends Helper{
 			$messages[$type] = array_merge($messages[$type], [$message]);
 		}
 
-		
+
 		Bag::session()->write('flash', $messages);
 	}
 
@@ -35,7 +34,7 @@ class Flash extends Helper{
 	 * Set message method
 	 * @return void
 	 */
-	public static function read($type = false){
+	public function read($type = false){
 		$data = Bag::session()->read("flash");
 
 		if(!$type){
@@ -59,7 +58,7 @@ class Flash extends Helper{
 	 * Set message method
 	 * @return void
 	 */
-	public static function delete($type = false){
+	public function delete($type = false){
 		if($type){
 			$data = Bag::session()->read("flash");
 			unset($data[$type]);
@@ -72,15 +71,15 @@ class Flash extends Helper{
 			Bag::session()->delete("flash");
 		}
 	}
-        
-        /**
-         * 
-         */
-        public static function check(){
-            $data = Bag::session()->read("flash");
-            if($data){
-                return true;
-            }
-            return false;
+
+    /**
+     *
+     */
+    public function check(){
+        $data = Bag::session()->read("flash");
+        if($data){
+            return true;
         }
+        return false;
+    }
 }

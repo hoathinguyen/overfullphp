@@ -3,7 +3,7 @@
  * View.php
  * View object class
  * This object handle the view of site
- * 
+ *
  * @author overfull.net
  * @date 2016/01/01
  */
@@ -25,7 +25,7 @@ class View extends Otp implements \Overfull\Patterns\MVC\Foundation\IView{
     function __construct(){
         $this->contentPath = 'Views'.DS.'Contents';
     }
-    
+
     /**
      * Run method
      * This method will be call from Handle pattern
@@ -46,7 +46,7 @@ class View extends Otp implements \Overfull\Patterns\MVC\Foundation\IView{
 
         return $this->{$dataTransfer->type}($dataTransfer->get());
     }
-    
+
     /**
      * Read file method
      * @param type $file
@@ -54,28 +54,28 @@ class View extends Otp implements \Overfull\Patterns\MVC\Foundation\IView{
      * @return string $content
      */
     protected function runFile($file, $variables = []){
-        try{            
+        try{
             // Convert file
             $file = PathUtil::convert($file);
             $appRoot = Bag::config()->get('app.root');
-            $ext = Bag::config()->get('core.otp.ext');
-            
+            $ext = Bag::config()->get('core.otp-extension');
+
             $fullFile = PathUtil::getFull($appRoot.DS.$file.'.'.($ext ? $ext : 'php'));
             $this->tempBag = $fullFile;
             // Check if file is not exists
             if ( !file_exists($fullFile) ) {
                 throw new FileNotFoundException($fullFile);
             }
-            
+
             $storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($appRoot.DS.$file).'.otp');
 
             if($this->useTemplate && (!file_exists($storageFile) || Bag::config()->get('core.develop'))){
-                $helpers = Bag::config()->get('core.otp.helpers');
+                $helpers = Bag::config()->get('alias.helpers');
                 $helpers = !empty($helpers) ? $helpers : [];
-                
+
                 $this->useClasses($helpers);
                 $this->useClasses($this->helpers);
-                
+
                 $this->replaceTemplate($fullFile, $storageFile);
 
                 $this->tempBag = $storageFile;

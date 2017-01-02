@@ -37,10 +37,12 @@ class Bag{
 	public static $store;
 
 	public static $config;
-        
-        public static $error;
-        
-        public static $system;
+
+    public static $error;
+
+    public static $system;
+
+	public static $flash;
 
 	/**
 	* The main application will call this method before use it.
@@ -58,21 +60,21 @@ class Bag{
 		static::store();
 
 		static::config();
-                
+
                 static::system();
 	}
-        
-        /**
-         * GEt error
-         */
-        public static function error(){
-            if(!static::$error){
-                static::$error = new \Overfull\Exception\Handler\ErrorData();
-            }
-            
-            return static::$error;
+
+    /**
+     * GEt error
+     */
+    public static function error(){
+        if(!static::$error){
+            static::$error = new \Overfull\Exception\Handler\ErrorData();
         }
-        
+
+        return static::$error;
+    }
+
 	/**
 	 * Get DbStore
 	 * @return DbStore
@@ -141,7 +143,7 @@ class Bag{
 		if(!static::$package){
 			static::$package = new PackageStore();
 		}
-                
+
                 if($name){
                     return static::$package->{$name};
                 }
@@ -194,8 +196,8 @@ class Bag{
 
 		return static::$pattern;
 	}
-        
-        /**
+
+    /**
 	 * Get MyStore
 	 * @return Config
 	 */
@@ -205,5 +207,17 @@ class Bag{
             }
 
             return static::$system;
+	}
+
+	/**
+	 * Get MyStore
+	 * @return flash object
+	 */
+	public static function flash(){
+		if(!static::$flash){
+			static::$flash = new \Overfull\Record\Session\Flash();
+		}
+
+		return static::$flash;
 	}
 }

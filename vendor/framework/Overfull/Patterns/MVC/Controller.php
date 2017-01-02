@@ -160,12 +160,22 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	protected final function redirect($url){
-            $this->defaultDataTransfer();
-            $this->dataTransfer->type = 'redirect';
+        $this->defaultDataTransfer();
+        $this->dataTransfer->type = 'redirect';
 
-            $this->dataTransfer->set($url);
+        $this->dataTransfer->set($url);
 
-            return $this->dataTransfer;
+        return $this->dataTransfer;
+	}
+
+    /**
+	 * Set type to view is redirect
+	 *
+	 * @param string $url
+	 * @return array
+	 */
+	protected final function toRoute($name, $params = [], $skipNoParameter = false){
+        return $this->redirect(\Overfull\Utility\URLUtil::route($name, $params, $skipNoParameter));
 	}
 
 	/**

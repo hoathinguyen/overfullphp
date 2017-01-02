@@ -121,7 +121,7 @@ class QueryBuilder extends BaseQueryBuilder{
 	 * @return string
 	 */
 	public function selectSyntax(){
-            
+
 		$sql = "SELECT ".implode(',', $this->attributes['columns'])." FROM ". $this->attributes['table'];
 
 		// Check if have joins syntax
@@ -140,7 +140,7 @@ class QueryBuilder extends BaseQueryBuilder{
 				$isFirst = false;
 			}
 		}
-                
+
                 // Check offset and limit
 		if(!empty($this->attributes['orders'])){
 			$sql .= " ORDER BY ";
@@ -151,14 +151,14 @@ class QueryBuilder extends BaseQueryBuilder{
                         }
                         $sql = rtrim($sql, ",");
 		}
-                
-		// Check offset and limit
-		if($this->attributes['offset'] !== false){
-			$sql .= " offset {$this->attributes['offset']}";
-		}
 
+		// Check offset and limit
 		if($this->attributes['limit'] !== false){
 			$sql .= " limit {$this->attributes['limit']}";
+		}
+
+		if($this->attributes['offset'] !== false){
+			$sql .= " offset {$this->attributes['offset']}";
 		}
 
 		return $sql;

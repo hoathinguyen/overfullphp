@@ -62,3 +62,10 @@ function bag($name){
 function request(){
     return \Bag::request();
 }
+
+/**
+ * request
+ */
+function flash(){
+    return \Bag::flash();
+}

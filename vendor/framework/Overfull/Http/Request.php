@@ -28,7 +28,7 @@ class Request extends BaseRequest{
             else
                 return $_SERVER['REQUEST_URI'];
 	}
-        
+
         /**
 	* Uri method
 	* This method will be return uri of request
@@ -88,7 +88,7 @@ class Request extends BaseRequest{
 
 		return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https" : "http";
 	}
-        
+
         /**
          * Get client ip method
          * @return string
@@ -111,7 +111,7 @@ class Request extends BaseRequest{
                 $ipaddress = 'UNKNOWN';
             return $ipaddress;
         }
-        
+
 	/**
 	* UriArray method
 	* This method will be return uri of request
@@ -123,7 +123,7 @@ class Request extends BaseRequest{
 		// Return value
 		$uris = explode('/', $this->uri());
 		array_shift($uris);
-		
+
 		$uris = array_filter($uris, function($value) { return $value ? true : false; });
 
 		return array_filter($uris);
@@ -269,9 +269,26 @@ class Request extends BaseRequest{
 	 * @param string $name
 	 * @return string
 	 */
-	public function get($name = false){
-		if(!$name) return $_GET;
+	public function get($name = false, $asArray = false){
+		if(!$name) {
+			if($asArray){
+				return $_GET;
+			}
+			return new \Overfull\Http\Request\RequestData($_GET);
+		}
+
 		return ArrayUtil::access($_GET, $name);
+	}
+
+	/**
+	 * Get method
+	 *
+	 * @date 2016/02/27
+	 * @param string $name
+	 * @return string
+	 */
+	public function getAsArray(){
+		return $this->get(false, true);
 	}
 
 	/**
@@ -281,10 +298,27 @@ class Request extends BaseRequest{
 	 * @param string $name
 	 * @return string
 	 */
-	public function post($name = false){
-		if(!$name) return $_POST;
+	public function post($name = false, $asArray = false){
+		if(!$name) {
+			if($asArray){
+				return $_POST;
+			}
+			return new \Overfull\Http\Request\RequestData($_POST);
+		}
 		return ArrayUtil::access($_POST, $name);
 	}
+
+	/**
+	 * post method
+	 *
+	 * @date 2016/02/27
+	 * @param string $name
+	 * @return string
+	 */
+	public function postAsArray(){
+		return $this->post(false, true);
+	}
+
 	/**
 	 * any method
 	 *
@@ -292,11 +326,22 @@ class Request extends BaseRequest{
 	 * @param string $name
 	 * @return string
 	 */
-	public function any($name = false){
-		if($this->is("POST")){
-			return $this->post($name);
+	public function any($name = false, $asArray = false){
+		if($this->isPost()){
+			return $this->post($name, $asArray = false);
 		}
-		
-		return $this->get($name);
+
+		return $this->get($name, $asArray = false);
+	}
+
+	/**
+	 * anyAsArray method
+	 *
+	 * @date 2016/02/27
+	 * @param string $name
+	 * @return string
+	 */
+	public function anyAsArray(){
+		return $this->any(false, true);
 	}
 }

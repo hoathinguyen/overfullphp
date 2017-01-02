@@ -91,6 +91,11 @@ class Application extends BaseObject{
                 ROOT.DS.$this->root.DS.'Config'.DS.'databases.php'
         ], true, false);
 
+        Bag::config()->set('alias', [
+                ROOT.DS.'config'.DS.'alias.php',
+                ROOT.DS.$this->root.DS.'Config'.DS.'alias.php'
+        ], true, false);
+
         //Bag::config()->set('alias', ROOT.DS.$this->root.DS.'config'.DS.'alias.php', true);
         Bag::config()->set('packages', [
                 ROOT.DS.'config'.DS.'packages.php',

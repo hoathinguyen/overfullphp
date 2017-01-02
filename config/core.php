@@ -6,10 +6,10 @@ return [
             'default' => 'vi',
             'folder'	=> 'languages'
     ),
-    
+
     /**
      * Config setting core for MVC pattern
-     * 
+     *
      */
     'MVC' => [
         /**
@@ -25,7 +25,9 @@ return [
          */
         'action-ucfirst' => true
     ],
-    
+
+    'otp-extension' => 'php',
+
     /**
      * My custom setting
      */

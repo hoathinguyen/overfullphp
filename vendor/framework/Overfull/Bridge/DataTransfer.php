@@ -139,7 +139,7 @@ class DataTransfer{
 	 * @return this
 	 */
 	public function withLastGet(){
-            if(!empty($data = Bag::request()->get())){
+            if(!empty($data = Bag::request()->getAsArray())){
                 if(isset($data[Form::MODEL_KEY])){
                     Bag::store()->{Form::VALUE_KEY.$data[Form::MODEL_KEY]} = $data;
                 } else {
@@ -156,7 +156,7 @@ class DataTransfer{
 	 * @return this
 	 */
 	public function withLastPost(){
-            if(!empty($data = Bag::request()->post())){
+            if(!empty($data = Bag::request()->postAsArray())){
                 if(isset($data[Form::MODEL_KEY])){
                     Bag::store()->{Form::VALUE_KEY.$data[Form::MODEL_KEY]} = $data;
                 } else {
@@ -173,7 +173,7 @@ class DataTransfer{
 	 * @return this
 	 */
 	public function withLastData(){
-            if(!empty($data = Bag::request()->any())){
+            if(!empty($data = Bag::request()->anyAsArray())){
                 if(isset($data[Form::MODEL_KEY])){
                     Bag::store()->{Form::VALUE_KEY.$data[Form::MODEL_KEY]} = $data;
                 } else {

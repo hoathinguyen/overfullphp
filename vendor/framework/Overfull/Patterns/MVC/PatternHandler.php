@@ -51,6 +51,9 @@ class PatternHandler extends BaseObject{
                     throw new \Overfull\Patterns\MVC\Exception\FilterNotFoundException($filter);
                 }
             }
+
+            $filter = new $filter();
+            $filter->run($this->controller);
         }
 
         // Call view

@@ -27,66 +27,41 @@
 */
 
 return [
-	'share.overfull.dev' => [
-		'root' => 'src/Share',
-		'namespace' => 'Src\Share'
-	],
-	
-	'share.overfull.net' => [
-		'root' => 'src/Share',
-		'namespace' => 'Src\Share'
-	],
-    
-        'game.overfull.dev' => [
-		'root' => 'src/Game',
-		'namespace' => 'Src\Game'
-	],
-    
-        'game.overfull.net' => [
-		'root' => 'src/Game',
-		'namespace' => 'Src\Game'
+	/**
+	 * Domain for Share app
+	 */
+	// Domain in localhost
+	// 'share.overfull.dev' => [
+	// 	'root' => 'src/Share',
+	// 	'namespace' => 'Src\Share'
+	// ],
+	 [
+		 'domain' => ['share.overfull.dev', 'share.overfull.net'],
+		 'root' => 'src/Share',
+ 		 'namespace' => 'Src\Share'
+	 ],
+
+	/**
+	 * Domain for Gift app
+	 */
+	[
+		'domain' => ['gift.overfull.dev', 'gift.overfull.net'],
+	    'root' => 'src/Gift',
+		'namespace' => 'Src\Gift'
 	],
 
-	'192.168.0.107' => [
-		'root' => 'src/Share',
-		'namespace' => 'Src\Share'
-	],
-    
-        'gift.overfull.dev' => [
-            'root' => 'src/Gift',
-            'namespace' => 'Src\Gift'
-	],
-	
-	'gift.overfull.net' => [
-            'root' => 'src/Gift',
-            'namespace' => 'Src\Gift'
-	],
-
+	/**
+	 * Domain for Shop app
+	 */
+	 [
+		 'domain' => ['shop.overfull.dev', 'shop.overfull.net'],
+		 'root' => 'src/Shop',
+		 'namespace' => 'Src\Shop'
+	 ],
+	/**
+	 * Domain for admin app
+	 */
 	'admin.overfull.dev' => 'root=src/FirstAdmin;namespace=Src\FirstAdmin',
-
-	// 'admin.overfull.dev' => function(){
-	// 	$page = \Bag::request()->get('uid');
-
-	// 	if($page == 'framework'){
-	// 		$page = [
-	// 			'root' => 'src\Admin',
-	// 			'namespace' => 'Src\Admin'
-	// 		];
-
-	// 		\Bag::session()->write('__page', $page);
-	// 	} else{
-	// 		$page = \Bag::session()->read('__page');
-	// 	}
-
-	// 	if(empty($page)){
-	// 		$page = [
-	// 			'root' => 'src\FirstAdmin',
-	// 			'namespace' => 'Src\FirstAdmin'
-	// 		];
-	// 	}
-
-	// 	return $page;
-	// },
 
 	'framework.admin.overfull.dev' => [
 		'root' => 'src/Admin',
