@@ -167,7 +167,7 @@ class Paginate extends \Overfull\Package\BasePackage{
      * data
      * @return type
      */
-    public function list(){
+    public function getResults(){
         return $this->data;
     }
 }
