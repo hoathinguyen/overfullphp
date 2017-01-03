@@ -38,6 +38,7 @@ class PatternHandler extends BaseObject{
         }
 
         $this->controller = new $controller();
+        $this->controller->init();
         // Filter
         // Call method beforeFilter
         $this->controller->beforeFilter();
@@ -53,11 +54,14 @@ class PatternHandler extends BaseObject{
             }
 
             $filter = new $filter();
-            $filter->run($this->controller);
+            $dataTransfer = $filter->run($this->controller);
         }
 
         // Call view
-        $dataTransfer = $this->controller->run();
+        if(!isset($dataTransfer)){
+            $dataTransfer = $this->controller->run();
+        }
+
         if(!empty($view = $dataTransfer->handler)){
             if(!class_exists($view)){
                 $view = "{$appNamespace}\\Views\\{$view}";

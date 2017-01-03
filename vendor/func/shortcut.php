@@ -66,6 +66,13 @@ function request(){
 /**
  * request
  */
+function package(){
+    return \Bag::package();
+}
+
+/**
+ * request
+ */
 function flash(){
     return \Bag::flash();
 }

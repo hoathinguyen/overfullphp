@@ -53,7 +53,7 @@ abstract class Controller extends BaseObject implements IController{
          * @param type $name
          * @param type $data
          */
-        protected final function helpers($name, $data = []){
+        public final function helpers($name, $data = []){
             if(is_string($name)){
                 $helpers = $this->dataTransfer->helpers;
                 $helpers[$name] = $data;
@@ -68,7 +68,7 @@ abstract class Controller extends BaseObject implements IController{
          * layout
          * @param type $name
          */
-        protected final function appendTo($name){
+        public final function appendTo($name){
             $this->dataTransfer->appendFile = $name;
             return $this;
         }
@@ -78,7 +78,7 @@ abstract class Controller extends BaseObject implements IController{
          * @param type $name
          * @param type $data
          */
-        protected final function root($name){
+        public final function root($name){
             $this->dataTransfer->root = $name;
             return $this;
         }
@@ -87,7 +87,7 @@ abstract class Controller extends BaseObject implements IController{
          * handler
          * @param type $name
          */
-        protected final function handler($name){
+        public final function handler($name){
             if(is_object($name)){
                 $this->dataTransfer->handler = $name;
                 return $this;
@@ -98,7 +98,7 @@ abstract class Controller extends BaseObject implements IController{
          * dataTransfer
          * @param type $name
          */
-        protected final function dataTransfer($name = false){
+        public final function dataTransfer($name = false){
             if(!$name){
                 return $this->dataTransfer;
             }
@@ -116,7 +116,7 @@ abstract class Controller extends BaseObject implements IController{
 	 * @param mixed $data
 	 * @return array
 	 */
-	protected final function render($view = false, $data = []){
+	public final function render($view = false, $data = []){
             $this->defaultDataTransfer();
             if(is_array($view)){
                 $this->dataTransfer->appendFile = $view[0];
@@ -138,7 +138,7 @@ abstract class Controller extends BaseObject implements IController{
 	 * @param mixed $data
 	 * @return array
 	 */
-	protected final function renderAjax($view = false, $data = []){
+	public final function renderAjax($view = false, $data = []){
             $this->defaultDataTransfer();
             $this->dataTransfer->appendFile = false;
 
@@ -159,7 +159,7 @@ abstract class Controller extends BaseObject implements IController{
 	 * @param string $url
 	 * @return array
 	 */
-	protected final function redirect($url){
+	public final function redirect($url){
         $this->defaultDataTransfer();
         $this->dataTransfer->type = 'redirect';
 
@@ -174,7 +174,7 @@ abstract class Controller extends BaseObject implements IController{
 	 * @param string $url
 	 * @return array
 	 */
-	protected final function toRoute($name, $params = [], $skipNoParameter = false){
+	public final function toRoute($name, $params = [], $skipNoParameter = false){
         return $this->redirect(\Overfull\Utility\URLUtil::route($name, $params, $skipNoParameter));
 	}
 
@@ -184,7 +184,7 @@ abstract class Controller extends BaseObject implements IController{
 	 * @param mixed $data
 	 * @return array
 	 */
-	protected final function json($data){
+	public final function json($data){
             $this->defaultDataTransfer();
             $this->dataTransfer->type = 'json';
 
@@ -193,6 +193,16 @@ abstract class Controller extends BaseObject implements IController{
             return $this->dataTransfer;
 	}
 
+    /**
+	 * Run controller
+	 *
+	 * @return void
+	 */
+    public final function init(){
+        $this->dataTransfer = new DataTransfer();
+        return $this;
+    }
+    
 	/**
 	 * Run controller
 	 *
@@ -212,8 +222,6 @@ abstract class Controller extends BaseObject implements IController{
             if(!method_exists($this, $__method)){
                     throw new MethodNotFoundException($__method);
             }
-
-            $this->dataTransfer = new DataTransfer();
 
             // Get filter before
 

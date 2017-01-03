@@ -28,9 +28,9 @@ class Auth extends BasePackage{
 	 * @param array $data
 	 */
 	public function login($data = null){
-		
+
 		if(!$data){
-			$data = Bag::request()->post();
+			$data = Bag::request()->postAsArray();
 		}
 
 		$class = $this->entity;
@@ -59,7 +59,7 @@ class Auth extends BasePackage{
 			$logged = new LoggedData();
 			$pri = $result->getPrimaryKey();
 			$logged->{$pri} = $result->{$pri};
-                        
+
 			Bag::session()->write($this->session, $logged);
 
                         if(!empty($this->afterLogin)){
@@ -68,7 +68,7 @@ class Auth extends BasePackage{
                                 $afterEvent();
                             }
                         }
-                        
+
 			return true;
 		}
 		return false;
@@ -102,9 +102,9 @@ class Auth extends BasePackage{
 			$pr = $model->getPrimaryKey();
 			$this->dbData = $model->find($this->get()->{$pr});
 		}
-                
+
                 unset($this->dbData->{$this->secret});
-                
+
 		return $this->dbData;
 	}
 }
