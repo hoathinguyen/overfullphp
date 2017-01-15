@@ -53,7 +53,7 @@ class Auth extends BasePackage{
 				$query->orWhere([$ids[$i], 'LIKE', $username]);
 			}
 		})
-		->one();
+		->first();
 
 		if($result){
 			$logged = new LoggedData();

@@ -33,18 +33,18 @@ abstract class Otp{
         '/@beginArea\((.*)\)/' => '<?php $this->beginArea($1); ?>',
         '/@endArea/' => '<?php $this->endArea($1); ?>',
         '/@readArea\((.*)\)/' => '<?php echo $this->readArea($1); ?>',
-        
+
         '/@appendTo\((.*)\)/' => '<?php $this->appendTo($1); ?>',
         '/@append\((.*)\)/' => '<?php echo $this->append($1); ?>'
     ];
-    
+
     protected $currentAreaName = '';
     protected $areas = [];
     protected $contentPath = null;
     protected $appendFile = null;
     protected $useTemplate = true;
     protected $useClasses = [];
-    
+
     public function useClasses($classes){
         $this->useClasses = array_merge($this->useClasses, $classes);
     }
@@ -70,11 +70,11 @@ abstract class Otp{
             $this->variables = $file;
             return $this->recursive($this->file, $this->variables);
         }
-        
+
         $this->variables = $variables;
         return $this->recursive($file, $this->variables);
     }
-    
+
     /**
      * Handle view as redirect
      *
@@ -89,7 +89,7 @@ abstract class Otp{
 
         return $html;
     }
-    
+
     /**
      * Handle view with json
      *
@@ -136,7 +136,7 @@ abstract class Otp{
     protected function file($gift){
         return 'render';
     }
-    
+
     /**
      * recursive method
      * This method will be call recursive the file
@@ -145,27 +145,27 @@ abstract class Otp{
      */
     protected function recursive($file, $variables = []){
         // read view
-        $__content = $this->runFile($this->contentPath.DS.(!empty($this->root) ? $this->root.DS : '' ).$file, $variables);
-        
+        $__content = $this->runFile(($this->contentPath ? $this->contentPath.DS : '').(!empty($this->root) ? $this->root.DS : '' ).$file, $variables);
+
         $__appendFile = $this->appendFile;
         $this->appendFile = null;
-        
+
         if($__appendFile){
             $__content = $this->recursive($__appendFile, $variables);
         }
-        
+
         return $__content;
     }
-    
+
     /**
      * Render
      * @param type $file
      * @param type $variables
      */
     protected function append($file, $variables = []){
-        return $this->runFile($this->contentPath.DS.$file, $variables);
+        return $this->runFile(($this->contentPath ? $this->contentPath.DS : '').$file, $variables);
     }
-    
+
     /**
      * Begin area
      * @param type $name
@@ -176,7 +176,7 @@ abstract class Otp{
         $this->currentAreaName = $name;
         return $this;
     }
-    
+
     /**
      * End area
      * @return string
@@ -186,7 +186,7 @@ abstract class Otp{
         $this->areas[$this->currentAreaName] = $result;
         return $this;
     }
-    
+
     /**
      * Read area
      * @param type $name
@@ -195,7 +195,7 @@ abstract class Otp{
     protected function readArea($name){
         return isset($this->areas[$name]) ? $this->areas[$name] : null;
     }
-    
+
     /**
      * Replace template method
      * @param type $file
@@ -206,7 +206,7 @@ abstract class Otp{
         foreach ($this->tags as $key => $value) {
             $fileContent = preg_replace($key, $value, $fileContent);
         }
-        
+
         $namespace = "";
 
         foreach ( $this->useClasses as $key => $value) {
@@ -214,10 +214,10 @@ abstract class Otp{
         }
 
         file_put_contents($toFile, "<?php {$namespace} ?>".$fileContent);
-        
+
         return $toFile;
     }
-    
+
     /**
      * runTemplate
      * @param type $file
@@ -234,6 +234,6 @@ abstract class Otp{
 
         require $file;
 
-        return ob_get_clean(); 
+        return ob_get_clean();
    }
 }

@@ -50,7 +50,6 @@ class Application extends BaseObject{
 
             // Get config
             $this->getConfig();
-
             Bag::pattern();
 
             // Get result in route
@@ -85,39 +84,7 @@ class Application extends BaseObject{
     * This method will be call config object and set value config to this config object.
     */
     private function getConfig(){
-        // Get config for database
-        Bag::config()->set('databases', [
-                ROOT.DS.'config'.DS.'databases.php',
-                ROOT.DS.$this->root.DS.'Config'.DS.'databases.php'
-        ], true, false);
-
-        Bag::config()->set('alias', [
-                ROOT.DS.'config'.DS.'alias.php',
-                ROOT.DS.$this->root.DS.'Config'.DS.'alias.php'
-        ], true, false);
-
-        //Bag::config()->set('alias', ROOT.DS.$this->root.DS.'config'.DS.'alias.php', true);
-        Bag::config()->set('packages', [
-                ROOT.DS.'config'.DS.'packages.php',
-                ROOT.DS.$this->root.DS.'Config'.DS.'packages.php'
-        ], true, false);
-
-        Bag::config()->set('core', [
-                ROOT.DS.'config'.DS.'core.php',
-                ROOT.DS.$this->root.DS.'Config'.DS.'core.php'
-        ], true, false);
-
-        Bag::config()->set('errors', [
-                ROOT.DS.'config'.DS.'errors.php',
-                ROOT.DS.$this->root.DS.'Config'.DS.'errors.php'
-        ], true, false);
-
-        Bag::config()->set('routes', [
-                ROOT.DS.'config'.DS.'routes.php',
-                ROOT.DS.$this->root.DS.'Config'.DS.'routes.php'
-        ], true, false);
-
-        Bag::config()->set('system', ROOT.DS.'vendor'.DS.'framework'.DS.'Overfull'.DS.'Configure'.DS.'system.php', true);
+        require(ROOT.DS.'config'.DS.'main.php');
     }
 
     /*
@@ -125,7 +92,7 @@ class Application extends BaseObject{
     * This method will be call config object and set value config to this config object.
     */
     private function getDirectionConfig(){
-        Bag::config()->set('domain-config', ROOT.DS.'config'.DS.'domain.php', true);
+        Bag::config()->setByFile('domain-config', ROOT.DS.'config'.DS.'domain.php', true);
 
         // Check if have config in app
         if(!empty($app = Bag::config()->get('domain-config'))){
@@ -150,7 +117,6 @@ class Application extends BaseObject{
                 }
             }
         }
-
         Bag::config()->set('app', [
             'root' => $this->root,
             'namespace' => $this->namespace,
@@ -177,8 +143,9 @@ class Application extends BaseObject{
         $regex = str_replace('{domain}', '([a-zA-Z0-9\-]+)', $regex);
         $regex = str_replace('{ext}', '([a-zA-Z0-9]+)', $regex);
         $regex = str_replace('{folder}', '([a-zA-Z0-9\-]+)', $regex);
-        $regex = str_replace('[', '|(', $regex);
-        $regex = str_replace(']', ')', $regex);
+        // $regex = preg_replace("/\W+/", '\\$1', $regex);
+        // $regex = str_replace('[', '|(', $regex);
+        // $regex = str_replace(']', ')', $regex);
 
         $exRegex = explode('/', $regex);
         $base = count($exRegex) - 1;
@@ -221,7 +188,6 @@ class Application extends BaseObject{
                 return true;
             }
         }
-
         return false;
     }
     /*

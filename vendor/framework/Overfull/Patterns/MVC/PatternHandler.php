@@ -58,7 +58,7 @@ class PatternHandler extends BaseObject{
         }
 
         // Call view
-        if(!isset($dataTransfer)){
+        if(empty($dataTransfer)){
             $dataTransfer = $this->controller->run();
         }
 

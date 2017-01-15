@@ -17,16 +17,43 @@ class ArrayUtil extends BaseUtil{
 	 * @return array with grouped
 	 */
 	public final static function access( $arr = null , $name = '' ){
-		if ( empty($name) ) return $arr;
-		 
-		$exs = explode('.', $name);
+		if ( empty($name) || empty($arr) || !is_array($arr)) return $arr;
+
 		$result = $arr;
+
+		if(array_key_exists($name, $arr)){
+			return $result[$name];
+		}
+
+		$exs = explode('.', $name);
+
 
 		foreach ($exs as $key => $value) {
 			$result = isset($result[$value]) ? $result[$value] : null;
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Set value method
+	 */
+	public static function setValue(&$ob, $name, $value){
+		$exs = explode('.', $name);
+		$count = count($exs);
+
+		for($index = 0; $index < $count; $index++) {
+			if($index == ($count - 1)){
+				$ob[$exs[$index]] = $value;
+				return;
+			}
+
+			if(!array_key_exists($exs[$index], $ob)){
+				$ob[$exs[$index]] = [];
+			}
+
+			$ob = &$ob[$exs[$index]];
+		}
 	}
 
 	/**

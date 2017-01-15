@@ -76,3 +76,11 @@ function package(){
 function flash(){
     return \Bag::flash();
 }
+
+function config($name = false){
+    if(!$name){
+        return bag('config');
+    }
+
+    return bag('config')->get($name);
+}

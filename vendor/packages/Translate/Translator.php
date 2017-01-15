@@ -26,7 +26,7 @@ class Translator extends BasePackage{
             if(empty($languages)){
                     $lang = 'en';
                     $folder = Bag::config()->get('core.languages.folder');
-                    $languages = Bag::config()->set('languages', ROOT.DS.PathUtil::convert($folder).DS.$lang.DS.$domain.'.php', true, false);
+                    $languages = Bag::config()->setByFile('languages', ROOT.DS.PathUtil::convert($folder).DS.$lang.DS.$domain.'.php', true, false);
             }
 
             if(isset($languages[$text])){

@@ -9,6 +9,6 @@ use Overfull\Exception\OverfullException;
 
 class PageNotFoundException extends OverfullException{
 	function __construct(){
-		parent::__construct('Page is not found', 1);
+		parent::__construct('Page is not found', 404);
 	}
 }

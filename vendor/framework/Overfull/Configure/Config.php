@@ -21,8 +21,8 @@ class Config extends BaseObject{
 	public function get( $name = '' ){
 		try {
 			return ArrayUtil::access($this->configs, $name);
-		}catch( Exception $e ){
-			throw new Exception($e->getMessage(), 102);
+		}catch( \Exception $e ){
+			throw new \Exception($e->getMessage(), 102);
 		}
 	}
 
@@ -34,39 +34,67 @@ class Config extends BaseObject{
 	 * @param value $val
 	 * @param boolean $isPath
 	 */
-	public function set( $name = false, $val = array() , $isPath = false, $isException = true){
+	public function set($name, $val = null){
 		try {
-			if ( !$name ) {
-				return;
-			}
+			ArrayUtil::setValue($this->configs, $name, $val);
+			return $val;
+		}catch( \Exception $e ){
+			throw new \Exception($e->getMessage(), 102);
+		}
+	}
 
-			if($isPath){
+	/**
+	 * setByFile
+	 */
+	public function setByFile($name, $val = array(), $isException = true, $isGetReturn = true){
+		try {
+			if(!$isGetReturn){
 				if(is_array($val)){
-					if(empty($this->configs[$name])){
-						$this->configs[$name] = [];
-					}
 					foreach ($val as $key => $value) {
 						if(file_exists($value)){
-							$configs = require($value);
-							$this->configs[$name] = array_merge($this->configs[$name], $configs);
+							require($value);
 						} else if($isException){
-							throw new ConfigFileNotFoundException($val);
+							throw new ConfigFileNotFoundException($value);
 						}
 					}
 				} else {
 					if(file_exists($val)){
-						$this->configs[$name] = require($val);
+						require($val);
 					} else if($isException){
 						throw new ConfigFileNotFoundException($val);
 					}
 				}
-				
-			} else {
-				$this->configs[$name] = $val;
+				return;
 			}
-			return isset($this->configs[$name]) ? $this->configs[$name] : null;
-		}catch( Exception $e ){
-			throw new Exception($e->getMessage(), 102);
+
+			$result = $this->get($name);
+
+			if(empty($result)){
+				$result = [];
+			}
+
+			if(is_array($val)){
+				foreach ($val as $key => $value) {
+					if(file_exists($value)){
+						$configs = require($value);
+						$result = array_merge($result, $configs);
+					} else if($isException){
+						throw new ConfigFileNotFoundException($value);
+					}
+				}
+			} else {
+				if(file_exists($val)){
+					$configs = require($val);
+					$result = array_merge($result, $configs);
+				} else if($isException){
+					throw new ConfigFileNotFoundException($val);
+				}
+			}
+
+			ArrayUtil::setValue($this->configs, $name, $result);
+			return $result;
+		}catch( \Exception $e ){
+			throw new \Exception($e->getMessage(), 102);
 		}
 	}
 

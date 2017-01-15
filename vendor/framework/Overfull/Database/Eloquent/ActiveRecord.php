@@ -135,7 +135,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         $databases = Bag::config()->get('databases');
 
         if ( !$use ) {
-            $use = $databases['use'];
+            $use = $databases['uses'];
         }
 
         if(!isset($databases['connections'][$use])
@@ -275,7 +275,7 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
         // Create query
         return $this->schema()
             ->where([$this->primaryKey, '=', $id])
-            ->one();
+            ->first();
     }
 
     /**
