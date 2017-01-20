@@ -43,7 +43,7 @@ class Route extends BaseObject{
 		$configs = Bag::config()->get('routes');
 
 		// Check if have no data in pages
-		if(empty($configs['pages'])){
+		if(empty($configs)){
 			throw new PageNotFoundException();
 		}
 
@@ -55,15 +55,15 @@ class Route extends BaseObject{
 		}
 
 		// Get root
-		if(Bag::config()->get('routes.compare') == 'relative'){
+		if(Bag::config()->get('route-compare') == 'relative'){
 			$this->uri = strtolower($this->setWebroot($configs, $uriArray));
 		} else {
 			$this->uri = $this->setWebroot($configs, $uriArray);
 		}
-		
+
 		$this->url = explode('?', $this->uri)[0];
 
-		$this->setAlias($configs['pages']);
+		$this->setAlias($configs);
 
 		if($this->validRouting == null){
 			throw new PageNotFoundException();
@@ -105,7 +105,7 @@ class Route extends BaseObject{
                                     $this->alias[$value['as']] = $alias;
 				}
 
-				if($this->validRouting == null 
+				if($this->validRouting == null
 					&& ($alias->isValid($this->uri)
 					|| $alias->isValid($this->url)) ){
 					$this->validRouting = $alias;
@@ -162,7 +162,7 @@ class Route extends BaseObject{
 
 		return implode('/', $url);
 	}
-        
+
         public function clearAttributes(){
             $this->attributes = [];
             return $this;
@@ -215,7 +215,7 @@ class Route extends BaseObject{
 	* @return value
 	*/
 	private function convertRegex($str){
-		
+
 		foreach ($this->regexKeys as $key => $value) {
 			$str = preg_replace($key, $value, $str);
 		}

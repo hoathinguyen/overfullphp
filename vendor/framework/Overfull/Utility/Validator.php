@@ -10,7 +10,6 @@ namespace Overfull\Utility;
 use Overfull\Utility\Foundation\BaseUtil;
 use Overfull\Utility\ArrayUtil;
 use Bag;
-use Overfull\Template\Helpers\Form;
 
 class Validator extends BaseUtil{
 	protected static $regex = [
@@ -96,12 +95,12 @@ class Validator extends BaseUtil{
                                             default:
                                                 if(method_exists($parent, $__regex)){
                                                     $status = $parent->$__regex($column, $data, $values);
-                                                    
+
                                                     if(is_array($status)){
                                                         foreach($status as $param => $paramValue){
                                                             $messsage = str_replace(':'.$param, $paramValue, $messsage);
                                                         }
-                                                        
+
                                                         $messsages[$column] = str_replace(':field', $column, $messsage);
                                                     }elseif(!$status){
                                                         $messsages[$column] = str_replace(':field', $column, $messsage);
@@ -121,13 +120,7 @@ class Validator extends BaseUtil{
 				}
 			}
 		}
-                
-                if(!empty($values[Form::MODEL_KEY])){
-                    Bag::store()->{Form::MESSAGE_KEY.$values[Form::MODEL_KEY]} = $messsages;
-                } else {
-                    Bag::store()->{Form::MESSAGE_KEY.Form::generateModelKey('default')} = $messsages;
-                }
-        
+
 		return $messsages;
 	}
 }

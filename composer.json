@@ -2,7 +2,9 @@
     "autoload": {
     	"psr-4": {
     		"Overfull\\": "vendor/framework/Overfull",
-            "Src\\": "src",
+            "Dev\\": "src/Dev",
+            "FW\\": "src/FW",
+            "Shop\\": "src/Shop",
             "Weights\\": "weights",
             "Packages\\": "vendor/packages"
     	},
@@ -16,5 +18,8 @@
             "vendor/framework/Overfull/Bag.php",
             "vendor/packages/Translate/func.php"
     	]
+    },
+    "require": {
+        "intervention/image": "^2.3"
     }
 }
