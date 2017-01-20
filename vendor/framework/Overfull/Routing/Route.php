@@ -56,9 +56,9 @@ class Route extends BaseObject{
 
 		// Get root
 		if(Bag::config()->get('route-compare') == 'relative'){
-			$this->uri = strtolower($this->setWebroot($configs, $uriArray));
+			$this->uri = strtolower($this->setWebroot($uriArray));
 		} else {
-			$this->uri = $this->setWebroot($configs, $uriArray);
+			$this->uri = $this->setWebroot($uriArray);
 		}
 
 		$this->url = explode('?', $this->uri)[0];
@@ -137,36 +137,35 @@ class Route extends BaseObject{
 	* @param string $url
 	* @return string $url
 	*/
-	private function setWebroot($configs, $url){
+	private function setWebroot($url){
 		// Get baseFolder
-		$base = (int) Bag::config()->get('app.base');
-
-		//$root = ROOT;
-		for ($i = 1; $i <= $base; $i++) {
-			array_shift($url);
-		}
-
-		$this->attributes['webroot'] = '';
+		//$appBase = (int) Bag::config()->get('app.base');
+		//$routeBase = (int) Bag::config()->get('core.route-base');
+		//$routeBase += $appBase;
+		$routeBase = (int) Bag::config()->get('app.base');
+		//$this->attributes['root'] = '';
 
 		//Get root with private setting
-		if ( !empty($configs['base']) && is_numeric($configs['base'])) {
-			for($i = 0; $i < $configs['base']; $i++){
-				$this->attributes['webroot'] .= !empty($url[0]) ? '/'.$url[0] : '';
+		if ( !empty($routeBase) && is_numeric($routeBase)) {
+			for($i = 0; $i < $routeBase; $i++){
+				//$this->attributes['root'] .= $url[0].'/';
 				array_shift($url);
 			}
 		}
 
-		if(!$this->attributes['webroot']){
-			$this->attributes['webroot'] = '/';
-		}
+		//$this->attributes['root'] = rtrim($this->attributes['root'], "/");
+
+		// if(!$this->attributes['root']){
+		// 	$this->attributes['root'] = '/';
+		// }
 
 		return implode('/', $url);
 	}
 
-        public function clearAttributes(){
-            $this->attributes = [];
-            return $this;
-        }
+    public function clearAttributes(){
+        $this->attributes = [];
+        return $this;
+    }
 
 	/**
 	* __get method

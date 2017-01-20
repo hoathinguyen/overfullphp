@@ -29,7 +29,7 @@ class Application extends BaseObject{
     public function __construct($appRoot = 'src/App', $appNamespace = 'src\App'){
         $this->root = $appRoot;
         $this->namespace = $appNamespace;
-        $this->getDirectionConfig();
+        Bag::config()->setByFile('main', ROOT.DS.'config'.DS.'main.php',  true,  true);
     }
 
     /*
@@ -39,14 +39,14 @@ class Application extends BaseObject{
     */
     public function run(){
         try{
+            $this->registerException();
             // Get route info
             Bag::init();
+            $this->getDirectionConfig();
 
             if(!file_exists(ROOT.DS.$this->root)){
-                    throw new AppNotFoundException($this->root);
+                throw new AppNotFoundException($this->root);
             }
-
-            $this->registerException();
 
             // Get config
             $this->getConfig();
@@ -84,7 +84,13 @@ class Application extends BaseObject{
     * This method will be call config object and set value config to this config object.
     */
     private function getConfig(){
-        require(ROOT.DS.'config'.DS.'main.php');
+        $main = Bag::config()->get('main');
+        unset($main['domain']);
+        foreach ($main as $name => $value) {
+            foreach($value as $setting){
+                Bag::config()->setByFile($name, str_replace('@APP_ROOT', $this->root, $setting[0]),  $setting[1],  $setting[2]);
+            }
+        }
     }
 
     /*
@@ -92,10 +98,13 @@ class Application extends BaseObject{
     * This method will be call config object and set value config to this config object.
     */
     private function getDirectionConfig(){
-        Bag::config()->setByFile('domain-config', ROOT.DS.'config'.DS.'domain.php', true);
+        $main = Bag::config()->get('main.domain');
+        foreach ($main as $value) {
+            Bag::config()->setByFile('domain', $value[0],  $value[1],  $value[2]);
+        }
 
         // Check if have config in app
-        if(!empty($app = Bag::config()->get('domain-config'))){
+        if(!empty($app = Bag::config()->get('domain'))){
             $uri = Bag::request()->uriArray();
             $currentDomain = strtolower(Bag::request()->host());
             foreach ($app as $key => $config) {

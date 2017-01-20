@@ -23,7 +23,7 @@ class URLUtil extends BaseUtil{
         }
 
         if ( substr($name, 0, 1) != '/') {
-            $route = Bag::config()->get('app.route');
+            $route = Bag::request()->publicPath();
 
             $name = ($route == '' ? '' : '/'.$route).'/'.$name;
         }
@@ -42,8 +42,8 @@ class URLUtil extends BaseUtil{
         if(!$alias){
             throw new \Overfull\Exception\RouteAliasNotFoundException($name);
         }
-
-        return Bag::request()->root().'/'.$alias->getRoute($params, $skipNoParameter);
+        $route = Bag::config()->get('app.route');
+        return Bag::request()->root().'/'.($route ? $route . '/' : ''). $alias->getRoute($params, $skipNoParameter);
     }
 
     /**

@@ -61,7 +61,7 @@ class Bag{
 
 		static::config();
 
-                static::system();
+        static::system();
 	}
 
     /**

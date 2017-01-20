@@ -15,12 +15,21 @@ class Auth extends BasePackage{
 	private $idField = 'username';
 	private $secretField = 'password';
 	private $dbData = null;
+	private $scope = null;
 	/**
 	 * Is logged method
 	 * @return boolean
 	 */
 	public function isLogged(){
-		return Bag::session()->check($this->session);
+		return Bag::session()->check($this->scope.'_'.$this->session);
+	}
+
+	/**
+	 * Scope
+	 */
+	public function scope($scope = null){
+		$this->scope = $scope;
+		return $this;
 	}
 
 	/**
@@ -28,7 +37,6 @@ class Auth extends BasePackage{
 	 * @param array $data
 	 */
 	public function login($data = null){
-
 		if(!$data){
 			$data = Bag::request()->postAsArray();
 		}
@@ -60,7 +68,7 @@ class Auth extends BasePackage{
 			$pri = $result->getPrimaryKey();
 			$logged->{$pri} = $result->{$pri};
 
-			Bag::session()->write($this->session, $logged);
+			Bag::session()->write($this->scope.'_'.$this->session, $logged);
 
                         if(!empty($this->afterLogin)){
                             $afterEvent = $this->afterLogin;
@@ -79,7 +87,7 @@ class Auth extends BasePackage{
 	 * @param array $data
 	 */
 	public function logout(){
-		Bag::session()->delete($this->session);
+		Bag::session()->delete($this->scope.'_'.$this->session);
 	}
 
 	/**
@@ -87,7 +95,7 @@ class Auth extends BasePackage{
 	 * @param array $data
 	 */
 	public function get(){
-		return Bag::session()->read($this->session);
+		return Bag::session()->read($this->scope.'_'.$this->session);
 	}
 
 	/**
