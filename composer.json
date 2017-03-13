@@ -1,22 +1,21 @@
 {
     "autoload": {
     	"psr-4": {
-    		"Overfull\\": "vendor/framework/Overfull",
-            "Dev\\": "src/Dev",
-            "FW\\": "src/FW",
-            "Shop\\": "src/Shop",
-            "Weights\\": "weights",
-            "Packages\\": "vendor/packages"
+            "Overfull\\": "vendor/overfull/framework",
+            "Dev\\": "resources/Dev",
+            "FW\\": "resources/FW",
+            "Shop\\": "resources/Shop",
+            "Attendance\\": "resources/Attendance"
     	},
     	"classmap": [
-    		"vendor/framework/Overfull"
+    		"vendor/overfull/framework"
     	],
     	"files": [
-            "vendor/func/debug.php",
-            "vendor/func/shortcut.php",
-            "vendor/framework/Overfull/Foundation/constants.php",
-            "vendor/framework/Overfull/Bag.php",
-            "vendor/packages/Translate/func.php"
+            "vendor/overfull/framework/Foundation/func/debug.php",
+            "vendor/overfull/framework/Foundation/func/shortcut.php",
+            "vendor/overfull/framework/Foundation/constants.php",
+            "vendor/overfull/framework/Bag.php",
+            "vendor/overfull/framework/Packages/Translate/func.php"
     	]
     },
     "require": {

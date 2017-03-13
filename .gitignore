@@ -1,9 +1,0 @@
-#ignore composer file and folder
-vendor/composer
-vendor/autoload.php
-src
-config/databases.temp.php
-config/app.temp.php
-storage
-public/css
-public/plugins

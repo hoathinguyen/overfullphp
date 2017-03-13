@@ -1,10 +1,10 @@
 <?php
 return [
-    'develop' => false,
+    'develop' => true,
 
     'languages' => array(
-            'default' => 'vi',
-            'folder'	=> 'languages'
+        'default' => 'vi',
+        'folder'	=> 'languages'
     ),
 
     /**
@@ -26,11 +26,34 @@ return [
         'action-ucfirst' => true
     ],
 
+    'pattern' => \Overfull\Patterns\MVC\PatternHandler::class,
+
+    /**
+     * Setting for otp
+     */
     'otp-extension' => 'php',
+    'otp-redirect-title' => 'Đang chuyển hướng ...',
 
     /**
      * My custom setting
      */
     //'socket-url' => 'https://chat-share-overfull.herokuapp.com',
-    'socket-url' => 'http://localhost:8080'
+    'socket-url' => 'http://localhost:8080',
+
+    /**
+     * Setting for route
+     */
+     'route-compare' => 'relative', // absolute
+
+    /*
+     * ------------------------------------------------------------------
+     * Setting for errors and debug
+     * ------------------------------------------------------------------
+     */
+    'error-display' => true,
+    
+//     'error-handler' => [
+//         'controller' => 'ErrorsController',
+//         'action' => 'error'
+//     ]
 ];

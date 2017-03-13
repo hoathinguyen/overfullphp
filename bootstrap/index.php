@@ -15,6 +15,6 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 // ----------------------------------------------------
 // Create applicateion object and run it
 // ----------------------------------------------------
-$application = new \Overfull\Application('src/App', 'Src\App');
+$application = new \Overfull\Application('resource/App', 'App');
 
 $application->run();
