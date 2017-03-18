@@ -1,128 +1,270 @@
 <?php
-/*----------------------------------------------------
-* Config object class
-* This class is parent for all of config object.
-* This has some method will be use as static.
-* ----------------------------------------------------
-*/
+/**
+ * Config object class
+ * This object read data for config 
+ *
+ * @author Overfull.net
+ * @link http://php.overfull.net/docs/config Document for Config
+ * @date 2017/03/18
+ */
 namespace Overfull\Configure;
-use Overfull\Foundation\Base\BaseObject;
-use Overfull\Utility\ArrayUtil;
+
 use Overfull\Exception\ConfigFileNotFoundException;
+use Overfull\Utility\ArrayUtil;
 
-class Config extends BaseObject{
-    private $configs = array();
-
-    public function addFiles($name, $files){
-        $this->set("main.$name", $files);
-    }
-
+class Config extends \Overfull\Foundation\Base\BaseObject
+{
+    private $configData = [];
+    
     /**
-     * Get value of config
-     *
-     * @param string $name
+     * Run file
+     * @param string $file
+     * @param boolean $isException
+     * @throws ConfigFileNotFoundException
+     * @return $this
      */
-    public function get( $name = '' ){
-            try {
-                    return ArrayUtil::access($this->configs, $name);
-            }catch( \Exception $e ){
-                    throw new \Exception($e->getMessage(), 102);
-            }
+    public function runFile($file, $isException = true)
+    {
+        // Check if exists file
+        if(file_exists($file)){
+            // Require file
+            require($file);
+        } else if($isException){
+            // Throw error
+            throw new ConfigFileNotFoundException($file);
+        }
+        
+        return $this;
     }
-
+    
     /**
-     * set value for config
+     * 
+     * @param string $name
+     * @param string $file
+     * @param boolean $isException
+     * @throws ConfigFileNotFoundException
+     * @return $this
+     */
+    public function loadJson($name, $file, $isException = true)
+    {
+        // Check if exists file
+        if(file_exists($file)){
+            $data = json_decode(file_get_contents($file));
+            
+            if(!$name)
+            {
+                $this->set($data);
+            }
+            else
+            {
+                $this->set($name, $data);
+            }
+        } else if($isException){
+            // Throw error
+            throw new ConfigFileNotFoundException($file);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Load array method
+     * @param string $name
+     * @param string $arrays
+     * @param boolean $isException
+     * @throws \Overfull\Exception\DataTypeException
+     * @return $this
+     */
+    public function loadArray($name, $arrays, $isException = true)
+    {
+        // Check if is array
+        if(is_array($arrays)){
+            if(!$name)
+            {
+                $this->set($arrays);
+            }
+            else
+            {
+                $this->set($name, $arrays);
+            }
+        } else  if($isException){
+            throw new \Overfull\Exception\DataTypeException(get_class($arrays), 'Config::loadArray(type of array)');
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Load file method
+     * @param string $name
+     * @param string $file
+     * @param boolean $isException
+     * @throws ConfigFileNotFoundException
+     * @return $this
+     */
+    public function loadFile($name, $file, $isException = true)
+    {
+        // Check if exists file
+        if(file_exists($file)){
+            // Require file
+            $data = require($file);
+            if(!$name)
+            {
+                $this->set($data);
+            }
+            else
+            {
+                $this->set($name, $data);
+            }
+        } else if($isException){
+            // Throw error
+            throw new ConfigFileNotFoundException($file);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Load file method
+     * @param string $name
+     * @param \Closure $func
+     * @param boolean $isException
+     * @throws \Overfull\Exception\InstanceOfObjectException
+     * @return $this
+     */
+    public function loadClosure($name, $func, $isException = true)
+    {
+        // Check if exists file
+        if($func instanceof \Closure){
+            // Require file
+            if(!$name)
+            {
+                $this->set($func($this));
+            }
+            else
+            {
+                $this->set($name, $func($this));
+            }
+        }
+        else if($isException)
+        {
+            // Throw error
+            throw new \Overfull\Exception\InstanceOfObjectException(get_class($func), 'Closure');
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Remove config method
+     * @param type $name
+     * @return $this
+     */
+    public function remove($name)
+    {
+        ArrayUtil::remove($this->configData, $name);
+        return $this;
+    }
+    
+    /**
+     * Set value for config
      *
-     * @date 2016/05/21
      * @param string $name
      * @param value $val
-     * @param boolean $isPath
+     * @return $this
      */
-    public function set($name, $val = null){
-            try {
-                    ArrayUtil::setValue($this->configs, $name, $this->convert($val));
-                    return $val;
-            }catch( \Exception $e ){
-                    throw new \Exception($e->getMessage(), 102);
+    public function set($name, $val = [])
+    {
+        try {
+            if(is_array($name))
+            {
+                foreach ($name as $key => $value)
+                {
+                    if(is_array($value))
+                    {
+                        $data = (array)ArrayUtil::access($this->configData, $key);
+                        if(is_array($data))
+                        {
+                            $value = array_merge($data, $value);
+                        }
+                    }
+                    
+                    ArrayUtil::setValue($this->configData, $key, $value);
+                }
             }
-    }
-
-    /**
-     * setByFile
-     */
-    public function setByFile($name, $val = array(), $isException = true, $isGetReturn = true){
-            try {
-                    if(!$isGetReturn){
-                            if(is_array($val)){
-                                    foreach ($val as $key => $value) {
-                                            if(file_exists($value)){
-                                                    require($value);
-                                            } else if($isException){
-                                                    throw new ConfigFileNotFoundException($value);
-                                            }
-                                    }
-                            } else {
-                                    if(file_exists($val)){
-                                            require($val);
-                                    } else if($isException){
-                                            throw new ConfigFileNotFoundException($val);
-                                    }
-                            }
-                            return;
+            else
+            {
+                if(is_array($val))
+                {
+                    $data = (array)ArrayUtil::access($this->configData, $name);
+                    if(is_array($data))
+                    {
+                        $val = array_merge($data, $val);
                     }
-
-                    $result = $this->get($name);
-
-                    if(empty($result)){
-                            $result = [];
-                    }
-
-                    if(is_array($val)){
-                            foreach ($val as $key => $value) {
-                                    if(file_exists($value)){
-                                            $configs = require($value);
-                                            $result = array_merge($result, $this->convert($configs));
-                                    } else if($isException){
-                                            throw new ConfigFileNotFoundException($value);
-                                    }
-                            }
-                    } else {
-                            if(file_exists($val)){
-                                    $configs = require($val);
-                                    $result = array_merge($result, $this->convert($configs));
-                            } else if($isException){
-                                    throw new ConfigFileNotFoundException($val);
-                            }
-                    }
-
-                    ArrayUtil::setValue($this->configs, $name, $result);
-                    return $result;
-            }catch( \Exception $e ){
-                    throw new \Exception($e->getMessage(), 102);
+                }
+                
+                ArrayUtil::setValue($this->configData, $name, $val);
             }
-    }
-
-    /**
-     * Delete config
-     *
-     * @param string $name
-     * @return void
-     */
-    public function delete($name){
-        unset($this->configs[$name]);
-    }
-
-    /**
-     * Convert config
-     *
-     * @param string $name
-     * @return void
-     */
-    private function convert($configs){
-        if(is_object($configs)){
-            return $configs();
+        }catch( \Exception $e ){
+            throw new \Exception($e->getMessage(), 102);
         }
-
-        return $configs;
+        
+        return $this;
+    }
+    
+    /**
+     * Get config method
+     * @param type $name
+     * @return type
+     * @throws \Exception
+     * @return mixed
+     */
+    public function get($name = '')
+    {
+        try {
+            return ArrayUtil::access($this->configData, $name);
+        }catch( \Exception $e ){
+            throw new \Exception($e->getMessage(), 102);
+        }
+    }
+    
+    /**
+     * Group method
+     * @param type $groupName
+     * @param type $data
+     */
+    public function forApp($app, $data, $isException = true)
+    {
+        // Check if exists file
+        if($data instanceof \Closure){
+            $this->set('ForApp.'.$app, $data);
+        } else if($isException){
+            // Throw error
+            throw new \Overfull\Exception\InstanceOfObjectException(get_class($data), 'Closure');
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Group method
+     * @param type $groupName
+     * @param type $data
+     */
+    public function loadApp($app, $isException = true)
+    {
+        $func = $this->get('ForApp.'.$app);
+        
+        if($func)
+        {
+            $this->loadClosure(false, $func, $isException);
+        }
+        else if($isException)
+        {
+            // Throw error
+            throw new ConfigFileNotFoundException('ForApp.'.$app);
+        }
+        
+        return $this;
     }
 }

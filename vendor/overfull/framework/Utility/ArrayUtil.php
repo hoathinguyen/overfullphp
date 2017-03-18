@@ -34,6 +34,41 @@ class ArrayUtil extends BaseUtil{
 
 		return $result;
 	}
+        
+        /**
+	 * Access array
+	 * @param array $arr
+	 * @param string $name
+	 * @return array with grouped
+	 */
+	public final static function remove(&$ob , $name = '' )
+        {
+            // Check if exists this key
+            if(array_key_exists($name, $ob)){
+                unset($ob[$name]);
+                return;
+            }
+            
+            $exs = explode('.', $name);
+            $count = count($exs);
+            foreach($exs as $key => $value)
+            {
+                if(array_key_exists($value, $ob))
+                {
+                    if($key == ($count - 1))
+                    {
+                        unset($ob[$value]);
+                        return;
+                    }
+                        
+                    $ob = &$ob[$value];
+                }
+                else
+                {
+                    return;
+                }
+            }
+	}
 
 	/**
 	 * Check if is exists this key

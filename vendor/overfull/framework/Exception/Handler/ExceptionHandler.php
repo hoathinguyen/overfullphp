@@ -66,7 +66,7 @@ class ExceptionHandler extends BaseObject{
             ob_clean();
             ob_start();
             
-            require ROOT.DS.'vendor'.DS.'framework'.DS.'Overfull'.DS.'Exception'.DS.'Handler'.DS.'view'.DS.'debug.php';
+            require ROOT.DS.'vendor'.DS.'overfull'.DS.'framework'.DS.'Exception'.DS.'Handler'.DS.'view'.DS.'debug.php';
             
             Bag::response()->content = ob_get_clean();
             

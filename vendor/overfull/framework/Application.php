@@ -26,7 +26,7 @@ class Application extends BaseObject{
     public function __construct($appRoot = 'src/App', $appNamespace = 'src\App'){
         Bag::config()->set('app.root', $appRoot);
         Bag::config()->set('app.namespace', $appNamespace);
-        Bag::config()->setByFile('main', ROOT.DS.'config'.DS.'main.php',  true,  false);
+        Bag::config()->runFile(ROOT.DS.'config'.DS.'main.php');
     }
 
     /*
@@ -39,14 +39,14 @@ class Application extends BaseObject{
             $this->registerException();
             // Get route info
             Bag::init();
-            $this->getDirectionConfig();
+            $this->getAppConfig();
 
             if(!file_exists(ROOT.DS.Bag::config()->get('app.root'))){
                 throw new AppNotFoundException(Bag::config()->get('app.root'));
             }
 
             // Get config
-            $this->getConfig();
+            $this->getConfigForApp();
             Bag::pattern();
 
             // Get result in route
@@ -80,46 +80,15 @@ class Application extends BaseObject{
     * Get config method
     * This method will be call config object and set value config to this config object.
     */
-    private function getConfig(){
-        $app = Bag::config()->get('app');
-        $main = Bag::config()->get('main.*');
-        
-        if(isset($app['as'])){
-            $dmain = Bag::config()->get("main.{$app['as']}");
-            if(!empty($dmain)){
-                foreach($dmain as $key => $value){
-                    if(isset($main[$key])){
-                       $main[$key] = array_merge($main[$key], $value);;
-                    } else {
-                       $main[$key] = $value;
-                    }
-                } 
-            }
-        }
-        unset($main['domain']);
-        foreach ($main as $name => $value) {
-            foreach($value as $setting){
-                foreach($app as $key => $setVal){
-                    if(is_string($setVal) || is_numeric($setVal)){
-                        $setting[0] = str_replace(":$key", $setVal, $setting[0]);
-                    }
-                }
-                
-                Bag::config()->setByFile($name, $setting[0],  $setting[1],  $setting[2]);
-            }
-        }
+    private function getConfigForApp(){
+        $func = Bag::config()->loadApp(Bag::config()->get('app.as'), false);
     }
 
     /*
     * Get config method
     * This method will be call config object and set value config to this config object.
     */
-    private function getDirectionConfig(){
-        $main = Bag::config()->get('main.*.domain');
-        foreach ($main as $value) {
-            Bag::config()->setByFile('domain', $value[0],  $value[1],  $value[2]);
-        }
-
+    private function getAppConfig(){
         // Check if have config in app
         if(!empty($app = Bag::config()->get('domain'))){
             $uri = Bag::request()->uriArray();

@@ -69,7 +69,7 @@ class Route extends BaseObject{
 
         $this->attributes = array_merge($data, $this->attributes);
 
-        Bag::config()->delete('routes');
+        Bag::config()->remove('routes');
     }
 
     /**

@@ -1,34 +1,26 @@
 <?php
-config()->addFiles('*', [
-    'domain' => [
-        array(ROOT.'/config/domain.php', true, true)
-    ],
-    'databases' => [
-        array(ROOT.'/config/databases.php', true, true),
-        //array(ROOT.'/:root/Config/databases.php', false, true)
-    ],
-    'alias' => [
-        array(ROOT.'/config/alias.php', true, true),
-        //array(ROOT.'/:root/Config/alias.php', false, true)
-    ],
-    'packages' => [
-        array(ROOT.'/config/packages.php', true, true),
-        //array(ROOT.'/:root/Config/packages.php', false, true)
-    ],
-    'core' => [
-        array(ROOT.'/config/core.php', true, true),
-        //array(ROOT.'/:root/Config/core.php', false, true)
-    ],
-
-    'system' => [
-        array(ROOT.'/vendor/framework/Overfull/Configure/system.php', true, true)
-    ],
-
-    // 'routes' => [
-    //     array(ROOT.'/:root/Config/routes.php', false, true)
-    // ],
-    // Read file
-    array(
-        [ROOT.'/:config/main.php', true, false]
-    )
-]);
+// Load domain config
+config()->loadFile('domain', ROOT.'/config/domain.php', true)
+->loadFile('databases', ROOT.'/config/databases.php', true)
+->loadFile('alias', ROOT.'/config/alias.php', true)
+->loadFile('core', ROOT.'/config/core.php', true)
+->forApp('ofs', function($config){
+    $config->loadFile('routes', ROOT.'/config/ofs/routes.php', true)
+        ->loadFile('databases', ROOT.'/config/databases.php', true);
+})
+// Config for ofs
+->forApp('shop', function($config){
+    $config->loadFile('routes', ROOT.'/config/shop/site/routes.php', true)
+        ->loadFile('packages', ROOT.'/config/shop/packages.php', true);
+})
+// Config for ofs
+->forApp('admin-shop', function($config){
+    $config->loadFile('routes', ROOT.'/config/shop/admin/routes.php', true)
+        ->loadFile('packages', ROOT.'/config/shop/packages.php', true);
+})
+// Config for ofs
+->forApp('attendance', function($config){
+    $config->loadFile('databases', ROOT.'/config/attendance/databases.php', true)
+        ->loadFile('routes', ROOT.'/config/attendance/routes.php', true)
+        ->loadFile('packages', ROOT.'/config/attendance/packages.php', true);
+});
