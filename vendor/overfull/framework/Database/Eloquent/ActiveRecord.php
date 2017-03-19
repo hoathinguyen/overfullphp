@@ -1,24 +1,24 @@
 <?php
-/*----------------------------------------------------
+/*
 * Filename: ActiveRecord.php
-* Author: Overfull.net
-* Date: 2016/10/25
-* Description: The ActiveRecord will be use as a row
+* @author: Overfull.net
+* @date: 2016/10/25
+* @description: The ActiveRecord will be use as a row
 * in table of database.
-* ----------------------------------------------------
+* 
 */
 namespace Overfull\Database\Eloquent;
 use Bag;
 use Overfull\Database\Schema;
-use Overfull\Database\Eloquent\Foundation\IActiveRecord;
 use Overfull\Exception\ConnectionException;
 use Overfull\Exception\SchemaNotFoundException;
-use Overfull\Foundation\Base\BaseObject;
 use Overfull\Database\Eloquent\Relations\BelongsTo;
 use Overfull\Database\Eloquent\Relations\HasMany;
 use Overfull\Database\Eloquent\Relations\HasOne;
 
-abstract class ActiveRecord extends BaseObject implements IActiveRecord{
+abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
+    implements \Overfull\Database\Eloquent\Foundation\IActiveRecord
+{
     // The primary key of table
     protected $primaryKey = 'id';
 
@@ -44,10 +44,19 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
 
     // The connection, which connect between db and php
     protected $connection = null;
-	function __construct( $use = false ){
+    
+    /**
+     * __construct
+     * @param string $use
+     */
+    function __construct( $use = false )
+    {
         $this->connect($use);
     }
-
+    
+    /**
+     * BeforeSave event
+     */
     protected function beforeSave(){}
 
     /**
@@ -56,7 +65,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param string $relative They key of relation object
      * @param string $locale They key of relation object
      */
-    public final function hasMany($activeRecord, $relative){
+    public final function hasMany($activeRecord, $relative)
+    {
         $name = debug_backtrace()[1]['function'];
         //$name = str_replace('relation', '', $name);
         preg_match('/get(.*)Relation/', $name, $names);
@@ -81,7 +91,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param string $relative They key of relation object
      * @param string $locale They key of relation object
      */
-    public final function hasOne($activeRecord, $relative){
+    public final function hasOne($activeRecord, $relative)
+    {
         $name = debug_backtrace()[1]['function'];
         preg_match('/get(.*)Relation/', $name, $names);
 
@@ -107,7 +118,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param string $relative They key of relation object
      * @param string $locale They key of relation object
      */
-    public final function belongsTo($activeRecord, $relative){
+    public final function belongsTo($activeRecord, $relative)
+    {
         $name = debug_backtrace()[1]['function'];
         preg_match('/get(.*)Relation/', $name, $names);
 
@@ -134,7 +146,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * which is config in database.php
      * @return current object
      */
-    public static function instance($use = false){
+    public static function instance($use = false)
+    {
         $class = static::className();
         $model = new $class($use);
         return $model;
@@ -147,7 +160,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param array $connectionInfo
      * @return void
      */
-    public final function connect($use = false){
+    public final function connect($use = false)
+    {
         $databases = Bag::config()->get('databases');
 
         if ( !$use ) {
@@ -186,7 +200,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return object
      */
-    public final function schema($type = false){
+    public final function schema($type = false)
+    {
         // Check if type is exists.
         if(!empty($type)){
             $chemaClass = "\Overfull\Database\Schema\\".ucfirst($type)."\Schema";
@@ -205,7 +220,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return instance
      */
-    public function beginTransaction(){
+    public function beginTransaction()
+    {
         $this->connection->beginTransaction();
         return $this;
     }
@@ -215,7 +231,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return instance
      */
-    public function rollBack(){
+    public function rollBack()
+    {
         $this->connection->rollBack();
         return $this;
     }
@@ -225,7 +242,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return void
      */
-    public function commit(){
+    public function commit()
+    {
         try {
             $this->connection->commit();
         } catch(Exception $e) {
@@ -237,7 +255,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get primary key method
      *
      */
-    public function getPrimaryKey(){
+    public function getPrimaryKey()
+    {
         return $this->primaryKey;
     }
 
@@ -245,7 +264,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get primary key method
      *
      */
-    public function getTableName(){
+    public function getTableName()
+    {
         return $this->tableName;
     }
 
@@ -253,7 +273,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get primary key method
      *
      */
-    public function isAttribute($name){
+    public function isAttribute($name)
+    {
         return array_key_exists($name, $this->attributes);
     }
 
@@ -261,7 +282,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get primary key method
      *
      */
-    public function isOldAttribute($name){
+    public function isOldAttribute($name)
+    {
         return array_key_exists($name, $this->oldAttributes);
     }
 
@@ -269,7 +291,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get primary key method
      *
      */
-    public function isMoreAttribute($name){
+    public function isMoreAttribute($name)
+    {
         return array_key_exists($name, $this->moreAttributes);
     }
 
@@ -277,7 +300,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get primary key method
      *
      */
-    public function isRelation($name){
+    public function isRelation($name)
+    {
         return array_key_exists($name, $this->relations);
     }
 
@@ -287,7 +311,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param mixed $id
      * @return object
      */
-    public function find($id){
+    public function find($id)
+    {
         // Create query
         return $this->schema()
             ->where([$this->primaryKey, '=', $id])
@@ -300,7 +325,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param mixed $id
      * @return object
      */
-    public function findOrDefault($id){
+    public function findOrDefault($id)
+    {
         // Create query
         $rs = $this->find($id);
 
@@ -314,7 +340,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return array
      */
-    public function save($isExecute = true){
+    public function save($isExecute = true)
+    {
         $this->beforeSave();
 
         if($this->isNew()){
@@ -377,7 +404,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return array
      */
-    public function delete(){
+    public function delete()
+    {
         if(!$this->isNew()){
             return $this->schema()
                 ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
@@ -390,7 +418,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return array
      */
-    public function isNew(){
+    public function isNew()
+    {
         return empty($this->attributes[$this->getPrimaryKey()]);
     }
 
@@ -399,7 +428,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return array
      */
-    public function jsonSerialize(){
+    public function jsonSerialize()
+    {
         return array_merge($this->attributes, $this->relations, $this->moreAttributes);
     }
 
@@ -408,7 +438,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      *
      * @return array
      */
-    public function __debugInfo() {
+    public function __debugInfo()
+    {
         return array_merge($this->attributes, $this->relations, $this->moreAttributes);
     }
 
@@ -419,7 +450,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param mixed $value
      * @return void
      */
-    public function __set($name, $value){
+    public function __set($name, $value)
+    {
         $this->attributes[$name] = $value;
     }
 
@@ -429,7 +461,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param string $name
      * @return mixed
      */
-    public function __get($name){
+    public function __get($name)
+    {
         if(!$this->isAttribute($name)){
 
             // Get attribute
@@ -469,7 +502,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param  string  $key
      * @return bool
      */
-    public function __isset($key){
+    public function __isset($key)
+    {
     	return ($this->isAttribute($key) || $this->isRelation($key) || $this->isMoreAttribute($key));
     }
 
@@ -479,7 +513,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * @param  string  $key
      * @return void
      */
-    public function __unset($key){
+    public function __unset($key)
+    {
         unset($this->attributes[$key], $this->relations[$key], $this->moreAttributes[$key]);
     }
 
@@ -487,7 +522,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get attributes
      * @return array attributes
      */
-    public function getAttributes($name = false){
+    public function getAttributes($name = false)
+    {
         if(!$name){
             return $this->attributes;
         }
@@ -501,7 +537,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get attributes
      * @return array attributes
      */
-    public function getOldAttributes($name = false){
+    public function getOldAttributes($name = false)
+    {
         if(!$name){
             return $this->oldAttributes;
         }
@@ -515,7 +552,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get relations
      * @return array relations
      */
-    public function getRelations($name = false){
+    public function getRelations($name = false)
+    {
         if(!$name){
             return $this->relations;
         }
@@ -529,7 +567,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
      * Get relations
      * @return array relations
      */
-    public function getMoreAttributes($name = false){
+    public function getMoreAttributes($name = false)
+    {
         if(!$name){
             return $this->moreAttributes;
         }
@@ -542,7 +581,8 @@ abstract class ActiveRecord extends BaseObject implements IActiveRecord{
     /**
      * makeOldAttributes
      */
-    public function makeOldAttributes(){
+    public function makeOldAttributes()
+    {
         $this->oldAttributes = $this->attributes;
         return $this;
     }

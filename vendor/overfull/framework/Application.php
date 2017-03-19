@@ -6,73 +6,66 @@
 * ----------------------------------------------------
 */
 namespace Overfull;
-use Overfull\Foundation\Base\BaseObject;
-use Overfull\Configure\Config;
-use Overfull\Routing\Route;
-use Bag;
-use Overfull\Exception\AppNotFoundException;
-use Overfull\Exception\ConfigFileNotFoundException;
-use Overfull\Exception\PageNotFoundException;
-use Overfull\Exception\PatternNotFoundException;
-use Exception;
-use Overfull\Exception\Handler\ExceptionHandler;
 
-class Application extends BaseObject{
-    /*
-    * Construct method
-    *
-    * @param string appRoot : root of project
-    */
-    public function __construct($appRoot = 'src/App', $appNamespace = 'src\App'){
-        Bag::config()->set('app.root', $appRoot);
-        Bag::config()->set('app.namespace', $appNamespace);
-        Bag::config()->runFile(ROOT.DS.'config'.DS.'main.php');
+class Application extends \Overfull\Foundation\Base\BaseObject
+{
+    /**
+     * __construct
+     * @param string $appRoot
+     * @param string $appNamespace
+     */
+    public function __construct($appRoot = 'src/App', $appNamespace = 'src\App')
+    {
+        \Bag::config()->set('app.root', $appRoot);
+        \Bag::config()->set('app.namespace', $appNamespace);
+        \Bag::config()->runFile(ROOT.DS.'config'.DS.'main.php');
     }
 
     /*
     * Run method
     * This method perform all of process on a transaction
-    * @return object
+    * @return void
     */
-    public function run(){
+    public function run()
+    {
         try{
             $this->registerException();
             // Get route info
-            Bag::init();
+            \Bag::init();
             $this->getAppConfig();
 
-            if(!file_exists(ROOT.DS.Bag::config()->get('app.root'))){
-                throw new AppNotFoundException(Bag::config()->get('app.root'));
+            if(!file_exists(ROOT.DS.\Bag::config()->get('app.root'))){
+                throw new \Overfull\Exception\AppNotFoundException(\Bag::config()->get('app.root'));
             }
 
             // Get config
             $this->getConfigForApp();
-            Bag::pattern();
+            \Bag::pattern();
 
             // Get result in route
-            Bag::route()->run();
+            \Bag::route()->run();
 
-            if(Bag::route()->response){
-                foreach (Bag::route()->response as $key => $value) {
-                        Bag::$response->{$key} = $value;
+            if(\Bag::route()->response){
+                foreach (\Bag::route()->response as $key => $value) {
+                        \Bag::$response->{$key} = $value;
                 }
             }
 
             // Run pattern
-            Bag::pattern()->run();
+            \Bag::pattern()->run();
 
             // return result
-            Bag::response()->send();
-        } catch(AppNotFoundException $e){
-                ExceptionHandler::showExceptionObject($e);
-        } catch(ConfigFileNotFoundException $e){
-                ExceptionHandler::showExceptionObject($e);
-        } catch(PageNotFoundException $e){
-                ExceptionHandler::showExceptionObject($e);
-        } catch(PatternNotFoundException $e){
-                ExceptionHandler::showExceptionObject($e);
-        } catch(Exception $e){
-                ExceptionHandler::showExceptionObject($e);
+            \Bag::response()->send();
+        } catch(\Overfull\Exception\AppNotFoundException $e){
+                \Overfull\Exception\Handler\ExceptionHandler::showExceptionObject($e);
+        } catch(\Overfull\Exception\ConfigFileNotFoundException $e){
+                \Overfull\Exception\Handler\ExceptionHandler::showExceptionObject($e);
+        } catch(\Overfull\Exception\PageNotFoundException $e){
+                \Overfull\Exception\Handler\ExceptionHandler::showExceptionObject($e);
+        } catch(\Overfull\Exception\PatternNotFoundException $e){
+                \Overfull\Exception\Handler\ExceptionHandler::showExceptionObject($e);
+        } catch(\Exception $e){
+                \Overfull\Exception\Handler\ExceptionHandler::showExceptionObject($e);
         }
     }
 
@@ -80,19 +73,22 @@ class Application extends BaseObject{
     * Get config method
     * This method will be call config object and set value config to this config object.
     */
-    private function getConfigForApp(){
-        $func = Bag::config()->loadApp(Bag::config()->get('app.as'), false);
+    private function getConfigForApp()
+    {
+        $func = \Bag::config()->loadApp(\Bag::config()->get('app.as'), false);
     }
 
     /*
     * Get config method
     * This method will be call config object and set value config to this config object.
     */
-    private function getAppConfig(){
+    private function getAppConfig()
+    {
         // Check if have config in app
-        if(!empty($app = Bag::config()->get('domain'))){
-            $uri = Bag::request()->uriArray();
-            $currentDomain = strtolower(Bag::request()->host());
+        if(!empty($app = \Bag::config()->get('domain')))
+        {
+            $uri = \Bag::request()->uriArray();
+            $currentDomain = strtolower(\Bag::request()->host());
             foreach ($app as $key => $config) {
                 if(is_object($config)){
                     $config = $config();
@@ -115,16 +111,22 @@ class Application extends BaseObject{
 
         $config['base'] = 0;
         $config['route'] = '';
-        $config['root'] = Bag::config()->get('app.root');
-        $config['namespace'] = Bag::config()->get('app.namespace');
-        Bag::config()->set('app', $config);
+        $config['root'] = \Bag::config()->get('app.root');
+        $config['namespace'] = \Bag::config()->get('app.namespace');
+        \Bag::config()->set('app', $config);
     }
 
-    /*
-    * Get config method
-    * This method will be call config object and set value config to this config object.
-    */
-    private function isValidDomain($domain, $currentDomain, $uri, $config){
+    /**
+     * IsValidDomain
+     * This method check url is valid
+     * @param string $domain
+     * @param string $currentDomain
+     * @param array $uri
+     * @param array $config
+     * @return boolean
+     */
+    private function isValidDomain($domain, $currentDomain, $uri, $config)
+    {
         if(is_string($config)){
                 $keyValDo = explode(";", $config);
                 $config = [];
@@ -163,13 +165,13 @@ class Application extends BaseObject{
                         //$prefix = explode('/', $key);
                         $config['base'] = $base;
                         $config['prefix'] = $prefix;
-                        Bag::config()->set('app', $config);
+                        \Bag::config()->set('app', $config);
                         return true;
                     }
             } else {
                 $config['base'] = $base;
                 $config['prefix'] = '';
-                Bag::config()->set('app', $config);
+                \Bag::config()->set('app', $config);
                 return true;
             }
         }
@@ -180,7 +182,8 @@ class Application extends BaseObject{
     * Get config method
     * This method will be call config object and set value config to this config object.
     */
-    private function registerException(){
+    private function registerException()
+    {
         @set_exception_handler(array('\Overfull\Exception\Handler\ExceptionHandler','exceptionHandler'));
 
         @set_error_handler(array('\Overfull\Exception\Handler\ExceptionHandler','errorHandler'));
@@ -188,5 +191,3 @@ class Application extends BaseObject{
         @register_shutdown_function(array('\Overfull\Exception\Handler\ExceptionHandler','shutdown'));
     }
 }
-
-?>

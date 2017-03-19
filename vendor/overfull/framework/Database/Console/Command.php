@@ -1,11 +1,13 @@
 <?php
-/*----------------------------------------------------
-* Command object class
-* ----------------------------------------------------
-*/
+/**
+ * Command.php
+ * 
+ * @author Overfull.net
+ * @date 2016/10/12
+ */
 namespace Overfull\Database\Console;
-use Overfull\Foundation\Base\BaseObject;
 
-class Command extends BaseObject{
+class Command extends \Overfull\Foundation\Base\BaseObject
+{
 
 }
