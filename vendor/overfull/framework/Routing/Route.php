@@ -21,26 +21,14 @@ class Route extends BaseObject{
     private $uri = '';
 
     private $attributes = [];
-    
-    /**
-    * Regex keys
-    * This array contains all of key config on routes to parse to regex
-    */
-    private $regexKeys = [
-    	'/\<(|([a-zA-Z0-9]+)):all\>/' => '(.*)',
-    	'/\//' => '\/',
-    	'/\?/' => '\?',
-    	'/\<:empty\>/' => '',
-    	'/\<(|([a-zA-Z0-9]+)):integer\>/' => '(0|[1-9][0-9]*)',
-    	'/\<(|([a-zA-Z0-9]+)):alphanumeric\>/' => '([a-zA-Z0-9]*)'
-    ];
 
     /**
      * Run method
      *
      * @return void
      */
-    public function run(){
+    public function run()
+    {
         $configs = Bag::config()->get('routes');
 
         // Check if have no data in pages
@@ -51,7 +39,7 @@ class Route extends BaseObject{
         $uriArray = Bag::request()->uriArray();
         
         // Get root
-        if(Bag::config()->get('route-compare') == 'relative'){
+        if(Bag::config()->get('core.route-compare') == 'relative'){
             $this->uri = strtolower($this->setWebroot($uriArray));
         } else {
             $this->uri = $this->setWebroot($uriArray);
@@ -79,25 +67,14 @@ class Route extends BaseObject{
     * @param string $prefix
     * @return void
     */
-    private function setAlias($pages, $prefix = '', $aliasName = ''){
+    private function setAlias($pages, $prefix = '', $aliasName = '')
+    {
         foreach ($pages as $key => $value) {
             if(is_numeric($key)){
-                $format = isset($value['format']) ? $value['format'] : $value[0];
-                $regex = $this->convertRegex($prefix.$format);
-
-                if(substr( $regex, -1 ) == '/'){
-                        $regex = substr($regex, 0, -2);
-                }
-
-                $value['regex'] = $regex;
-
                 $value['prefix'] = $prefix;
-
                 $alias = new RouteAlias($value);
 
                 if(!empty($value['as'])){
-                    //$_aliasName = ($aliasName ? $aliasName.'.' : '').$value['as'];
-                    //$this->alias[$_aliasName] = $alias;
                     $this->alias[$value['as']] = $alias;
                 }
 
@@ -118,7 +95,8 @@ class Route extends BaseObject{
     * @param string $name
     * @return RouteAlias
     */
-    public function getAlias($name = false){
+    public function getAlias($name = false)
+    {
         if(!$name){
             return $this->alias;
         }
@@ -133,7 +111,8 @@ class Route extends BaseObject{
     * @param string $url
     * @return string $url
     */
-    private function setWebroot($url){
+    private function setWebroot($url)
+    {
         $routeBase = (int) Bag::config()->get('app.base');
 
         //Get root with private setting
@@ -152,7 +131,8 @@ class Route extends BaseObject{
      * Clear attributes method
      * @return $this
      */
-    public function clearAttributes(){
+    public function clearAttributes()
+    {
         $this->attributes = [];
         return $this;
     }
@@ -160,14 +140,16 @@ class Route extends BaseObject{
     /**
      * Get current route
      */
-    public function getCurrentRoute(){
+    public function getCurrentRoute()
+    {
     	return $this->validRouting;
     }
     
     /**
      * Get current route
      */
-    public function getUrl($name, $params = [], $skipNoParameter = true){
+    public function getUrl($name, $params = [], $skipNoParameter = true)
+    {
         $alias = $this->getAlias($name);
 
         if(!$alias){
@@ -184,7 +166,8 @@ class Route extends BaseObject{
     * @param string $name
     * @return value
     */
-    public function __get($name){
+    public function __get($name)
+    {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
@@ -194,7 +177,8 @@ class Route extends BaseObject{
     * @param string $name
     * @return value
     */
-    public function __set($name, $value){
+    public function __set($name, $value)
+    {
         $this->attributes[$name] = $value;
     }
 
@@ -204,7 +188,8 @@ class Route extends BaseObject{
      * @param  string  $key
      * @return bool
      */
-    public function __isset($key){
+    public function __isset($key)
+    {
     	return isset($this->attributes[$key]);
     }
 
@@ -214,22 +199,8 @@ class Route extends BaseObject{
      * @param  string  $key
      * @return void
      */
-    public function __unset($key){
+    public function __unset($key)
+    {
         unset($this->attributes[$key]);
-    }
-
-    /**
-    * convertRegex method
-    *
-    * @param string $str
-    * @return value
-    */
-    private function convertRegex($str){
-
-        foreach ($this->regexKeys as $key => $value) {
-                $str = preg_replace($key, $value, $str);
-        }
-
-        return $str;
     }
 }

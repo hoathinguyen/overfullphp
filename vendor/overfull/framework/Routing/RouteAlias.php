@@ -7,20 +7,49 @@
 * ----------------------------------------------------
 */
 namespace Overfull\Routing;
-use Overfull\Foundation\Base\BaseObject;
+
 use Bag;
 
-class RouteAlias extends BaseObject{
+class RouteAlias extends \Overfull\Foundation\Base\BaseObject
+{
     private $data = [];
     private $matches = null;
     private $attributes = [];
+    
+        
+    /**
+    * Regex keys
+    * This array contains all of key config on routes to parse to regex
+    */
+    private $regexKeys = [
+    	'/\<(|([a-zA-Z0-9]+)):all\>/' => '(.*)',
+    	'/\//' => '\/',
+    	'/\?/' => '\?',
+    	'/\<:empty\>/' => '',
+    	'/\<(|([a-zA-Z0-9]+)):integer\>/' => '(0|[1-9][0-9]*)',
+    	'/\<(|([a-zA-Z0-9]+)):alphanumeric\>/' => '([a-zA-Z0-9]*)'
+    ];
     
     /**
      * __construct
      * @param array $data
      * @return void
      */
-    public function __construct($data){
+    public function __construct($data)
+    {
+        $format = isset($data['format']) ? $data['format'] : null;
+        $prefix = isset($data['prefix']) ? $data['prefix'] : null;
+        
+        $regex = $this->convertRegex($prefix.$format);
+
+        if(substr( $regex, -1 ) == '/'){
+            $regex = substr($regex, 0, -2);
+        }
+
+        $data['regex'] = $regex;
+
+        $data['prefix'] = $prefix;
+        
         $this->data = $data;
     }
 
@@ -28,10 +57,13 @@ class RouteAlias extends BaseObject{
      * Check is valid method
      * @param
      */
-    public function isValid($uri){
+    public function isValid($uri)
+    {
+        // Check if is request
         if ( !Bag::request()->is($this->getMethod()))
             return false;
-
+        
+        // Check if is valid url
         if(preg_match('/^'.$this->getRegex().'$/', $uri, $this->matches)){
             return true;
         }
@@ -42,22 +74,25 @@ class RouteAlias extends BaseObject{
     /**
      * Get regex
      */
-    public function getRegex(){
+    public function getRegex()
+    {
         return $this->data['regex'];
     }
     
     /**
      * Get method
      */
-    public function getMethod(){
-        return isset($this->data['method']) ? $this->data['method'] : $this->data[1];
+    public function getMethod()
+    {
+        return isset($this->data['method']) ? $this->data['method'] : 'any';
     }
 
     /**
      * getMatches
      * @return array matches
      */
-    public function getMatches(){
+    public function getMatches()
+    {
         return $this->matches;
     }
 
@@ -65,16 +100,85 @@ class RouteAlias extends BaseObject{
      * setUrlParameters
      * @return $this
      */
-    public function getFormat(){
-        return isset($this->data['format']) ? $this->data['format'] : $this->data[0];
+    public function getFormat()
+    {
+        return isset($this->data['format']) ? $this->data['format'] : null;
     }
     
     /**
      * Get prefix
      * @return string
      */
-    public function getPrefix(){
+    public function getPrefix()
+    {
         return isset($this->data['prefix']) ? $this->data['prefix'] : null;
+    }
+    
+    /**
+     * Get name method
+     * @return string
+     */
+    public function getName()
+    {
+        return isset($this->data['as']) ? $this->data['as'] : null;
+    }
+    
+    /**
+     * Get regex
+     */
+    public function setRegex($value)
+    {
+        $this->data['regex'] = $value;
+        return $this;
+    }
+    
+    /**
+     * Get method
+     */
+    public function setMethod($value)
+    {
+        $this->data['method'] = $value;
+        return $this;
+    }
+
+    /**
+     * getMatches
+     * @return array matches
+     */
+    public function setMatches($value)
+    {
+        $this->matches = $value;
+        return $this;
+    }
+
+    /**
+     * setUrlParameters
+     * @return $this
+     */
+    public function setFormat($value)
+    {
+        $this->data['format'] = $value;
+        return $this;
+    }
+    
+    /**
+     * Get prefix
+     * @return string
+     */
+    public function setPrefix($value)
+    {
+        $this->data['prefix'] = $value;
+        return $this;
+    }
+    
+    /**
+     * Get name method
+     * @return string
+     */
+    public function setName($value)
+    {
+        $this->data['as'] = $value;
+        return $this;
     }
 
     /**
@@ -82,7 +186,8 @@ class RouteAlias extends BaseObject{
      * @param type $url
      * @param type $parameters
      */
-    private function setParameterForUrl($url, $parameters = [], $skipNoParameter = true){
+    private function setParameterForUrl($url, $parameters = [], $skipNoParameter = true)
+    {
         if(is_array($parameters) && $url){
             foreach ($parameters as $key => $value) {
                 $old = $url;
@@ -119,7 +224,8 @@ class RouteAlias extends BaseObject{
      * setUrlParameters
      * @return $this
      */
-    public function getUrl($data = [], $skipNoParameter = true){
+    public function getUrl($data = [], $skipNoParameter = true)
+    {
         return $this->setParameterForUrl($this->getPrefix().$this->getFormat(), $data, $skipNoParameter);
     }
 
@@ -128,7 +234,8 @@ class RouteAlias extends BaseObject{
     *
     * @return void
     */
-    public function get(){
+    public function get()
+    {
         if(!empty($this->attributes)){
             return $this->attributes;
         }
@@ -173,7 +280,8 @@ class RouteAlias extends BaseObject{
      * @param array $matches
      * @return array $attributes
      */
-    private function mergeByObject($object, $urlRegex, $matches){
+    private function mergeByObject($object, $urlRegex, $matches)
+    {
         $result = $object($urlRegex, $matches);
 
         if( is_array($result) ){
@@ -192,7 +300,8 @@ class RouteAlias extends BaseObject{
      * @param array $matches
      * @return array $attributes
      */
-    private function mergeByString($str, $matches){
+    private function mergeByString($str, $matches)
+    {
         $couples = explode(';', $str);
         $attributes = [];
 
@@ -217,7 +326,8 @@ class RouteAlias extends BaseObject{
      * @param array $matches
      * @return array $attributes
      */
-    private function mergeByArray($array, $matches){
+    private function mergeByArray($array, $matches)
+    {
         $attributes = [];
 
         foreach ($array as $key => $value) {
@@ -240,7 +350,8 @@ class RouteAlias extends BaseObject{
      * @param array $attributes
      * @return array $attributes
      */
-    private function setVariables($attributes, $onUrl){
+    private function setVariables($attributes, $onUrl)
+    {
         $__attributes = [];
 
         foreach ($attributes as $key => $value) {
@@ -276,5 +387,21 @@ class RouteAlias extends BaseObject{
         }
         
         return $__attributes ? array_merge($__attributes, $onUrl) : $attributes;
+    }
+    
+    /**
+    * convertRegex method
+    *
+    * @param string $str
+    * @return value
+    */
+    private function convertRegex($str)
+    {
+
+        foreach ($this->regexKeys as $key => $value) {
+            $str = preg_replace($key, $value, $str);
+        }
+
+        return $str;
     }
 }
