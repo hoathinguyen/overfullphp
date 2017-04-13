@@ -19,7 +19,7 @@ if(!function_exists('route')){
  */
 if(!function_exists('asset')){
     function asset($name){
-        return \Overfull\Utility\URLUtil::asset($name);
+        return \Overfull\Support\Utility\URLUtil::asset($name);
     }
 }
 
@@ -31,7 +31,7 @@ if(!function_exists('asset')){
  */
 if(!function_exists('to')){
     function to($name, $inRoot = true){
-        return \Overfull\Utility\URLUtil::to($name, $inRoot);
+        return \Overfull\Support\Utility\URLUtil::to($name, $inRoot);
     }
 }
 
@@ -43,7 +43,7 @@ if(!function_exists('to')){
  */
 if(!function_exists('toAlpha')){
     function toAlpha( $string ){
-        return \Overfull\Utility\URLUtil::toAlpha($string);
+        return \Overfull\Support\Utility\URLUtil::toAlpha($string);
     }
 }
 
@@ -54,7 +54,7 @@ if(!function_exists('toAlpha')){
  */
 if(!function_exists('isUrl')){
     function isUrl($string){
-        return \Overfull\Utility\URLUtil::isUrl($string);
+        return \Overfull\Support\Utility\URLUtil::isUrl($string);
     }
 }
 
@@ -129,5 +129,14 @@ if(!function_exists('db')){
         }
 
         return \Bag::db();
+    }
+}
+
+/**
+ * Db shortcut method
+ */
+if(!function_exists('event')){
+    function event(){
+        return \Bag::event();
     }
 }

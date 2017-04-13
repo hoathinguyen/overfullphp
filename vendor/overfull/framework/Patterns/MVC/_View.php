@@ -7,8 +7,8 @@ namespace Overfull\Patterns\MVC;
 
 use Overfull\Patterns\MVC\Foundation\IView;
 use Overfull\Patterns\MVC\Exception\ViewTypeNotFoundException;
-use Overfull\Utility\PathUtil;
-use Overfull\Utility\URLUtil;
+use Overfull\Support\Utility\PathUtil;
+use Overfull\Support\Utility\URLUtil;
 use Overfull\Patterns\MVC\Exception\FileNotFoundException;
 use Overfull\Configure\Config;
 use Overfull\Http\Response\ResponseFormat;

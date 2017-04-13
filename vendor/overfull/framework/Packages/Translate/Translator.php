@@ -9,8 +9,8 @@
 namespace Overfull\Packages\Translate;
 use Overfull\Packages\Foundation\BasePackage;
 use Bag;
-use Overfull\Utility\PathUtil;
-use Overfull\Utility\ArrayUtil;
+use Overfull\Support\Utility\PathUtil;
+use Overfull\Support\Utility\ArrayUtil;
 
 class Translator extends BasePackage{
     private $languages = [];

@@ -44,6 +44,9 @@ class Bag
     // Flash
     public static $flash;
 
+    // Events
+    public static $event;
+
     /**
      * The main application will call this method before use it.
      * This method will create some object in this app
@@ -243,5 +246,18 @@ class Bag
         }
 
         return static::$flash;
+    }
+
+    /**
+     * Get event
+     * @return \Overfull\Support\Flash
+     */
+    public static function event()
+    {
+        if(!static::$event){
+            static::$event = new \Overfull\Events\Guide();
+        }
+
+        return static::$event;
     }
 }

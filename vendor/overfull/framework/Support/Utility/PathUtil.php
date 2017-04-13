@@ -7,8 +7,8 @@
 * Some method to handle array
 * ___________________________________________________________________________
 */
-namespace Overfull\Utility;
-use Overfull\Utility\Foundation\BaseUtil;
+namespace Overfull\Support\Utility;
+use Overfull\Support\Utility\Foundation\BaseUtil;
 
 class PathUtil extends BaseUtil{
 	public static function getFull( $string = '' ){

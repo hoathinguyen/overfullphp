@@ -40,14 +40,17 @@ class Application extends \Overfull\Foundation\Base\BaseObject
 
             // Get config
             $this->getConfigForApp();
+
             \Bag::pattern();
+
+            \Bag::event()->sign(\Overfull\Events\EventKeys::START);
 
             // Get result in route
             \Bag::route()->run();
 
             if(\Bag::route()->response){
                 foreach (\Bag::route()->response as $key => $value) {
-                        \Bag::$response->{$key} = $value;
+                    \Bag::$response->{$key} = $value;
                 }
             }
 
@@ -56,6 +59,8 @@ class Application extends \Overfull\Foundation\Base\BaseObject
 
             // return result
             \Bag::response()->send();
+
+            \Bag::event()->sign(\Overfull\Events\EventKeys::END);
         } catch(\Overfull\Exception\AppNotFoundException $e){
                 \Overfull\Exception\Handler\ExceptionHandler::showExceptionObject($e);
         } catch(\Overfull\Exception\ConfigFileNotFoundException $e){

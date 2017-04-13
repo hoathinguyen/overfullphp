@@ -5,7 +5,7 @@
 */
 namespace Overfull\Http\Record\Session;
 use Overfull\Foundation\Base\BaseObject;
-use Overfull\Utility\ArrayUtil;
+use Overfull\Support\Utility\ArrayUtil;
 
 class HttpSession extends BaseObject{
 	private $uid = null;

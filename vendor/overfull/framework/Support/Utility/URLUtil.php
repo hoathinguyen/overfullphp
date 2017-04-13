@@ -6,8 +6,8 @@
 * Description: The controller to handle users
 * ----------------------------------------------------
 */
-namespace Overfull\Utility;
-use Overfull\Utility\Foundation\BaseUtil;
+namespace Overfull\Support\Utility;
+use Overfull\Support\Utility\Foundation\BaseUtil;
 use Bag;
 
 class URLUtil extends BaseUtil{

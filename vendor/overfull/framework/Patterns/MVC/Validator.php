@@ -1,6 +1,6 @@
 <?php
 namespace Overfull\Patterns\MVC;
-use Overfull\Utility\ValidatorUtil;
+use Overfull\Support\Utility\ValidatorUtil;
 use Overfull\Template\Helpers\Form;
 
 class Validator{

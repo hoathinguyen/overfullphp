@@ -10,7 +10,7 @@
 namespace Overfull\Configure;
 
 use Overfull\Exception\ConfigFileNotFoundException;
-use Overfull\Utility\ArrayUtil;
+use Overfull\Support\Utility\ArrayUtil;
 
 class Config extends \Overfull\Foundation\Base\BaseObject
 {
@@ -38,7 +38,7 @@ class Config extends \Overfull\Foundation\Base\BaseObject
     }
     
     /**
-     * 
+     * loadJson
      * @param string $name
      * @param string $file
      * @param boolean $isException
@@ -50,6 +50,36 @@ class Config extends \Overfull\Foundation\Base\BaseObject
         // Check if exists file
         if(file_exists($file)){
             $data = json_decode(file_get_contents($file), true);
+            
+            if(!$name)
+            {
+                $this->set($data);
+            }
+            else
+            {
+                $this->set($name, $data);
+            }
+        } else if($isException){
+            // Throw error
+            throw new ConfigFileNotFoundException($file);
+        }
+        
+        return $this;
+    }
+
+    /**
+     * loadJson
+     * @param string $name
+     * @param string $file
+     * @param boolean $isException
+     * @throws ConfigFileNotFoundException
+     * @return $this
+     */
+    public function loadIni($name, $file, $isException = true)
+    {
+        // Check if exists file
+        if(file_exists($file)){
+            $data = parse_ini_file($file, true);
             
             if(!$name)
             {

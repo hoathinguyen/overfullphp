@@ -9,7 +9,7 @@
 namespace Overfull\Template;
 use Overfull\Http\Response\ResponseFormat;
 use Overfull\Http\Response\Response;
-use Overfull\Utility\URLUtil;
+use Overfull\Support\Utility\URLUtil;
 use Bag;
 
 abstract class Otp{

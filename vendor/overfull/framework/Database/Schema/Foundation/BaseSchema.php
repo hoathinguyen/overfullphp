@@ -281,13 +281,13 @@ abstract class BaseSchema implements \JsonSerializable{
 	 * @return this
 	 */
 	public function join($table, $conditions){
-		$joins = $this->queryBuilder->joins;
+            $joins = $this->queryBuilder->joins;
 
-		$joins[] = ['type' => 'JOIN', 'table' => $table, 'on' => $conditions];
+            $joins[] = ['type' => 'JOIN', 'table' => $table, 'on' => $conditions];
 
-		$this->queryBuilder->joins = $joins;
+            $this->queryBuilder->joins = $joins;
 
-		return $this;
+            return $this;
 	}
 
 	/**

@@ -7,11 +7,10 @@
 * ----------------------------------------------------
 */
 namespace Overfull\Utility;
-use Overfull\Utility\Foundation\BaseUtil;
-use Overfull\Utility\ArrayUtil;
+use Overfull\Support\Utility\ArrayUtil;
 use Bag;
 
-class ValidatorUtil extends BaseUtil{
+class ValidatorUtil{
 	protected static $regex = [
 
 	];

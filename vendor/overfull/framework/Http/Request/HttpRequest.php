@@ -9,7 +9,7 @@
 namespace Overfull\Http\Request;
 
 use Overfull\Http\Foundation\BaseRequest;
-use Overfull\Utility\ArrayUtil;
+use Overfull\Support\Utility\ArrayUtil;
 
 class HttpRequest extends BaseRequest{
 	public function full(){

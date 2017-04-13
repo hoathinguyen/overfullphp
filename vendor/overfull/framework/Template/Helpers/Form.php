@@ -8,7 +8,7 @@
 */
 namespace Overfull\Template\Helpers;
 use Bag;
-use Overfull\Utility\ArrayUtil;
+use Overfull\Support\Utility\ArrayUtil;
 use Overfull\Template\Foundation\Helper;
 
 class Form extends Helper{

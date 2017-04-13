@@ -6,11 +6,9 @@
 * Description: The BaseHasher class
 * ----------------------------------------------------
 */
-namespace Overfull\Security\Hasher;
-use Overfull\Security\Hasher\BaseHasher;
+namespace Overfull\Support\Hasher\Foundation;
 
-class SimpleHasher extends BaseHasher{
-	public function hash($str, $salt = ''){
-		return md5($str);
-	}
+abstract class BaseHasher extends \Overfull\Foundation\Base\BaseObject
+{
+	abstract function hash($str, $salt);
 }

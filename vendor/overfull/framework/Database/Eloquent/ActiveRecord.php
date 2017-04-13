@@ -268,6 +268,16 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
     {
         return $this->tableName;
     }
+    
+    /**
+     * Get column name method
+     * 
+     * @param string $name Name of columns
+     */
+    public function getColumnName($name)
+    {
+        return $this->tableName.'.'.$name;
+    }
 
     /**
      * Get primary key method

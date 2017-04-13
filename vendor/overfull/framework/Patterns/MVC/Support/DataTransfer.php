@@ -7,7 +7,7 @@
 * ----------------------------------------------------
 */
 namespace Overfull\Patterns\MVC\Support;
-use Overfull\Utility\ArrayUtil;
+use Overfull\Support\Utility\ArrayUtil;
 use Bag;
 use Overfull\Template\Helpers\Form;
 

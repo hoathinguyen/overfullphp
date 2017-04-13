@@ -10,7 +10,7 @@ use Overfull\Exception\DatabaseConfigException;
 use Overfull\Database\Eloquent\ActiveRecord;
 use Overfull\Database\Query;
 use JsonSerializable;
-use Overfull\Utility\ValidatorUtil;
+use Overfull\Support\Utility\ValidatorUtil;
 use Overfull\Template\Helpers\Form;
 
 abstract class Model extends ActiveRecord implements IModel, JsonSerializable{

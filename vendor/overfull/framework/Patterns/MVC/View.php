@@ -10,7 +10,7 @@
 namespace Overfull\Patterns\MVC;
 
 use Overfull\Patterns\MVC\Exception\ViewTypeNotFoundException;
-use Overfull\Utility\PathUtil;
+use Overfull\Support\Utility\PathUtil;
 use Overfull\Patterns\MVC\Exception\FileNotFoundException;
 use Bag;
 use Overfull\Template\Otp;

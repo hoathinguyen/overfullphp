@@ -7,7 +7,7 @@
 * Some method to util as parent
 * ___________________________________________________________________________
 */
-namespace Overfull\Utility\Foundation;
+namespace Overfull\Support\Utility\Foundation;
 use Overfull\Foundation\Base\BaseObject;
 
 class BaseUtil extends BaseObject{
