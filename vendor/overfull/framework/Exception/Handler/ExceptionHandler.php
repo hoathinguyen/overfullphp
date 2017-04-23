@@ -58,7 +58,7 @@ class ExceptionHandler extends BaseObject{
             Bag::pattern()->run();
 
             // return result
-            Bag::response()->send();
+            Bag::response()->setStatusCode($code)->send();
             exit();
         }else{
             $isShowDetail = Bag::config()->get('core.error-display');
@@ -69,9 +69,8 @@ class ExceptionHandler extends BaseObject{
             require ROOT.DS.'vendor'.DS.'overfull'.DS.'framework'.DS.'Exception'.DS.'Handler'.DS.'view'.DS.'debug.php';
             
             Bag::response()->content = ob_get_clean();
-            
-            Bag::response()->send();
-            die();
+            Bag::response()->setStatusCode($code)->send();
+            exit();
         }
     }
 }

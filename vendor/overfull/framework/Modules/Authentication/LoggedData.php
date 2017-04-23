@@ -3,10 +3,10 @@
 * Filename: Auth.php
 * Author: Overfull.net
 * Date: 2016/10/25
-* Description: The Authentication package
+* Description: The Authentication Module
 * ----------------------------------------------------
 */
-namespace Overfull\Packages\Authentication;
+namespace Overfull\Modules\Authentication;
 use Bag;
 
 class LoggedData{

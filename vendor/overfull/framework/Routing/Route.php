@@ -12,15 +12,21 @@ use Bag;
 use Overfull\Exception\PageNotFoundException;
 
 class Route extends BaseObject{
-    private $alias = [];
-
-    private $validRouting = null;
-
-    private $url = '';
-
-    private $uri = '';
-
+    // Attributes
     private $attributes = [];
+    
+    // Domain
+    private $domainConfig = null;
+    
+    // URI
+    private $uriConfig = null;
+    
+    public function __construct()
+    {
+        $this->domainConfig = new DomainConfig();
+        $this->uriConfig = new URIConfig();
+    }
+
 
     /**
      * Run method
@@ -28,136 +34,47 @@ class Route extends BaseObject{
      * @return void
      */
     public function run()
-    {
-        $configs = Bag::config()->get('routes');
-
-        // Check if have no data in pages
-        if(empty($configs)){
+    {                
+        $base = $this->getDomainConfig()->getValid()->getBase();
+        if(!$this->getURIConfig()->getValid($base))
+        {
             throw new PageNotFoundException();
         }
-
-        $uriArray = Bag::request()->uriArray();
         
-        // Get root
-        if(Bag::config()->get('core.route-compare') == 'relative'){
-            $this->uri = strtolower($this->setWebroot($uriArray));
-        } else {
-            $this->uri = $this->setWebroot($uriArray);
-        }
-
-        $this->url = explode('?', $this->uri)[0];
-
-        $this->setAlias($configs);
-
-        if($this->validRouting == null){
-            throw new PageNotFoundException();
-        }
-
-        $data = $this->validRouting->get();
-
-        $this->attributes = array_merge($data, $this->attributes);
-
-        Bag::config()->remove('routes');
-    }
-
-    /**
-    * Get webroot method
-    *
-    * @param array $pages
-    * @param string $prefix
-    * @return void
-    */
-    private function setAlias($pages, $prefix = '', $aliasName = '')
-    {
-        foreach ($pages as $key => $value) {
-            if(is_numeric($key)){
-                $value['prefix'] = $prefix;
-                $alias = new RouteAlias($value);
-
-                if(!empty($value['as'])){
-                    $this->alias[$value['as']] = $alias;
-                }
-
-                if($this->validRouting == null
-                    && ($alias->isValid($this->uri)
-                    || $alias->isValid($this->url)) ){
-                    $this->validRouting = $alias;
-                }
-            } else {
-                $this->setAlias($value, (!empty($prefix) ? $prefix : '').$key.'/', (!empty($prefix) ? str_replace('/', '', $prefix).'.' : '').$key);
-            }
-        }
-    }
-
-    /**
-    * Get webroot method
-    *
-    * @param string $name
-    * @return RouteAlias
-    */
-    public function getAlias($name = false)
-    {
-        if(!$name){
-            return $this->alias;
-        }
-
-        return isset($this->alias[$name]) ? $this->alias[$name] : null;
-    }
-
-    /**
-    * Get webroot method
-    *
-    * @param array $config
-    * @param string $url
-    * @return string $url
-    */
-    private function setWebroot($url)
-    {
-        $routeBase = (int) Bag::config()->get('app.base');
-
-        //Get root with private setting
-        if ( !empty($routeBase) && is_numeric($routeBase)) {
-                for($i = 0; $i < $routeBase; $i++){
-                        array_shift($url);
-                }
-        }
-
-        $this->attributes['root'] = Bag::config()->get('app.root');
-
-        return implode('/', $url);
+        $this->attributes = array_merge($this->getURIConfig()->getValid()->getData(), $this->attributes);
     }
     
     /**
-     * Clear attributes method
-     * @return $this
+     * getDomainConfig
+     * @return \Overfull\Routing
      */
-    public function clearAttributes()
+    public function getDomainConfig() : DomainConfig
     {
-        $this->attributes = [];
-        return $this;
+        return $this->domainConfig;
     }
-
+    
     /**
-     * Get current route
+     * getDomainConfig
+     * @return \Overfull\Routing
      */
-    public function getCurrentRoute()
+    public function getURIConfig() : URIConfig
     {
-    	return $this->validRouting;
+        return $this->uriConfig;
     }
     
     /**
      * Get current route
      */
-    public function getUrl($name, $params = [], $skipNoParameter = true)
+    public function getURL($name, $params = [], $skipNoParameter = true) : String
     {
-        $alias = $this->getAlias($name);
+        $alias = $this->getURIConfig()->getURI($name);
 
         if(!$alias){
-            throw new \Overfull\Exception\RouteAliasNotFoundException($name);
+            throw new \Overfull\Exception\RouteNotFoundException($name);
         }
         
         $prefix = Bag::config()->get('app.prefix');
-        return Bag::request()->baseUrl().'/'.($prefix ? $prefix . '/' : ''). $alias->getUrl($params, $skipNoParameter);
+        return Bag::request()->getBaseURL().'/'.($prefix ? $prefix . '/' : ''). $alias->getURL($params, $skipNoParameter);
     }
 
     /**
@@ -202,5 +119,15 @@ class Route extends BaseObject{
     public function __unset($key)
     {
         unset($this->attributes[$key]);
+    }
+    
+    /**
+     * Clear attributes method
+     * @return $this
+     */
+    public function clearAttributes()
+    {
+        $this->attributes = [];
+        return $this;
     }
 }

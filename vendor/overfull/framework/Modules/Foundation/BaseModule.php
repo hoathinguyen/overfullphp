@@ -1,9 +1,9 @@
 <?php
-namespace Overfull\Packages\Foundation;
+namespace Overfull\Modules\Foundation;
 
 use Overfull\Foundation\Base\BaseObject;
 
-abstract class BasePackage extends BaseObject{
+abstract class BaseModule extends BaseObject{
 	protected $attributes = [];
 	
 	/**

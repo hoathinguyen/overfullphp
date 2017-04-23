@@ -6,11 +6,11 @@
 * Description: The Validator to compare value with regex
 * ----------------------------------------------------
 */
-namespace Overfull\Utility;
+namespace Overfull\Support\Validate;
 use Overfull\Support\Utility\ArrayUtil;
 use Bag;
 
-class ValidatorUtil{
+class Validator{
 	protected static $regex = [
 
 	];

@@ -8,7 +8,7 @@
  */
 if(!function_exists('route')){
     function route($name, $params = [], $skipNoParameter = true){
-        return Bag::route()->getUrl($name, $params, $skipNoParameter);
+        return Bag::route()->getURL($name, $params, $skipNoParameter);
     }
 }
 
@@ -80,23 +80,23 @@ if(!function_exists('request')){
 /**
  * request
  */
-if(!function_exists('package')){
-    function package($name = null){
+if(!function_exists('module')){
+    function module($name = null){
         if($name){
-            return \Bag::package()->{$name};
+            return \Bag::module()->{$name};
         }
 
-        return \Bag::package();
+        return \Bag::module();
     }
 }
 
 if(!function_exists('auth')){
     function auth($scope = null){
         if($scope){
-            return \Bag::package()->auth->scope($scope);
+            return \Bag::module()->auth->scope($scope);
         }
 
-        return \Bag::package()->auth;
+        return \Bag::module()->auth;
     }
 }
 /**
@@ -138,5 +138,23 @@ if(!function_exists('db')){
 if(!function_exists('event')){
     function event(){
         return \Bag::event();
+    }
+}
+
+/**
+ * Configure domain shortcut method
+ */
+if(!function_exists('domain')){
+    function domain(){
+        return \Bag::route()->getDomainConfig();
+    }
+}
+
+/**
+ * Configure domain shortcut method
+ */
+if(!function_exists('uri')){
+    function uri(){
+        return \Bag::route()->getURIConfig();
     }
 }

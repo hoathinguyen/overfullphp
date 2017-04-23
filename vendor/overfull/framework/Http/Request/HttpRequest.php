@@ -12,8 +12,8 @@ use Overfull\Http\Foundation\BaseRequest;
 use Overfull\Support\Utility\ArrayUtil;
 
 class HttpRequest extends BaseRequest{
-	public function full(){
-            return $this->url(true);
+	public function getFullURL(){
+            return $this->getURL(true);
 	}
 	/**
 	* Uri method
@@ -22,7 +22,7 @@ class HttpRequest extends BaseRequest{
 	*
 	* @return string $uri
 	*/
-	public function uri($withParameter = true){
+	public function getURI($withParameter = true){
             if(!$withParameter)
 		return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             else
@@ -36,8 +36,8 @@ class HttpRequest extends BaseRequest{
 	*
 	* @return string $uri
 	*/
-	public function url($withParameter = true){
-            return $this->protocol(true).$this->host().$this->uri($withParameter);
+	public function getURL($withParameter = true){
+            return $this->getProtocol(true).$this->getHost().$this->getURI($withParameter);
 	}
 
 	/**
@@ -45,7 +45,7 @@ class HttpRequest extends BaseRequest{
 	 *
 	 * @return string
 	 */
-	public function host(){
+	public function getHost(){
 		return $_SERVER['HTTP_HOST'];
 	}
 
@@ -54,7 +54,7 @@ class HttpRequest extends BaseRequest{
 	 *
 	 * @return string
 	 */
-	public function port(){
+	public function getPort(){
 		return $_SERVER['SERVER_PORT'];
 	}
 
@@ -63,7 +63,7 @@ class HttpRequest extends BaseRequest{
 	 *
 	 * @return string
 	 */
-	public function name(){
+	public function getServerName(){
 		return $_SERVER['SERVER_NAME'];
 	}
 
@@ -72,7 +72,7 @@ class HttpRequest extends BaseRequest{
 	 *
 	 * @return string
 	 */
-	public function docRoot(){
+	public function getDocRoot(){
 		return $_SERVER['DOCUMENT_ROOT'];
 	}
 
@@ -81,7 +81,7 @@ class HttpRequest extends BaseRequest{
 	 *
 	 * @return string
 	 */
-	public function protocol($asPath = false){
+	public function getProtocol($asPath = false){
 		if($asPath){
 			return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 		}
@@ -93,7 +93,7 @@ class HttpRequest extends BaseRequest{
      * Get client ip method
      * @return string
      */
-    public function clientIP(){
+    public function getClientIP(){
         $ipaddress = '';
         if (getenv('HTTP_CLIENT_IP'))
             $ipaddress = getenv('HTTP_CLIENT_IP');
@@ -119,9 +119,9 @@ class HttpRequest extends BaseRequest{
 	*
 	* @return string $uri
 	*/
-	public function uriArray(){
+	public function getURIArray($withParameter = true){
 		// Return value
-		$uris = explode('/', $this->uri());
+		$uris = explode('/', $this->getURI($withParameter));
 		array_shift($uris);
 
 		$uris = array_filter($uris, function($value) { return $value ? true : false; });
@@ -140,13 +140,13 @@ class HttpRequest extends BaseRequest{
 			return false;
 		} else if ( is_array($rqs) ) {
 			foreach ($rqs as $key => $value) {
-				if ( $this->method() == strtoupper($value) || strtoupper($value) == 'ANY') {
+				if ( $this->getMethod() == strtoupper($value) || strtoupper($value) == 'ANY') {
 					return true;
 				}
 			}
 			return false;
 		} else {
-			if ( $this->method() == strtoupper($rqs) || strtoupper($rqs) == 'ANY') {
+			if ( $this->getMethod() == strtoupper($rqs) || strtoupper($rqs) == 'ANY') {
 				return true;
 			}
 			return false;
@@ -200,7 +200,7 @@ class HttpRequest extends BaseRequest{
 	 * @date 2016/02/27
 	 * @return boolean
 	 */
-	public function method(){
+	public function getMethod(){
 		return strtoupper($_SERVER['REQUEST_METHOD']);
 	}
 
@@ -211,7 +211,7 @@ class HttpRequest extends BaseRequest{
 	 * @date 2016/02/27
 	 * @return string
 	 */
-	public function subdomain(){
+	public function getSubdomain(){
 		$sub = explode(".",$_SERVER['HTTP_HOST']);
 
 		if(count($sub) == 3 && $sub[0] != 'www'){
@@ -229,13 +229,13 @@ class HttpRequest extends BaseRequest{
 	 * @date 2016/02/27
 	 * @return string
 	 */
-	public function publicPath(){
+	public function getPublicPath(){
 		return str_replace(
 			'\\',
 			'/',
 			substr(
 				dirname(dirname(dirname(dirname(dirname(dirname(__FILE__)))))),
-				strlen($this->docRoot())
+				strlen($this->getDocRoot())
 			)
 		);
 	}
@@ -247,8 +247,8 @@ class HttpRequest extends BaseRequest{
 	 * @param string $name
 	 * @return string
 	 */
-	public function baseUrl(){
-		return $this->protocol(true).$this->host();
+	public function getBaseURL(){
+		return $this->getProtocol(true).$this->getHost();
 	}
 
 	/**
@@ -258,8 +258,8 @@ class HttpRequest extends BaseRequest{
 	 * @param string $name
 	 * @return string
 	 */
-	public function root(){
-		return $this->protocol(true).$this->host().$this->publicPath();
+	public function getRoot(){
+		return $this->getProtocol(true).$this->getHost().$this->getPublicPath();
 	}
 
 	/**

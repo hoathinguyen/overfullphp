@@ -27,7 +27,7 @@ class Bag
     public static $session;
     
     // Package
-    public static $package;
+    public static $module;
     
     // Store
     public static $store;
@@ -154,20 +154,20 @@ class Bag
     }
 
     /**
-     * Get package object method
-     * @return \Overfull\Packages\Foundation\PackageStore
+     * Get module object method
+     * @return \Overfull\Modules\Foundation\ModuleStore
      */
-    public static function package($name = null)
+    public static function module($name = null)
     {
-        if(!static::$package){
-            static::$package = new \Overfull\Packages\Foundation\PackageStore();
+        if(!static::$module){
+            static::$module = new \Overfull\Modules\Foundation\ModuleStore();
         }
 
         if($name){
-            return static::$package->{$name};
+            return static::$module->{$name};
         }
 
-        return static::$package;
+        return static::$module;
     }
 
     /**

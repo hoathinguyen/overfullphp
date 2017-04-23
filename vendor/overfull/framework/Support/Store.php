@@ -13,21 +13,21 @@ class Store extends BaseObject{
 	protected $attributes = [];
 	
 	/**
-	 * Get package
+	 * Get module
 	 * 
 	 * @param string $name
-	 * @return Package object
+	 * @return module object
 	 */
 	function __get($name){
 		return $this->get($name);
 	}
 
 	/**
-	 * Set package
+	 * Set module
 	 * 
 	 * @param string $name
 	 * @param mixed $value
-	 * @return Package object
+	 * @return module object
 	 */
 	function __set($name, $value){
 		return $this->add($name, $value);

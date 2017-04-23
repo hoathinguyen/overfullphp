@@ -10,7 +10,7 @@ use Overfull\Exception\DatabaseConfigException;
 use Overfull\Database\Eloquent\ActiveRecord;
 use Overfull\Database\Query;
 use JsonSerializable;
-use Overfull\Support\Utility\ValidatorUtil;
+use Overfull\Support\Validate\Validator;
 use Overfull\Template\Helpers\Form;
 
 abstract class Model extends ActiveRecord implements IModel, JsonSerializable{
@@ -23,7 +23,7 @@ abstract class Model extends ActiveRecord implements IModel, JsonSerializable{
      * @param $rules
      */
     public final function validate($values , $rules){
-        $this->invalidErrors = ValidatorUtil::validate($values , $rules, $this);
+        $this->invalidErrors = Validator::validate($values , $rules, $this);
 		if(!empty($values[Form::MODEL_KEY])){
 			Bag::store()->{Form::MESSAGE_KEY.$values[Form::MODEL_KEY]} = $this->invalidErrors;
 		} else {

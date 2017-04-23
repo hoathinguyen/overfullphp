@@ -9,8 +9,8 @@
 namespace Overfull\Exception;
 use Overfull\Exception\OverfullException;
 
-class RouteAliasNotFoundException extends OverfullException{
+class RouteNotFoundException extends OverfullException{
 	function __construct($value){
-		parent::__construct('Route alias "'.$value.'" is not found', 1);
+		parent::__construct('Route "'.$value.'" is not found', 1);
 	}
 }

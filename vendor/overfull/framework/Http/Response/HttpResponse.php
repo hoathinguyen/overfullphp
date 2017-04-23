@@ -61,6 +61,7 @@ class HttpResponse extends BaseResponse{
 	public function send(){
 		$this->header('Content-Type', $this->attributes['format']);
 		echo $this->attributes['content'];
+		return $this;
 	}
 
 	/**
@@ -69,5 +70,12 @@ class HttpResponse extends BaseResponse{
 	*/
 	public function header($name, $value){
 		header("$name: $value");
+		return $this;
+	}
+
+	public function setStatusCode($code)
+	{
+		http_response_code($code);
+		return $this;
 	}
 }

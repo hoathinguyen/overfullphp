@@ -4,9 +4,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-namespace Overfull\Packages\Pagination;
+namespace Overfull\Modules\Pagination;
 
-class Paginate extends \Overfull\Packages\Foundation\BasePackage{
+class Paginate extends \Overfull\Modules\Foundation\BaseModule{
     private $data = [];
     private $totalRecord;
     private $schema;

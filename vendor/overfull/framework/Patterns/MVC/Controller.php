@@ -178,7 +178,7 @@ abstract class Controller extends BaseObject implements IController{
 	 * @return array
 	 */
 	public final function toRoute($name, $params = [], $skipNoParameter = true){
-            return $this->redirect(\Bag::route()->getUrl($name, $params, $skipNoParameter));
+            return $this->redirect(\Bag::route()->getURL($name, $params, $skipNoParameter));
 	}
 
 	/**

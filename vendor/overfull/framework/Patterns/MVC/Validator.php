@@ -1,11 +1,11 @@
 <?php
 namespace Overfull\Patterns\MVC;
-use Overfull\Support\Utility\ValidatorUtil;
+use Overfull\Support\Validate\Validator as ParentValidator;
 use Overfull\Template\Helpers\Form;
 
 class Validator{
     public function validate($values , $rules){
-        $invalidErrors = ValidatorUtil::validate($values , $rules, $this);
+        $invalidErrors = ParentValidator::validate($values , $rules, $this);
 
         if(!empty($values[Form::FORM_NAME])){
             \Bag::store()->add($values[Form::FORM_NAME], $invalidErrors, Form::MESSAGE_KEY);

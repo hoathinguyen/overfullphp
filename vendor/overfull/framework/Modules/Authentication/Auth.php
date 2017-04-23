@@ -6,12 +6,12 @@
 * Description: The Authentication package
 * ----------------------------------------------------
 */
-namespace Overfull\Packages\Authentication;
-use Overfull\Packages\Foundation\BasePackage;
-use Overfull\Packages\Authentication\LoggedData;
+namespace Overfull\Modules\Authentication;
+use Overfull\Modules\Foundation\BaseModule;
+use Overfull\Modules\Authentication\LoggedData;
 use Bag;
 
-class Auth extends BasePackage{
+class Auth extends BaseModule{
 	protected $attributes = null;
 
 	protected $provider = null;

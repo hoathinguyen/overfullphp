@@ -18,18 +18,42 @@ abstract class Otp{
         "/@foreach\((.*?)as(.*?)\)/" => '<?php foreach($1as$2): ?>',
         '/@endforeach/' => '<?php endforeach; ?>',
 
+        '/\<:foreach(\s.*?)exp=(.*)\>/' => '<?php foreach($2): ?>',
+        '/\<\/:foreach\>/' => '<?php endforeach; ?>',
+
+        // For
+        "/@for\((.*?)\)/" => '<?php for($1): ?>',
+        '/@endfor/' => '<?php endfor; ?>',
+
+        '/\<:for(\s.*?)exp=(.*)\>/' => '<?php for($2): ?>',
+        '/\<\/:for\>/' => '<?php endfor; ?>',
+
         // If
         "/@if\((.*)\)/" => '<?php if($1): ?>',
         '/@elseif\((.*)\)/' => '<?php elseif($1): ?>',
         '/@else/' => '<?php else: ?>',
         '/@endif/' => '<?php endif; ?>',
 
+        '/\<:if(\s.*?)exp=(.*)\>/' => '<?php if($2): ?>',
+        '/\<:elseif(\s.*?)exp=(.*)\>/' => '<?php elseif($2): ?>',
+        '/\<:else\>/' => '<?php else: ?>',
+        '/\<\/:if\>/' => '<?php endif; ?>',
+
+        // echo 
         '/\{\{/' => '<?php echo ',
         '/\}\}/' => '?>',
 
+        '/\<\:echo\>/' => '<?php echo ',
+        '/\<\/:echo\>/' => '?>',
+
+        // echo array
         '/\{\[/' => '<?php print_r( ',
         '/\]\}/' => '); ?>',
 
+        '/\<\:echoArray\>/' => '<?php print_r( ',
+        '/\<\/:echoArray\>/' => '); ?>',
+
+        // area
         '/@beginArea\((.*)\)/' => '<?php $this->beginArea($1); ?>',
         '/@endArea/' => '<?php $this->endArea($1); ?>',
         '/@readArea\((.*)\)/' => '<?php echo $this->readArea($1); ?>',
@@ -38,8 +62,25 @@ abstract class Otp{
         '/\<\!\-\-END\-\-\>/' => '<?php $this->endArea("$1"); ?>',
         '/\<\!\-\-AREA\[(.*)\]\-\-\>/' => '<?php echo $this->readArea("$1"); ?>',
 
+        '/\<:area(\s.*?)name=(.*)\>/' => '<?php $this->beginArea($2); ?>',
+        '/\<\/:area\>/' => '<?php $this->endArea(); ?>',
+        '/\<:readArea(\s.*?)name=(.*)\/\>/' => '<?php echo $this->readArea($2); ?>',
+
+        // append
         '/@appendTo\((.*)\)/' => '<?php $this->appendTo($1); ?>',
-        '/@append\((.*)\)/' => '<?php echo $this->append($1); ?>'
+        '/@append\((.*)\)/' => '<?php echo $this->append($1); ?>',
+
+        '/\<:layout(\s.*?)src=(.*)\/\>/' => '<?php $this->appendTo($2); ?>',
+        '/\<:append(\s.*?)src=(.*)\/\>/' => '<?php echo $this->append($2); ?>',
+
+        '/\<:append(\s.*?)src=(.*)\>/' => '<?php echo $this->append($2, [',
+        '/\<:param(\s.*?)name=(.*?)\>/' => '$2 => ',
+        '/\<\/:param\>/' => ',',
+        '/\<\/:append\>/' => ']);?>',
+
+        // PHP
+        '/\<\:php\>/' => '<?php ',
+        '/\<\/:php\>/' => ' ?>'
     ];
 
     protected $currentAreaName = '';
@@ -89,7 +130,7 @@ abstract class Otp{
     protected function redirect($gift){
         Bag::$response->format = ResponseFormat::HTML;
         $html = '<!DOCTYPE html>
-                        <html><head><title>'.\Bag::config()->get('core.otp-redirect-title').'</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift).'" /></head><body></body></html>';
+                        <html><head><meta charset="utf-8"><title>'.\Bag::config()->get('core.otp-redirect-title').'</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift).'" /></head><body></body></html>';
 
         return $html;
     }

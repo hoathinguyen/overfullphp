@@ -23,10 +23,10 @@ class URLUtil extends BaseUtil{
         }
 
         if ( substr($name, 0, 1) != '/') {
-            return Bag::request()->root().'/'.$name;
+            return Bag::request()->getRoot().'/'.$name;
         }
 
-        return Bag::request()->baseUrl().$name;
+        return Bag::request()->getBaseUrl().$name;
     }
 
     /**
@@ -51,7 +51,7 @@ class URLUtil extends BaseUtil{
                 $name = ($prefix == '' ? '' : '/'.$prefix).$name;
         }
 
-        return Bag::request()->baseUrl().$name;
+        return Bag::request()->getBaseUrl().$name;
     }
 
     /**

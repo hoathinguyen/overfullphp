@@ -3,16 +3,15 @@
 * Filename: Translator.php
 * Author: Overfull.net
 * Date: 2016/10/25
-* Description: The Translator package
+* Description: The Translator module
 * ----------------------------------------------------
 */
-namespace Overfull\Packages\Translate;
-use Overfull\Packages\Foundation\BasePackage;
+namespace Overfull\Modules\Translate;
+use Overfull\Modules\Foundation\BaseModule;
 use Bag;
 use Overfull\Support\Utility\PathUtil;
-use Overfull\Support\Utility\ArrayUtil;
 
-class Translator extends BasePackage{
+class Translator extends BaseModule{
     private $languages = [];
 
 	/**

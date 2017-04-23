@@ -1,17 +1,17 @@
 <?php
 /*----------------------------------------------------
-* Filename: PackageStore.php
+* Filename: ModuleStore.php
 * Author: Overfull.net
 * Date: 2016/10/25
-* Description: The Package store
+* Description: The Module store
 * ----------------------------------------------------
 */
-namespace Overfull\Packages\Foundation;
+namespace Overfull\Modules\Foundation;
 use Overfull\Support\Store;
-use Overfull\Exception\PackageNotFoundException;
+use Overfull\Exception\ModuleNotFoundException;
 use Bag;
 
-class PackageStore extends Store{
+class ModuleStore extends Store{
 
 	/**
 	* __get method
@@ -23,22 +23,22 @@ class PackageStore extends Store{
 		if(isset($this->attributes[$name])){
 			return $this->attributes[$name];
 		}
-		// Get config packages
-		$packages = Bag::config()->get('packages.'.$name);
+		// Get config Modules
+		$modules = Bag::config()->get('modules.'.$name);
 
-		if(!empty($packages)){
-			if(!class_exists($packages['class'])){
-				throw new PackageNotFoundException($packages['class']);
+		if(!empty($modules)){
+			if(!class_exists($modules['class'])){
+				throw new ModuleNotFoundException($modules['class']);
 			}
-			$this->attributes[$name] = new $packages['class']();
-			unset($packages['class']);
-			foreach ($packages as $key => $setting) {
+			$this->attributes[$name] = new $modules['class']();
+			unset($modules['class']);
+			foreach ($modules as $key => $setting) {
 				$this->attributes[$name]->{$key} = $setting;
 			}
 			return $this->attributes[$name];
 		}
 		
-		throw new PackageNotFoundException($name);
+		throw new ModuleNotFoundException($name);
 	}
 
 	/**
