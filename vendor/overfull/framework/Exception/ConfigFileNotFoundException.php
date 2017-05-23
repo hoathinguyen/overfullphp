@@ -5,10 +5,14 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class ConfigFileNotFoundException extends OverfullException{
-	function __construct($file){
-		parent::__construct("Config file \"".$file."\" is not found", 503);
-	}
+class ConfigFileNotFoundException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $file
+     */
+    function __construct($file){
+        parent::__construct("Config file \"".$file."\" is not found", 503);
+    }
 }

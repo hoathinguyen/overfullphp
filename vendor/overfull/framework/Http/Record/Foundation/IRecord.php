@@ -9,50 +9,46 @@
 */
 namespace Overfull\Http\Record\Foundation;
 
-interface IRecord{
-	/**
-	 * Session read
-	 *
-	 * @date 2016/05/31
-	 * @param $uid
-	 * @return value|array|object|string
-	 */
-	function read( $name = false );
+interface IRecord
+{
+    /**
+     * Session read
+     *
+     * @param $uid
+     * @return value|array|object|string
+     */
+    function read( $name = false );
 
-	/**
-	 * check function
-	 *
-	 * @date 2016/05/31
-	 * @param $name
-	 * @return boolean
-	 */
-	function check( $name = false );
+    /**
+     * check function
+     *
+     * @param $name
+     * @return boolean
+     */
+    function check( $name = false );
 
-	/**
-	 * write function
-	 *
-	 * @date 2016/05/31
-	 * @param $name
-	 * @param $value
-	 */
-	function write( $name = false, $value = false );
+    /**
+     * write function
+     *
+     * @param $name
+     * @param $value
+     */
+    function write( $name = false, $value = false );
 
-	/**
-	 * delete function
-	 *
-	 * @date 2016/05/31
-	 * @param $name
-	 * @param $value
-	 */
-	function delete( $name = false );
+    /**
+     * delete function
+     *
+     * @param $name
+     * @param $value
+     */
+    function delete( $name = false );
 
-	/**
-	 * write function
-	 *
-	 * @date 2016/05/31
-	 * @param $name
-	 * @param $value
-	 */
-	function destroy();
+    /**
+     * write function
+     *
+     * @param $name
+     * @param $value
+     */
+    function destroy();
 }
 ?>

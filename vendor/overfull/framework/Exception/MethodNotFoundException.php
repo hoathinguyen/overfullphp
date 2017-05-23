@@ -5,10 +5,15 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class MethodNotFoundException extends OverfullException{
-	function __construct($method, $class){
-		parent::__construct("Method '$method' is undefined in '$class'", 503);
-	}
+class MethodNotFoundException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $method
+     * @param string $class
+     */
+    function __construct($method, $class){
+        parent::__construct("Method '$method' is undefined in '$class'", 503);
+    }
 }

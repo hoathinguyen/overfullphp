@@ -5,10 +5,16 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class DataTypeException extends OverfullException{
-	function __construct($name, $in){
-            parent::__construct("The data type {$name} is not supported in {$in}");
-	}
+class DataTypeException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $name
+     * @param string $in
+     */
+    function __construct($name, $in)
+    {
+        parent::__construct("The data type {$name} is not supported in {$in}");
+    }
 }

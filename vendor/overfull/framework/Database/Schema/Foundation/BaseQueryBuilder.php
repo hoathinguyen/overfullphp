@@ -9,39 +9,48 @@
 namespace Overfull\Database\Schema\Foundation;
 use Overfull\Database\Schema\Foundation\IBaseQueryBuilder;
 
-abstract class BaseQueryBuilder implements IBaseQueryBuilder{
-	protected $attributes = [];
+abstract class BaseQueryBuilder implements IBaseQueryBuilder
+{
+    // attributes
+    protected $attributes = [];
+    
+    // Operators
+    protected $operators = [];
+    
+    // Joins array
+    protected $joins = [];
 
-	protected $operators = [];
+    /**
+     * Operator Syntax
+     * @param string $key
+     * @return boolean
+     */
+    protected function operatorSyntax($key)
+    {
+        return isset($this->operators[$key]) ? $this->operators[$key] : $key;
+    }
 
-	protected $joins = [];
+    /**
+     * Join Syntax
+     * @param string $key
+     * @return boolean
+     */
+    protected function joinSyntax($key)
+    {
+        return isset($this->joins[$key]) ? $this->joins[$key] : $key;
+    }
 
-	/**
-	 * OperatorSyntax
-	 *
-	 */
-	protected function operatorSyntax($key){
-		return isset($this->operators[$key]) ? $this->operators[$key] : $key;
-	}
-
-	/**
-	 * JoinSyntax
-	 *
-	 */
-	protected function joinSyntax($key){
-		return isset($this->joins[$key]) ? $this->joins[$key] : $key;
-	}
-
-	/**
+    /**
      * Auto call when set value for object attributes
      *
      * @param string $name
      * @param mixed $value
      * @return void
      */
-	public function __set($name, $value){
-		$this->attributes[$name] = $value;
-	}
+    public function __set($name, $value)
+    {
+        $this->attributes[$name] = $value;
+    }
 
     /**
      * Auto call when get value for object attributes
@@ -49,21 +58,23 @@ abstract class BaseQueryBuilder implements IBaseQueryBuilder{
      * @param string $name
      * @return mixed
      */
-	public function __get($name){
-		if(!isset($this->attributes[$name])){
-			return null;
-		}
+    public function __get($name)
+    {
+        if(!isset($this->attributes[$name])){
+            return null;
+        }
 
-		return $this->attributes[$name];
-	}
+        return $this->attributes[$name];
+    }
 
-	/**
+    /**
      * Determine if an attribute exists on the model.
      *
-     * @param  string  $key
+     * @param string $key
      * @return bool
      */
-    public function __isset($key){
+    public function __isset($key)
+    {
     	return isset($this->attributes[$key]);
     }
 
@@ -73,39 +84,42 @@ abstract class BaseQueryBuilder implements IBaseQueryBuilder{
      * @param  string  $key
      * @return void
      */
-    public function __unset($key){
+    public function __unset($key)
+    {
         unset($this->attributes[$key]);
     }
 
-	/**
-     * attributes
+    /**
+     * Get attribute method
      *
      * @param string $name
      * @return mixed
      */
-	public function getAttributes($attributes = null){
-		if(!$attributes){
-			return $this->attributes;
-		}
+    public function getAttributes($attributes = null)
+    {
+        if(!$attributes){
+            return $this->attributes;
+        }
 
-		$this->attributes = $attributes;
-		
-		return $this;
-	}
+        $this->attributes = $attributes;
 
-	/**
-	 * Clear sql
-	 *
-	 * @return void
-	 */
-	public function clear(){
-		$this->attributes['values'] = [];
-		$this->attributes['where'] = [];
-		$this->attributes['columns'] = ['*'];
-		$this->attributes['joins'] = [];
-		$this->attributes['offset'] = false;
-		$this->attributes['limit'] = false;
-                $this->attributes['orders'] = [];
-		return $this;
-	}
+        return $this;
+    }
+
+    /**
+     * Clear sql
+     *
+     * @return void
+     */
+    public function clear(){
+        $this->attributes['values'] = [];
+        $this->attributes['where'] = [];
+        $this->attributes['columns'] = ['*'];
+        $this->attributes['joins'] = [];
+        $this->attributes['offset'] = false;
+        $this->attributes['limit'] = false;
+        $this->attributes['orders'] = [];
+        
+        return $this;
+    }
 }

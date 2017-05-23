@@ -5,37 +5,70 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception\Handler;
-use Overfull\Foundation\Base\BaseObject;
 use Bag;
-//use overfull\utility\PathUtil;
 
-class ExceptionHandler extends BaseObject{
+class ExceptionHandler extends \Overfull\Foundation\Base\BaseObject
+{
+    /**
+     * exceptionHandler
+     * @param string $code
+     * @param string $message
+     * @param string $file
+     * @param string $line
+     */
+    public static function exceptionHandler($code = null, $message = null, $file = null, $line = null)
+    {
+        if(is_object($code))
+            static::showExceptionObject ($code);
+        else
+            static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
+    }
     
-    public static function exceptionHandler($code = null, $message = null, $file = null, $line = null){
+    /**
+     * errorHandler
+     * @param string $code
+     * @param string $message
+     * @param string $file
+     * @param string $line
+     */
+    public static function errorHandler($code = null, $message = null, $file = null, $line = null)
+    {
         if(is_object($code))
             static::showExceptionObject ($code);
         else
             static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
     }
-
-    public static function errorHandler($code = null, $message = null, $file = null, $line = null){
-        if(is_object($code))
-            static::showExceptionObject ($code);
-        else
-            static::showError($code, $message, $file, $line, 'Data exception', debug_backtrace());
-    }
-
-    public static function shutdown(){
+    
+    /**
+     * shutdown
+     */
+    public static function shutdown()
+    {
         if ( ($errors = error_get_last()) ) {
             static::showError($errors['type'], $errors['message'], $errors['file'], $errors['line'], 'Syntax exception', debug_backtrace());
         }
     }
-
-    public static function showExceptionObject($e){
+    
+    /**
+     * showExceptionObject
+     * @param \Exception $e
+     */
+    public static function showExceptionObject($e)
+    {
         static::showError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), 'Exception', debug_backtrace());
     }
-
-    private static function showError($code, $message, $file, $line, $title, $listStack){
+    
+    /**
+     * showError
+     * @param string $code
+     * @param string $message
+     * @param string $file
+     * @param string $line
+     * @param string $title
+     * @param array $listStack
+     */
+    private static function showError($code, $message, $file, $line, $title, $listStack)
+    {
         $handler = Bag::config()->get('core.error-handler');
         $isShowDetail = Bag::config()->get('core.error-display');
         

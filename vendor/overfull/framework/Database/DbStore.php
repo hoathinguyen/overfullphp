@@ -8,14 +8,15 @@
 namespace Overfull\Database;
 
 class DbStore extends \Overfull\Foundation\Base\BaseObject
-{
+{   
+    // Array contains list connection
     protected $connections = [];
 
     /**
      * Auto call when set new connection
      *
      * @param string $name
-     * @param string $value
+     * @param Connection $value
      * @return void
      */
     public function __set($name, $value)

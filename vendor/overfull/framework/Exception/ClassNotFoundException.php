@@ -5,10 +5,14 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class ClassNotFoundException extends OverfullException{
-	function __construct($file){
-		parent::__construct("Class \"".$file."\" is not found", 503);
-	}
+class ClassNotFoundException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $file
+     */
+    function __construct($file){
+        parent::__construct("Class \"".$file."\" is not found", 503);
+    }
 }

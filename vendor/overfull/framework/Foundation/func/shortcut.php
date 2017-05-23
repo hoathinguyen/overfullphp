@@ -1,14 +1,14 @@
 <?php
 /**
  * Route function
- * THis func call URL object and get url by route name
+ * THis func call Url object and get url by route name
  * @param type $name
  * @param type $params
  * @param type $skipNoParameter
  */
 if(!function_exists('route')){
     function route($name, $params = [], $skipNoParameter = true){
-        return Bag::route()->getURL($name, $params, $skipNoParameter);
+        return Bag::route()->getUrl($name, $params, $skipNoParameter);
     }
 }
 
@@ -19,7 +19,7 @@ if(!function_exists('route')){
  */
 if(!function_exists('asset')){
     function asset($name){
-        return \Overfull\Support\Utility\URLUtil::asset($name);
+        return \Overfull\Support\Utility\UrlUtil::asset($name);
     }
 }
 
@@ -31,7 +31,7 @@ if(!function_exists('asset')){
  */
 if(!function_exists('to')){
     function to($name, $inRoot = true){
-        return \Overfull\Support\Utility\URLUtil::to($name, $inRoot);
+        return \Overfull\Support\Utility\UrlUtil::to($name, $inRoot);
     }
 }
 
@@ -43,7 +43,7 @@ if(!function_exists('to')){
  */
 if(!function_exists('toAlpha')){
     function toAlpha( $string ){
-        return \Overfull\Support\Utility\URLUtil::toAlpha($string);
+        return \Overfull\Support\Utility\UrlUtil::toAlpha($string);
     }
 }
 
@@ -54,7 +54,7 @@ if(!function_exists('toAlpha')){
  */
 if(!function_exists('isUrl')){
     function isUrl($string){
-        return \Overfull\Support\Utility\URLUtil::isUrl($string);
+        return \Overfull\Support\Utility\UrlUtil::isUrl($string);
     }
 }
 
@@ -155,6 +155,6 @@ if(!function_exists('domain')){
  */
 if(!function_exists('uri')){
     function uri(){
-        return \Bag::route()->getURIConfig();
+        return \Bag::route()->getUriConfig();
     }
 }

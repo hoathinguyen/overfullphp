@@ -5,10 +5,15 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class InstanceOfObjectException extends OverfullException{
-	function __construct($class, $instance){
-		parent::__construct("Object $class is not instance of $instance", 500);
-	}
+class InstanceOfObjectException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $class
+     * @param string $instance
+     */
+    function __construct($class, $instance){
+        parent::__construct("Object $class is not instance of $instance", 500);
+    }
 }

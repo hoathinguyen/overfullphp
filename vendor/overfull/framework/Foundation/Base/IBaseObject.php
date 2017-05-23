@@ -10,13 +10,13 @@
 namespace Overfull\Foundation\Base;
 
 interface IBaseObject{
-	/**
-	* Get instance class name of object
-	*
-	* return name of class (include namespace)
-	*/
-	static function className();
+    /**
+    * Get instance class name of object
+    *
+    * return name of class (include namespace)
+    */
+    static function className();
 
-	static function instance($use = false);
+    static function instance($use = false);
 }
 ?>

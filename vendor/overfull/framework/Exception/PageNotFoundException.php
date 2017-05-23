@@ -7,8 +7,13 @@
 namespace Overfull\Exception;
 use Overfull\Exception\OverfullException;
 
-class PageNotFoundException extends OverfullException{
-	function __construct(){
-		parent::__construct('Page is not found', 404);
-	}
+class PageNotFoundException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     */
+    function __construct()
+    {
+        parent::__construct('Page is not found', 404);
+    }
 }

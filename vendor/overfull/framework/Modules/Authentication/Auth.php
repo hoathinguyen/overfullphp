@@ -12,229 +12,365 @@ use Overfull\Modules\Authentication\LoggedData;
 use Bag;
 
 class Auth extends BaseModule{
-	protected $attributes = null;
+    // Attributes
+    protected $attributes = null;
+    
+    // Provider
+    protected $provider = null;
+    
+    // Hasher
+    protected $hasher = null;
+    
+    // Logged data
+    protected $loadedData = null;
+    
+    // Session data
+    protected $loggedData = null;
 
-	protected $provider = null;
-	protected $hasher = null;
-
-	/**
-	 * __set
-	 */
-	public function __set($name, $value){
-		$this->setAttributes($name, $value);
-	}
-
-	/**
-	 * __get
-	 */
-	public function __get($name){
-		$this->getAttributes($name);
-	}
-
-	/**
-	 * Defined when call method
-	 */
-	public function __call($name, $arguments){
-        // Note: value of $name is case sensitive.
-        return $this->call($name, $arguments);
+    /**
+     * __set
+     */
+    public function __set($name, $value)
+    {
+        $this->setAttributes($name, $value);
     }
 
     /**
-	 * Set attributes
-	 */
-    public final function call($name, $arguments){
-    	// Check if user provider
-		if($provider = $this->getAttributes('provider')){
-			if(!$this->provider){
-				if(!class_exists($provider)){
-					throw new \Overfull\Exception\ClassNotFoundException($provider);
-				}
-
-				$this->provider = new $provider;
-			}
-
-			if(method_exists($this->provider, $name)){
-				return $this->provider->{$name}($arguments, $this);
-			}
-		}
-
-		throw new \Overfull\Exception\MethodNotFoundException($name, get_class($this));
+     * __get
+     */
+    public function __get($name)
+    {
+        $this->getAttributes($name);
     }
 
-	/**
-	 * Set attributes
-	 */
-	public final function setAttributes($name, $value){
-		$this->attributes[$name] = $value;
-		return $this;
-	}
+    /**
+     * Defined when call method
+     */
+    public function __call($name, $arguments)
+    {
+        // Note: value of $name is case sensitive.
+        return $this->call($name, $arguments);
+    }
+    
+    /**
+     * Get session key method
+     * @return type
+     */
+    public final function getKey()
+    {
+        return $this->getAttributes('scope').'_'.$this->session;
+    }
+    
+    /**
+     * get Provider
+     * @return type
+     * @throws \Overfull\Exception\ClassNotFoundException
+     */
+    public final function getProvider()
+    {
+        if(!$this->provider){
+            // Check if user provider
+            if($provider = $this->getAttributes('provider')){
+                if(!$this->provider){
+                    if(!class_exists($provider)){
+                        throw new \Overfull\Exception\ClassNotFoundException($provider);
+                    }
 
-	/**
-	 * Get attributes
-	 */
-	public final function getAttributes($name){
-		return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
-	}
+                    $this->provider = new $provider;
+                }
+            }
+        }
+        
+        return $this->provider;
+    }
+    
+    /**
+     * Get hasher
+     * @return type
+     */
+    public final function getHasher()
+    {
+        // Hasher
+        if(!$this->hasher){
+            $hasherClass = $this->getAttributes('hasher');
+            $this->hasher = new $hasherClass();
+        }
+        
+        return $this->hasher;
+    }
 
-	/**
-	 * Scope
-	 */
-	public final function scope($scope = null){
-		$this->setAttributes('scope', $scope);
-		return $this;
-	}
+    /**
+     * Call
+     * @param type $name
+     * @param type $arguments
+     * @return type
+     * @throws \Overfull\Exception\MethodNotFoundException
+     */
+    public final function call($name, $arguments)
+    {
+    	// Check if user provider
+        if($provider = $this->getProvider()){
+            if(method_exists($provider, $name)){
+                return $provider->{$name}($this, $arguments);
+            }
+        }
+        
+        throw new \Overfull\Exception\MethodNotFoundException($name, get_class($this));
+    }
 
-	/**
-	 * Is logged method
-	 * @return boolean
-	 */
-	public final function isLogged(){
-		return Bag::session()->check($this->getAttributes('scope').'_'.$this->session);
-	}
+    /**
+     * Set attribute
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public final function setAttributes($name, $value)
+    {
+        $this->attributes[$name] = $value;
+        return $this;
+    }
 
-	/**
-	 * Login method
-	 * @param array $data
-	 */
-	public final function login($data = null){
-		// Check if user provider
-		if($provider = $this->getAttributes('provider')){
-			if(!$this->provider){
-				if(!class_exists($provider)){
-					throw new \Overfull\Exception\ClassNotFoundException($provider);
-				}
+    /**
+     * Get attribute
+     * @param string $name
+     * @return $this
+     */
+    public final function getAttributes($name)
+    {
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
+    }
 
-				$this->provider = new $provider;
-			}
+    /**
+     * Set scope
+     * @param string $scope
+     * @return $this
+     */
+    public final function scope($scope = null)
+    {
+        $this->setAttributes('scope', $scope);
+        return $this;
+    }
 
-			if(method_exists($this->provider, 'login')){
-				$data = $this->provider->login($data, $this);
+    /**
+     * Is logged method
+     * @return boolean
+     */
+    public final function isLogged()
+    {
+        if($provider = $this->getProvider()){
+            if(method_exists($provider, 'isLogged')){
+                return $provider->isLogged($this);
+            }
+        }
+        
+        return Bag::session()->check($this->getKey());
+    }
 
-				return $this->set($data);
-			}
-		}
+    /**
+     * Login method
+     * @param array $data
+     */
+    public final function login($data = null)
+    {
+        // Get data post as array
+        if(!$data){
+            $data = Bag::request()->postAsArray();
+        }
+        
+        // Check if user provider
+        if($provider = $this->getProvider()){
+            if(method_exists($provider, 'login')){
+                return $provider->login($this, $data);
+            }
+        }
+        
+        // fields conpare
+        $clientId = $this->getAttributes('clientId');
+        $secretId = $this->getAttributes('secretId');
 
-		// Get data post as array
-		if(!$data){
-			$data = Bag::request()->postAsArray();
-		}
-
-		// Client id
-		$clientID = $this->getAttributes('clientID');
-		$secretID = $this->getAttributes('secretID');
-
-		// Check if is have setting
-		if(!$secretID){
-            throw new \Overfull\Exception\UndefinedAttributeException('secretID', get_class($this));
+        // Check if is have setting
+        if(empty($secretId)){
+            throw new \Overfull\Exception\UndefinedAttributeException('secretId', get_class($this));
         }
 
-        if(!$clientID){
-            throw new \Overfull\Exception\UndefinedAttributeException('clientID', get_class($this));
+        if(empty($clientId)){
+            throw new \Overfull\Exception\UndefinedAttributeException('clientId', get_class($this));
         }
 
         // Check if have request data
-		if(empty($data[$clientID]) || empty($data[$secretID])){
+        if(empty($data[$secretId[0]]) || empty($data[$clientId[0]])){
             return false;
         }
 
-		// Hasher
-		if(!$this->hasher){
-			$hasherClass = $this->getAttributes('hasher');
-			$this->hasher = new $hasherClass();
-		}
+        // Model object
+        $class = $this->getAttributes('entity');
+        $model = new $class;
+        $schema = $model->schema();
+        $hasherPw = $this->getHasher()->hash($data[$secretId[0]]);
 
+        // Secret
+        if(is_array($secretId[1])){
+            $schema->where(function($q) use ($secretId, $data, $hasherPw){
+                foreach ($secretId[1] as $key => $value){
+                    if($key == 0){
+                        $q->where([$value, '=', $hasherPw]);
+                    }
+                    else{
+                        $q->orWhere([$value, '=', $hasherPw]);
+                    }
+                }
+            });
+        }
+        else{
+            $schema->where([$secretId[1], '=', $hasherPw]);
+        }
 
-		// Model object
-		$class = $this->getAttributes('entity');
-		$model = new $class;
-		$result = $model->schema()
-			->where([$secretID, '=', $this->hasher->hash($data[$secretID])])
-			->andWhere([$clientID, 'LIKE', $data[$clientID]])
-			->first();
+        // Client id
+        if(is_array($clientId[1])){
+            $schema->andWhere(function($q) use ($clientId, $data){
+                foreach ($clientId[1] as $key => $value){
+                    if($key == 0){
+                        $q->where([$value, '=', $data[$clientId[0]]]);
+                    }
+                    else{
+                        $q->orWhere([$value, '=', $data[$clientId[0]]]);
+                    }
+                }
+            });
+        }
+        else{
+            $schema->andWhere([$clientId[1], '=', $data[$clientId[0]]]);
+        }
 
-		if($result){
-			return $this->set($result);
-		}
+        $result = $schema->first();
 
-		return false;
-	}
+        if($result){
+            return $this->setLoggedData($result);
+        }
 
-	/**
-	 * Login method
-	 * @param array $data
-	 */
-	public final function logout(){
-		Bag::session()->delete($this->getAttributes('scope').'_'.$this->session);
-		return $this;
-	}
+        return false;
+    }
 
-	/**
-	 * user method
-	 * @param array $data
-	 */
-	public final function get(){
-		return Bag::session()->read($this->getAttributes('scope').'_'.$this->session);
-	}
+    /**
+     * Login method
+     * @param array $data
+     */
+    public final function logout()
+    {
+        if($provider = $this->getProvider()){
+            if(method_exists($provider, 'logout')){
+                return $provider->logout($this);
+            }
+        }
+        
+        Bag::session()->delete($this->getKey());
+        return $this;
+    }
 
-	/**
-	 * user method
-	 * @param array $data
-	 */
-	public final function set($result){
-		if(!$result ){
-			return false;
-		}
+    /**
+     * user method
+     * @param array $data
+     */
+    public final function get()
+    {
+        if($logged = $this->getLoggedData()){
+            return $logged;
+        }
+        
+        if($provider = $this->getProvider()){
+            if(method_exists($provider, 'get')){
+                return $provider->get($this);
+            }
+        }
+        
+        $this->setLoggedData(Bag::session()->read($this->getKey()));
+        
+        return $this->getLoggedData();
+    }
+    
+    /**
+     * Get logged data method
+     * @return type
+     */
+    public final function getLoggedData()
+    {
+        return $this->loadedData;
+    }
 
-		if(!is_object($result)){
-			throw new \Overfull\Exception\InstanceOfObjectException($result,  '\Overfull\Database\Eloquent\ActiveRecord');
-		}
+    /**
+     * user method
+     * @param array $data
+     */
+    public final function setLoggedData($result, $saveSession = true)
+    {
+        if(!$result ){
+            return false;
+        }
 
-		if(!is_a($result, \Overfull\Database\Eloquent\ActiveRecord::class)){
-			throw new \Overfull\Exception\InstanceOfObjectException(get_class($result),  '\Overfull\Database\Eloquent\ActiveRecord');
-		}
+        if(!is_object($result)){
+            throw new \Overfull\Exception\InstanceOfObjectException($result,  '\Overfull\Database\Eloquent\ActiveRecord');
+        }
 
-		$logged = new LoggedData();
+        if(!is_a($result, \Overfull\Database\Eloquent\ActiveRecord::class)){
+            throw new \Overfull\Exception\InstanceOfObjectException(get_class($result),  '\Overfull\Database\Eloquent\ActiveRecord');
+        }
 
-		$attributes = $result->getAttributes();
+        $logged = new LoggedData();
 
-		foreach ($attributes as $key => $value) {
-			$logged->{$key} = $value;
-		}
+        $attributes = $result->getAttributes();
 
-		Bag::session()->write($this->getAttributes('scope').'_'.$this->session, $logged);
-		return true;
-	}
+        foreach ($attributes as $key => $value) {
+            $logged->{$key} = $value;
+        }
+        
+        $this->loggedData = $logged;
 
-	/**
-	 * user method
-	 * @param array $data
-	 */
-	public final function load(){
-		// Check if user provider
-		if($provider = $this->getAttributes('provider')){
-			if(!$this->provider){
-				if(!class_exists($provider)){
-					throw new \Overfull\Exception\ClassNotFoundException($provider);
-				}
+        if($saveSession){
+            Bag::session()->write($this->getKey(), $logged);
+        }
+        
+        return true;
+    }
 
-				$this->provider = new $provider;
-			}
+    /**
+     * user method
+     * @param array $data
+     */
+    public final function load()
+    {
+        if($loaded = $this->getLoadedData()){
+            return $loaded;
+        }
+        
+        if($provider = $this->getProvider()){
+            if(method_exists($provider, 'load')){
+                return $provider->load($this);
+            }
+        }
 
-			if(method_exists($this->provider, 'load')){
-				return $this->provider->load($this->get(), $this);
-			}
-		}
+        $entity = $this->getAttributes('entity');
+        $model = new $entity;
 
-		$entity = $this->getAttributes('entity');
-		$model = new $entity;
+        $pr = $model->getPrimaryKey();
+        $this->setLoadedData($model->find($this->get()->{$pr}));
 
-		if(!$this->loadData){
-			$pr = $model->getPrimaryKey();
-			$this->loadData = $model->find($this->get()->{$pr});
-			$secretID = $this->getAttributes('secretID');
-			unset($this->loadData->{$secretID});
-		}
+        return $this->getLoadedData();
+    }
+        
+    /**
+     * Set load data
+     */
+    public final function setLoadedData($data)
+    {
+        $this->loadedData = $data;
+        return $this;
+    }
 
-		return $this->loadData;
-	}
+    /**
+     * Set load data
+     */
+    public final function getLoadedData()
+    {
+        return $this->loadedData;
+    }
 }

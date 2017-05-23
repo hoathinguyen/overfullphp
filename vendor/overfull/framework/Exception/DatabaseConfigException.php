@@ -5,10 +5,14 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class DatabaseConfigException extends OverfullException{
-	function __construct($use){
-		parent::__construct("Have an error with database config \"".$use."\"");
-	}
+class DatabaseConfigException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $use
+     */
+    function __construct($use){
+        parent::__construct("Have an error with database config \"".$use."\"");
+    }
 }

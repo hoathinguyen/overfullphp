@@ -7,8 +7,15 @@
 namespace Overfull\Exception;
 use Overfull\Exception\OverfullException;
 
-class UndefinedAttributeException extends OverfullException{
-    function __construct($name, $class){
+class UndefinedAttributeException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $name
+     * @param string $class
+     */
+    function __construct($name, $class)
+    {
         parent::__construct('Attribute "'.$name.'" is undefined in "'.$class.'"', 1);
     }
 }

@@ -7,10 +7,15 @@
 * ----------------------------------------------------
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class MyStoreNotFoundException extends OverfullException{
-	function __construct($value){
-		parent::__construct('MyStore value "'.$value.'" is not found', 1);
-	}
+class MyStoreNotFoundException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $value
+     */
+    function __construct($value)
+    {
+        parent::__construct('MyStore value "'.$value.'" is not found', 1);
+    }
 }

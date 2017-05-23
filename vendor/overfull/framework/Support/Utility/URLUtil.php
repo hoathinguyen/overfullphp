@@ -10,7 +10,7 @@ namespace Overfull\Support\Utility;
 use Overfull\Support\Utility\Foundation\BaseUtil;
 use Bag;
 
-class URLUtil extends BaseUtil{
+class UrlUtil extends BaseUtil{
     /**
      * asset method
      *

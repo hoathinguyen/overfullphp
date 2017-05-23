@@ -23,7 +23,7 @@ class View extends Otp implements \Overfull\Patterns\MVC\Foundation\IView{
      * This method set some default for view
      */
     function __construct(){
-        $this->contentPath = 'Views'.DS.'Contents';
+        $this->contentPath = 'Views'.DS.'Render';
     }
 
     /**

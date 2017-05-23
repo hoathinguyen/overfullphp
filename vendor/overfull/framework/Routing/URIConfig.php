@@ -6,13 +6,13 @@
  */
 namespace Overfull\Routing;
 
-class URIConfig
+class UriConfig
 {
     // List of uri
     private $uris = [];
     
     // valid uri
-    private $validURI = null;
+    private $validUri = null;
     
     // Group name
     private $group = [];
@@ -23,7 +23,7 @@ class URIConfig
     * @param string $name
     * @return RouteAlias
     */
-    public function getURI($name = false)
+    public function getUri($name = false)
     {
         if(!$name){
             return $this->uris;
@@ -40,9 +40,9 @@ class URIConfig
      * @param mixed $value
      * @return $this
      */
-    public function addURI($method, $path, $alias, $value)
+    public function addUri($method, $path, $alias, $value)
     {
-        $uri = new \Overfull\Routing\URI($method, $path, $alias, $value, $this->group);
+        $uri = new \Overfull\Routing\Uri($method, $path, $alias, $value, $this->group);
         
         $this->uris[$alias] = $uri;
         
@@ -58,7 +58,7 @@ class URIConfig
      */
     public function get($path, $alias, $value)
     {
-        return $this->addURI('GET', $path, $alias, $value);
+        return $this->addUri('GET', $path, $alias, $value);
     }
     
     /**
@@ -70,7 +70,7 @@ class URIConfig
      */
     public function post($path, $alias, $value)
     {
-        return $this->addURI('POST', $path, $alias, $value);
+        return $this->addUri('POST', $path, $alias, $value);
     }
     
     /**
@@ -82,7 +82,7 @@ class URIConfig
      */
     public function any($path, $alias, $value)
     {
-        return $this->addURI('ANY', $path, $alias, $value);
+        return $this->addUri('ANY', $path, $alias, $value);
     }
     
     /**
@@ -105,13 +105,13 @@ class URIConfig
      */
     public function getValid($base = 0)
     {
-        if($this->validURI)
+        if($this->validUri)
         {
-            return $this->validURI;
+            return $this->validUri;
         }
         
         // Get current domain
-        $_uriPath = \Bag::request()->getURIArray(false);
+        $_uriPath = \Bag::request()->getUriArray(false);
         
         for($index = 0; $index < $base; $index++)
         {
@@ -131,8 +131,8 @@ class URIConfig
             if($value->isValid(\Bag::request()->getMethod(), $uriPath))
             {
                 // Get and run valid data
-                $this->validURI = $value;
-                return $this->validURI->run();
+                $this->validUri = $value;
+                return $this->validUri->run();
             }
         }
         

@@ -5,10 +5,15 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class ConnectionException extends OverfullException{
-	function __construct($name){
-		parent::__construct("Could not connect to \"".$name."\" in config");
-	}
+class ConnectionException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $name
+     */
+    function __construct($name)
+    {
+        parent::__construct("Could not connect to \"".$name."\" in config");
+    }
 }

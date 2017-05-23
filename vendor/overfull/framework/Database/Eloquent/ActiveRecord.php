@@ -45,6 +45,9 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
     // The connection, which connect between db and php
     protected $connection = null;
     
+    // Is new
+    protected $isNew = true;
+
     /**
      * __construct
      * @param string $use
@@ -356,9 +359,9 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
 
         if($this->isNew()){
             $values = $this->attributes;
-            if($this->autoIncrement){
-                unset($values[$this->primaryKey]);
-            }
+//            if($this->autoIncrement){
+//                unset($values[$this->primaryKey]);
+//            }
 
             // Creates
             $rs = $this->schema()
@@ -384,14 +387,31 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
 
         if($isExecute){
             if($rs){
+                $lastInsert = null;
+                
                 if($this->isNew()){
-                    $lastInsert = $this->instance()->find($this->schema->lastInsertPrimaryKey($this->primaryKey));
+                    if($this->primaryKey){
+                        if($this->autoIncrement){
+                            $lastInsert = $this->instance()->find($this->schema->lastInsertPrimaryKey($this->primaryKey));
+                        }
+                        else{
+                            $lastInsert = $this->instance()->find($this->getAttributes($this->primaryKey));
+                        }
+                    }
+                    else{
+                        // Todo continue
+                    }
                 } else {
-                    $lastInsert = $this->instance()->find($this->attributes[$this->primaryKey]);
+                    if($this->primaryKey){
+                        $lastInsert = $this->instance()->find($this->attributes[$this->primaryKey]);
+                    }
+                    else{
+                        // Todo continue
+                    }
                 }
 
                 if(!$lastInsert){
-                    return true;
+                    return false;
                 }
 
                 foreach ($lastInsert->getAttributes() as $key => $value) {
@@ -430,7 +450,8 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
      */
     public function isNew()
     {
-        return empty($this->attributes[$this->getPrimaryKey()]);
+        //return empty($this->attributes[$this->getPrimaryKey()]);
+        return $this->isNew;
     }
 
     /**
@@ -593,6 +614,9 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
      */
     public function makeOldAttributes()
     {
+        // Set is new flag
+        $this->isNew = false;
+        
         $this->oldAttributes = $this->attributes;
         return $this;
     }

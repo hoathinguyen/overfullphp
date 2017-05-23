@@ -8,6 +8,7 @@
 */
 namespace Overfull\Database\Schema\Foundation;
 
-interface IBaseSchema{
+interface IBaseSchema
+{
 
 } 

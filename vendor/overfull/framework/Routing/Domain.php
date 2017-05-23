@@ -180,7 +180,9 @@ class Domain extends \Overfull\Foundation\Base\BaseObject
             $regex = str_replace('{domain}', '([a-zA-Z0-9\-]+)', $regex);
             $regex = str_replace('{ext}', '([a-zA-Z0-9]+)', $regex);
             $regex = str_replace('{folder}', '([a-zA-Z0-9\-]+)', $regex);
-
+            
+            $currentDomain = rtrim($currentDomain, '/');
+            
             // Check if correct domain
             if(preg_match("/^".$regex."(|\/(.*))$/", $currentDomain)){
                 $uris = explode('/', $domain);

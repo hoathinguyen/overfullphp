@@ -8,35 +8,41 @@
 */
 namespace Overfull\Database\Schema\Mysql;
 
-class Schema extends \Overfull\Database\Schema\Foundation\BaseSchema{
+class Schema extends \Overfull\Database\Schema\Foundation\BaseSchema
+{
+    // Type of connect
     protected  $type = 'mysql';
+    
     /**
-    * Construct
-    *
-    * @param string $connectionName
-    * @param mixed $object
-    * @return void
-    */
-    function __construct($connection = null, $record = null, $queryBuilder = null){
-            $this->connection($connection);
-            $this->activeRecord($record);
-            $this->queryBuilder(new QueryBuilder());
+     * __construct
+     * @param type $connection
+     * @param type $record
+     * @param type $queryBuilder
+     */
+    function __construct($connection = null, $record = null, $queryBuilder = null)
+    {
+        $this->connection($connection);
+        $this->activeRecord($record);
+        $this->queryBuilder(new QueryBuilder());
     }
     
     /**
      * Get type of schema
      * @return type
      */
-    public function getType(){
+    public function getType()
+    {
         return $this->type;
     }
     
     /**
-    * count
-    * @return type
-    * @throws \Exception
-    */
-    public function lastInsertPrimaryKey($primary = 'id'){
+     * Set lastInsertPrimaryKey
+     * @param mixed $primary
+     * @return string
+     * @throws \Exception
+     */
+    public function lastInsertPrimaryKey($primary = 'id')
+    {
         try{
             return $this->connection->lastInsertId($primary);
         } catch (\Exception $e){
@@ -45,11 +51,14 @@ class Schema extends \Overfull\Database\Schema\Foundation\BaseSchema{
     }
     
     /**
-    * count
-    * @return type
-    * @throws \Exception
-    */
-   public function count($isExecute = true, $clear = false){
+     * Count query
+     * @param boolean $isExecute
+     * @param boolean $clear
+     * @return int
+     * @throws \Exception
+     */
+    public function count($isExecute = true, $clear = false)
+    {
        try{
            // Set limit as 1
            $this->limit(1);

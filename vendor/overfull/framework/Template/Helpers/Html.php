@@ -14,6 +14,6 @@ class Html extends \Overfull\Template\Foundation\Helper
 {
 	public static function css($src)
 	{
-		return '<link href="'.\Overfull\Support\Utility\URLUtil::asset($src).'" type="text/css" rel="stylesheet"/>';
+		return '<link href="'.\Overfull\Support\Utility\UrlUtil::asset($src).'" type="text/css" rel="stylesheet"/>';
 	}
 }

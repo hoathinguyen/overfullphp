@@ -5,10 +5,14 @@
 * ___________________________________________________________________________
 */
 namespace Overfull\Exception;
-use Overfull\Exception\OverfullException;
 
-class AppNotFoundException extends OverfullException{
-	function __construct($app){
-		parent::__construct('App "'.$app.'" is not found', 1);
-	}
+class AppNotFoundException extends \Overfull\Exception\OverfullException
+{
+    /**
+     * __construct
+     * @param string $app
+     */
+    function __construct($app){
+        parent::__construct('App "'.$app.'" is not found', 1);
+    }
 }

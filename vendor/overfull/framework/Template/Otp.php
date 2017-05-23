@@ -9,7 +9,7 @@
 namespace Overfull\Template;
 use Overfull\Http\Response\ResponseFormat;
 use Overfull\Http\Response\Response;
-use Overfull\Support\Utility\URLUtil;
+use Overfull\Support\Utility\UrlUtil;
 use Bag;
 
 abstract class Otp{
@@ -130,7 +130,7 @@ abstract class Otp{
     protected function redirect($gift){
         Bag::$response->format = ResponseFormat::HTML;
         $html = '<!DOCTYPE html>
-                        <html><head><meta charset="utf-8"><title>'.\Bag::config()->get('core.otp-redirect-title').'</title><meta http-equiv="refresh" content="0; url='.URLUtil::to($gift).'" /></head><body></body></html>';
+                        <html><head><meta charset="utf-8"><title>'.\Bag::config()->get('core.otp-redirect-title').'</title><meta http-equiv="refresh" content="0; url='.UrlUtil::to($gift).'" /></head><body></body></html>';
 
         return $html;
     }

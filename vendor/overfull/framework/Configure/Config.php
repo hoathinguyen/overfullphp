@@ -27,10 +27,10 @@ class Config extends \Overfull\Foundation\Base\BaseObject
     {
         // Check if exists file
         if(file_exists($file)){
-            // Require file
             require($file);
-        } else if($isException){
-            // Throw error
+        }
+        // Throw error when this file is not exists
+        else if($isException){
             throw new ConfigFileNotFoundException($file);
         }
         
@@ -215,6 +215,7 @@ class Config extends \Overfull\Foundation\Base\BaseObject
         
         return $this;
     }
+    
     /**
      * Remove config method
      * @param type $name

@@ -18,13 +18,13 @@ class Route extends BaseObject{
     // Domain
     private $domainConfig = null;
     
-    // URI
+    // Uri
     private $uriConfig = null;
     
     public function __construct()
     {
         $this->domainConfig = new DomainConfig();
-        $this->uriConfig = new URIConfig();
+        $this->uriConfig = new UriConfig();
     }
 
 
@@ -36,12 +36,12 @@ class Route extends BaseObject{
     public function run()
     {                
         $base = $this->getDomainConfig()->getValid()->getBase();
-        if(!$this->getURIConfig()->getValid($base))
+        if(!$this->getUriConfig()->getValid($base))
         {
             throw new PageNotFoundException();
         }
         
-        $this->attributes = array_merge($this->getURIConfig()->getValid()->getData(), $this->attributes);
+        $this->attributes = array_merge($this->getUriConfig()->getValid()->getData(), $this->attributes);
     }
     
     /**
@@ -57,7 +57,7 @@ class Route extends BaseObject{
      * getDomainConfig
      * @return \Overfull\Routing
      */
-    public function getURIConfig() : URIConfig
+    public function getUriConfig() : UriConfig
     {
         return $this->uriConfig;
     }
@@ -65,16 +65,16 @@ class Route extends BaseObject{
     /**
      * Get current route
      */
-    public function getURL($name, $params = [], $skipNoParameter = true) : String
+    public function getUrl($name, $params = [], $skipNoParameter = true) : String
     {
-        $alias = $this->getURIConfig()->getURI($name);
+        $alias = $this->getUriConfig()->getUri($name);
 
         if(!$alias){
             throw new \Overfull\Exception\RouteNotFoundException($name);
         }
         
         $prefix = Bag::config()->get('app.prefix');
-        return Bag::request()->getBaseURL().'/'.($prefix ? $prefix . '/' : ''). $alias->getURL($params, $skipNoParameter);
+        return Bag::request()->getBaseUrl().'/'.($prefix ? $prefix . '/' : ''). $alias->getUrl($params, $skipNoParameter);
     }
 
     /**

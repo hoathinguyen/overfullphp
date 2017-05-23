@@ -10,7 +10,7 @@ namespace Overfull\Routing;
 
 use Bag;
 
-class URI extends \Overfull\Foundation\Base\BaseObject
+class Uri extends \Overfull\Foundation\Base\BaseObject
 {
     private $attributes = [];
     
@@ -245,7 +245,7 @@ class URI extends \Overfull\Foundation\Base\BaseObject
      * setUrlParameters
      * @return $this
      */
-    public function getURL($data = [], $skipNoParameter = true)
+    public function getUrl($data = [], $skipNoParameter = true)
     {
         $url = $this->getFormat();
         

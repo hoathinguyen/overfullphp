@@ -33,7 +33,7 @@ class DomainConfig
      */
     public function setDefault($data)
     {
-        $this->add(['{sub}.{domain}.{ext}', '{domain}.{ext}', 'www.{domain}.{ext}'], $data);
+        $this->add(['{sub}.{domain}.{ext}', '{domain}.{ext}', 'www.{domain}.{ext}', '{sub}.{domain}.{ext}/{folder}'], $data);
         return $this;
     }
     
@@ -49,7 +49,7 @@ class DomainConfig
         }
         
         // Get current domain
-        $currentDomain = strtolower(\Bag::request()->getHost().\Bag::request()->getURI(false));
+        $currentDomain = strtolower(\Bag::request()->getHost().\Bag::request()->getUri(false));
         
         // Loop with list of domain that defined
         foreach ($this->domains as $key => $value) {
