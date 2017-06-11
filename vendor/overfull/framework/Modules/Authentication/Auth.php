@@ -13,7 +13,9 @@ use Bag;
 
 class Auth extends BaseModule{
     // Attributes
-    protected $attributes = null;
+    protected $attributes = [
+        'session' => 'auth'
+    ];
     
     // Provider
     protected $provider = null;
@@ -58,7 +60,7 @@ class Auth extends BaseModule{
      */
     public final function getKey()
     {
-        return $this->getAttributes('scope').'_'.$this->session;
+        return $this->getAttributes('scope').'_'.$this->getAttributes('session');
     }
     
     /**
@@ -282,9 +284,9 @@ class Auth extends BaseModule{
                 return $provider->get($this);
             }
         }
-        
-        $this->setLoggedData(Bag::session()->read($this->getKey()));
-        
+
+        $this->setLoggedData(Bag::session()->read($this->getKey()), FALSE);
+                
         return $this->getLoggedData();
     }
     
@@ -294,7 +296,7 @@ class Auth extends BaseModule{
      */
     public final function getLoggedData()
     {
-        return $this->loadedData;
+        return $this->loggedData;
     }
 
     /**
@@ -311,22 +313,25 @@ class Auth extends BaseModule{
             throw new \Overfull\Exception\InstanceOfObjectException($result,  '\Overfull\Database\Eloquent\ActiveRecord');
         }
 
-        if(!is_a($result, \Overfull\Database\Eloquent\ActiveRecord::class)){
-            throw new \Overfull\Exception\InstanceOfObjectException(get_class($result),  '\Overfull\Database\Eloquent\ActiveRecord');
+        if(is_a($result, \Overfull\Database\Eloquent\ActiveRecord::class)){
+            //throw new \Overfull\Exception\InstanceOfObjectException(get_class($result),  '\Overfull\Database\Eloquent\ActiveRecord');
+            
+            $logged = new LoggedData();
+
+            $attributes = $result->getAttributes();
+
+            foreach ($attributes as $key => $value) {
+                $logged->{$key} = $value;
+            }
+
+            $this->loggedData = $logged;
         }
-
-        $logged = new LoggedData();
-
-        $attributes = $result->getAttributes();
-
-        foreach ($attributes as $key => $value) {
-            $logged->{$key} = $value;
+        else{
+            $this->loggedData = $result;
         }
         
-        $this->loggedData = $logged;
-
         if($saveSession){
-            Bag::session()->write($this->getKey(), $logged);
+            Bag::session()->write($this->getKey(), $this->loggedData);
         }
         
         return true;

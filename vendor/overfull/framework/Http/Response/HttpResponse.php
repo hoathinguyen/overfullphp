@@ -7,12 +7,12 @@
 * ----------------------------------------------------
 */
 namespace Overfull\Http\Response;
-use Overfull\Http\Response\ResponseFormat;
 
 class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
 {
     protected $attributes = [
-        'format' => ResponseFormat::HTML,
+        'format' => '',
+        'contentType' => '',
         'content' => ''
     ];
 
@@ -21,7 +21,8 @@ class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
     * This method will handle when set data for this response object
     * @date 2016/05/21
     */
-    public function __set($name, $value){
+    public function __set($name, $value)
+    {
         $this->attributes[$name] = $value;
     }
 
@@ -29,7 +30,8 @@ class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
     * Get method. Return exist value of attributes
     * @date 2016/05/21
     */
-    public function __get($name){
+    public function __get($name)
+    {
         return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
@@ -39,7 +41,8 @@ class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
      * @param  string  $key
      * @return bool
      */
-    public function __isset($key){
+    public function __isset($key)
+    {
     	return isset($this->attributes[$key]);
     }
 
@@ -49,18 +52,35 @@ class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
      * @param  string  $key
      * @return void
      */
-    public function __unset($key){
+    public function __unset($key)
+    {
         unset($this->attributes[$key]);
     }
 
     /**
-    * Get method
-    * @date 2016/05/21
-    */
-    public function send(){
-            $this->header('Content-Type', $this->attributes['format']);
-            echo $this->attributes['content'];
-            return $this;
+     * Send data to client method
+     * @return $this
+     */
+    public function send()
+    {
+        // Set header
+        $this->header('Content-Type', $this->contentType);
+
+        switch ($this->format) {
+            // Text format
+            case Constant::FORMAT_TEXT:
+                echo $this->content;
+                break;
+            case Constant::FORMAT_FILE:
+                $this->header("Content-Length", strlen($this->content));
+                $this->header("Content-Disposition", "attachment; filename=$this->fileName");
+                echo $this->content;
+                break;
+            default:
+                break;
+        }
+
+        return $this;
     }
 
     /**
@@ -71,8 +91,8 @@ class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
      */
     public function header($name, $value)
     {
-            header("$name: $value");
-            return $this;
+        header("$name: $value");
+        return $this;
     }
     
     /**

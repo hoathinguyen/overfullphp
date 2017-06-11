@@ -11,7 +11,6 @@ use Overfull\Foundation\Base\BaseObject;
 use Bag;
 use Overfull\Patterns\MVC\Exception\ControllerNotFoundException;
 use Overfull\Patterns\MVC\Exception\ViewNotFoundException;
-use Overfull\Http\Response\ResponseFormat;
 
 class PatternHandler extends BaseObject{
 
@@ -56,13 +55,21 @@ class PatternHandler extends BaseObject{
             $filter = new $filter();
             $dataTransfer = $filter->run($this->controller);
         }
-
-        // Call view
-        if(empty($dataTransfer)){
+        else
+        {
             $dataTransfer = $this->controller->run();
         }
-
-        if(!empty($view = $dataTransfer->handler)){
+        
+        if(!is_object($dataTransfer)){
+            if(is_array($dataTransfer))
+            {
+                $dataTransfer = json_encode($dataTransfer);
+            }
+            
+            Bag::$response->content = (string)$dataTransfer;
+            return;
+        }
+        elseif(!empty($view = $dataTransfer->handler)){
             if(!class_exists($view)){
                 $view = "{$appNamespace}\\Views\\{$view}";
                 if(!class_exists($view)){
@@ -84,15 +91,6 @@ class PatternHandler extends BaseObject{
             $this->view = new \Overfull\Patterns\MVC\View();
         }
 
-        // switch (Bag::$response->format) {
-        // 	case ResponseFormat::HTML:
-        // 		$viewResult = 'test';
-        // 		break;
-        // 	case ResponseFormat::JSON:
-        // 	default:
-        // 		break;
-        // }
-
-        Bag::$response->content = $this->view->run($dataTransfer);
+        $this->view->run($dataTransfer);
     }
 }

@@ -85,7 +85,7 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
                 $activeRecord,
                 $this,
                 $relative);
-        return $this->relations[$name]->parse()->schema();
+        return $this->relations[$name]->parse()->getSchema();
     }
 
     /**
@@ -112,7 +112,7 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
                 $this,
                 $relative);
 
-        return $this->relations[$name]->parse()->schema();
+        return $this->relations[$name]->parse()->getSchema();
     }
 
     /**
@@ -139,7 +139,7 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
                 $this,
                 $relative);
 
-        return $this->relations[$name]->parse()->schema();
+        return $this->relations[$name]->parse()->getSchema();
     }
 
 /**
@@ -193,7 +193,7 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
 
         $this->connection->setAttribute( \PDO::ATTR_EMULATE_PREPARES, false );
 
-        $this->schema($databases['connections'][$use]['type']);
+        $this->setSchema($databases['connections'][$use]['type']);
 
         return $this;
     }
@@ -203,8 +203,8 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
      *
      * @return object
      */
-    public final function schema($type = false)
-    {
+    public function setSchema($type = false)
+    {        
         // Check if type is exists.
         if(!empty($type)){
             $chemaClass = "\Overfull\Database\Schema\\".ucfirst($type)."\Schema";
@@ -215,7 +215,23 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
             $this->schema = new $chemaClass($this->connection, get_class($this));
             $this->schema->table($this->getTableName());
         }
+        
+        return $this;
+    }
+    
+    public function getSchema()
+    {
         return $this->schema;
+    }
+    
+    public static function schema($type = false)
+    {
+        $instance = self::instance();
+        
+        // Check if type is exists.
+        $instance->setSchema($type);
+        
+        return $instance->getSchema();
     }
 
     /**
@@ -327,7 +343,7 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
     public function find($id)
     {
         // Create query
-        return $this->schema()
+        return $this->getSchema()
             ->where([$this->primaryKey, '=', $id])
             ->first();
     }
@@ -364,7 +380,7 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
 //            }
 
             // Creates
-            $rs = $this->schema()
+            $rs = $this->getSchema()
                 ->columns(array_keys($values))
                 ->values($values)
                 ->insert($isExecute);
@@ -378,7 +394,7 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
                 }
             }
             // Update
-            $rs = $this->schema()
+            $rs = $this->getSchema()
                 ->columns(array_keys($values))
                 ->values($values)
                 ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
@@ -437,7 +453,7 @@ abstract class ActiveRecord extends \Overfull\Foundation\Base\BaseObject
     public function delete()
     {
         if(!$this->isNew()){
-            return $this->schema()
+            return $this->getSchema()
                 ->where([$this->primaryKey, '=', $this->attributes[$this->primaryKey]])
                 ->delete();
         }

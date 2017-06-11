@@ -10,7 +10,6 @@ use Overfull\Patterns\MVC\Exception\MethodNotFoundException;
 use Overfull\Patterns\MVC\Exception\ValidatorNotFoundException;
 use Overfull\Exception\UndefinedAttributeException;
 use Bag;
-use Overfull\Http\Response\ResponseFormat;
 use Overfull\Patterns\MVC\Support\DataTransfer;
 use Overfull\Foundation\Base\BaseObject;
 
@@ -192,6 +191,21 @@ abstract class Controller extends BaseObject implements IController{
             $this->dataTransfer->type = 'json';
 
             $this->dataTransfer->set($data);
+
+            return $this->dataTransfer;
+	}
+        
+        /**
+	 * Set type to view is json
+	 *
+	 * @param mixed $data
+	 * @return array
+	 */
+	public final function file($content, $info){
+            $this->defaultDataTransfer();
+            $this->dataTransfer->type = 'file';
+
+            $this->dataTransfer->set(['content' => $content, 'info' => $info]);
 
             return $this->dataTransfer;
 	}

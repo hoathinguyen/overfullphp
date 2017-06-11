@@ -174,20 +174,22 @@ abstract class BaseSchema implements \JsonSerializable
     public function where($conditions)
     {
         $wheres = $this->queryBuilder->where;
-
+        
+        $label = count($wheres) > 0 ? 'AND' : '';
+        
         if(is_object($conditions)){
             $class = get_class($this);
             $q = new $class();
             $conditions($q);
 
             $wheres[] = [
-                'operation' => '',
+                'operation' => $label,
                 'type' => 'group',
                 'values' => $q->queryBuilder()->where
             ];
         } else {
             $wheres[] = [
-                'operation' => '',
+                'operation' => $label,
                 'type' => 'simple',
                 'values' => $conditions
             ];

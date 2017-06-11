@@ -10,7 +10,7 @@ namespace Overfull\Database\Eloquent\Relations;
 
 class HasOne extends \Overfull\Database\Eloquent\Relations\Relation{
     public function run(){
-        $this->data($this->schema()->first());
+        $this->data($this->getSchema()->first());
         return $this;
     }
 }

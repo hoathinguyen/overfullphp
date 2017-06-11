@@ -10,7 +10,7 @@ namespace Overfull\Database\Eloquent\Relations;
 
 class HasMany extends \Overfull\Database\Eloquent\Relations\Relation{
     public function run(){
-        $this->data($this->schema()->all());
+        $this->data($this->getSchema()->all());
         return $this;
     }
 }

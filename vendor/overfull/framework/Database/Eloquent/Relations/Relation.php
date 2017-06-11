@@ -59,7 +59,7 @@ abstract class Relation extends \Overfull\Foundation\Base\BaseObject{
      *
      * @return object
      */
-    public final function schema(){
+    public final function getSchema(){
         // Check if type is exists.
         return $this->schema;
     }

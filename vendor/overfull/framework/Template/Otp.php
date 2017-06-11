@@ -7,100 +7,36 @@
 * ----------------------------------------------------
 */
 namespace Overfull\Template;
-use Overfull\Http\Response\ResponseFormat;
-use Overfull\Http\Response\Response;
+use Overfull\Http\Response\Constant;
 use Overfull\Support\Utility\UrlUtil;
+use Overfull\Support\Utility\PathUtil;
+use Overfull\Patterns\MVC\Exception\FileNotFoundException;
 use Bag;
 
-abstract class Otp{
-    protected $tags = [
-        // Foreach
-        "/@foreach\((.*?)as(.*?)\)/" => '<?php foreach($1as$2): ?>',
-        '/@endforeach/' => '<?php endforeach; ?>',
-
-        '/\<:foreach(\s.*?)exp=(.*)\>/' => '<?php foreach($2): ?>',
-        '/\<\/:foreach\>/' => '<?php endforeach; ?>',
-
-        // For
-        "/@for\((.*?)\)/" => '<?php for($1): ?>',
-        '/@endfor/' => '<?php endfor; ?>',
-
-        '/\<:for(\s.*?)exp=(.*)\>/' => '<?php for($2): ?>',
-        '/\<\/:for\>/' => '<?php endfor; ?>',
-
-        // If
-        "/@if\((.*)\)/" => '<?php if($1): ?>',
-        '/@elseif\((.*)\)/' => '<?php elseif($1): ?>',
-        '/@else/' => '<?php else: ?>',
-        '/@endif/' => '<?php endif; ?>',
-
-        '/\<:if(\s.*?)exp=(.*)\>/' => '<?php if($2): ?>',
-        '/\<:elseif(\s.*?)exp=(.*)\>/' => '<?php elseif($2): ?>',
-        '/\<:else\>/' => '<?php else: ?>',
-        '/\<\/:if\>/' => '<?php endif; ?>',
-
-        // echo 
-        '/\{\{/' => '<?php echo ',
-        '/\}\}/' => '?>',
-
-        '/\<\:echo\>/' => '<?php echo ',
-        '/\<\/:echo\>/' => '?>',
-
-        // echo array
-        '/\{\[/' => '<?php print_r( ',
-        '/\]\}/' => '); ?>',
-
-        '/\<\:echoArray\>/' => '<?php print_r( ',
-        '/\<\/:echoArray\>/' => '); ?>',
-
-        // area
-        '/@beginArea\((.*)\)/' => '<?php $this->beginArea($1); ?>',
-        '/@endArea/' => '<?php $this->endArea($1); ?>',
-        '/@readArea\((.*)\)/' => '<?php echo $this->readArea($1); ?>',
-        
-        '/\<\!\-\-BEGIN\[(.*)\]\-\-\>/' => '<?php $this->beginArea("$1"); ?>',
-        '/\<\!\-\-END\-\-\>/' => '<?php $this->endArea("$1"); ?>',
-        '/\<\!\-\-AREA\[(.*)\]\-\-\>/' => '<?php echo $this->readArea("$1"); ?>',
-
-        '/\<:area(\s.*?)name=(.*)\>/' => '<?php $this->beginArea($2); ?>',
-        '/\<\/:area\>/' => '<?php $this->endArea(); ?>',
-        '/\<:readArea(\s.*?)name=(.*)\/\>/' => '<?php echo $this->readArea($2); ?>',
-
-        // append
-        '/@appendTo\((.*)\)/' => '<?php $this->appendTo($1); ?>',
-        '/@append\((.*)\)/' => '<?php echo $this->append($1); ?>',
-
-        '/\<:layout(\s.*?)src=(.*)\/\>/' => '<?php $this->appendTo($2); ?>',
-        '/\<:append(\s.*?)src=(.*)\/\>/' => '<?php echo $this->append($2); ?>',
-
-        '/\<:append(\s.*?)src=(.*)\>/' => '<?php echo $this->append($2, [',
-        '/\<:param(\s.*?)name=(.*?)\>/' => '$2 => ',
-        '/\<\/:param\>/' => ',',
-        '/\<\/:append\>/' => ']);?>',
-
-        // PHP
-        '/\<\:php\>/' => '<?php ',
-        '/\<\/:php\>/' => ' ?>'
-    ];
-
+abstract class Otp
+{
     protected $currentAreaName = '';
     protected $areas = [];
     protected $contentPath = null;
     protected $appendFile = null;
     protected $useTemplate = true;
-    protected $useClasses = [];
-
-    public function useClasses($classes){
-        $this->useClasses = array_merge($this->useClasses, $classes);
+    protected $parser = null;
+    
+    /**
+     * __construct
+     */
+    public function __construct()
+    {
+        $this->parser = new \Overfull\Template\Parsing\Parser();
     }
-
 
     /**
      * Append to
      * @param type $file
      * @return this
      */
-    public function appendTo($file){
+    public function appendTo($file)
+    {
         $this->appendFile = $file;
         return $this;
     }
@@ -109,15 +45,27 @@ abstract class Otp{
      * @param type $file
      * @param type $variables
      */
-    protected function render($file, $variables = []){
+    protected function render($file, $variables = [])
+    {        
+        if(!Bag::response()->contentType){
+            Bag::response()->contentType = Constant::CONTENT_TYPE_HTML;
+        }
+
+        if(!Bag::response()->format){
+            Bag::response()->format = Constant::FORMAT_TEXT;
+        }
+        
         // Check if the file is array
         if(is_array($file)){
             $this->variables = $file;
-            return $this->recursive($this->file, $this->variables);
+            Bag::response()->content = $this->recursive($this->file, $this->variables);
         }
-
-        $this->variables = $variables;
-        return $this->recursive($file, $this->variables);
+        else{
+            $this->variables = $variables;
+            Bag::response()->content = $this->recursive($file, $this->variables);
+        }
+        
+        return $this;
     }
 
     /**
@@ -127,12 +75,21 @@ abstract class Otp{
      * @param mixed $gift
      * @return string
      */
-    protected function redirect($gift){
-        Bag::$response->format = ResponseFormat::HTML;
+    protected function redirect($gift)
+    {   
+        if(!Bag::response()->contentType){
+            Bag::response()->contentType = Constant::CONTENT_TYPE_HTML;
+        }
+        
+        if(!Bag::response()->format){
+            Bag::response()->format = Constant::FORMAT_TEXT;
+        }
+        
         $html = '<!DOCTYPE html>
                         <html><head><meta charset="utf-8"><title>'.\Bag::config()->get('core.otp-redirect-title').'</title><meta http-equiv="refresh" content="0; url='.UrlUtil::to($gift).'" /></head><body></body></html>';
 
-        return $html;
+        Bag::response()->content = $html;
+        return $this;
     }
 
     /**
@@ -142,9 +99,17 @@ abstract class Otp{
      * @param mixed $gift
      * @return string
      */
-    protected function json($gift){
-        Bag::$response->format = ResponseFormat::JSON;
-        return json_encode($gift);
+    protected function json($gift)
+    {
+        if(!Bag::response()->contentType){
+            Bag::response()->contentType = Constant::CONTENT_TYPE_JSON;
+        }
+        
+        if(!Bag::response()->format){
+            Bag::response()->format = Constant::FORMAT_TEXT;
+        }
+        Bag::response()->content = json_encode($gift);
+        return $this;
     }
 
     /**
@@ -154,9 +119,18 @@ abstract class Otp{
      * @param mixed $gift
      * @return string
      */
-    protected function html($gift){
-        Bag::$response->format = ResponseFormat::HTML;
-        return $gift;
+    protected function html($gift)
+    {
+        if(!Bag::response()->contentType){
+            Bag::response()->contentType = Constant::CONTENT_TYPE_HTML;
+        }
+        
+        if(!Bag::response()->format){
+            Bag::response()->format = Constant::FORMAT_TEXT;
+        }
+        
+        Bag::response()->content = $gift;
+        return $this;
     }
 
     /**
@@ -166,9 +140,18 @@ abstract class Otp{
      * @param mixed $gift
      * @return string
      */
-    protected function xml($gift){
-        Bag::$response->format = ResponseFormat::XML;
-        return 'render';
+    protected function xml($gift)
+    {
+        if(!Bag::response()->contentType){
+            Bag::response()->contentType = Constant::CONTENT_TYPE_XML;
+        }
+        
+        if(!Bag::response()->format){
+            Bag::response()->format = Constant::FORMAT_TEXT;
+        }
+        
+        Bag::response()->content = $gift;
+        return $this;
     }
 
     /**
@@ -178,8 +161,28 @@ abstract class Otp{
      * @param mixed $gift
      * @return string
      */
-    protected function file($gift){
-        return 'render';
+    protected function file($data)
+    {
+        
+        if(Bag::response()->contentType){
+            unset($data['info']['Content-Type']);
+        }
+        
+        Bag::response()->fileName = $data['info']['Name'];
+        unset($data['info']['Name']);
+        
+        foreach($data['info'] as $key => $value)
+        {
+            Bag::response()->header($key, $value);
+        }
+
+        if(!Bag::response()->format){
+            Bag::response()->format = Constant::FORMAT_FILE;
+        }
+        
+        Bag::response()->content = $data['content'];
+        
+        return $this;
     }
 
     /**
@@ -188,7 +191,8 @@ abstract class Otp{
      * @param type $name Description
      * @return $this;
      */
-    protected function recursive($file, $variables = []){
+    protected function recursive($file, $variables = [])
+    {
         // read view
         $__content = $this->runFile(($this->contentPath ? $this->contentPath.DS : '').(!empty($this->root) ? $this->root.DS : '' ).$file, $variables);
 
@@ -207,7 +211,8 @@ abstract class Otp{
      * @param type $file
      * @param type $variables
      */
-    protected function append($file, $variables = []){
+    protected function append($file, $variables = [])
+    {
         return $this->runFile(($this->contentPath ? $this->contentPath.DS : '').$file, $variables);
     }
 
@@ -216,7 +221,8 @@ abstract class Otp{
      * @param type $name
      * @param type $data
      */
-    protected function beginArea($name){
+    protected function beginArea($name)
+    {
         ob_start();
         $this->currentAreaName = $name;
         return $this;
@@ -226,7 +232,8 @@ abstract class Otp{
      * End area
      * @return string
      */
-    protected function endArea(){
+    protected function endArea()
+    {
         $result = ob_get_clean();
         $this->areas[$this->currentAreaName] = $result;
         return $this;
@@ -237,48 +244,62 @@ abstract class Otp{
      * @param type $name
      * @return type
      */
-    protected function readArea($name){
+    protected function readArea($name)
+    {
         return isset($this->areas[$name]) ? $this->areas[$name] : null;
     }
-
-    /**
-     * Replace template method
-     * @param type $file
-     * @return $fileContent
-     */
-    protected function replaceTemplate($file, $toFile){
-        $fileContent = file_get_contents($file);
-        foreach ($this->tags as $key => $value) {
-            $fileContent = preg_replace($key, $value, $fileContent);
-        }
-
-        $namespace = "";
-
-        foreach ( $this->useClasses as $key => $value) {
-            $namespace .= "use {$value} as {$key}; ";
-        }
-
-        file_put_contents($toFile, "<?php {$namespace} ?>".$fileContent);
-
-        return $toFile;
-    }
-
+    
     /**
      * runTemplate
      * @param type $file
      * @param type $variables
      * @return string Content after run
      */
-    protected function runFile($file, $variables = []){
-        // Create variable
-        foreach ($variables as $key => $value) {
-            $$key = $value;
+    protected function runFile($file, $variables = [])
+    {
+        try{
+            // Convert file
+            $file = PathUtil::convert($file);
+            $appRoot = Bag::config()->get('app.root');
+            $ext = Bag::config()->get('core.otp-extension');
+
+            $fullFile = PathUtil::getFull($appRoot.DS.$file.'.'.($ext ? $ext : 'php'));
+
+            // Check if file is not exists
+            if ( !file_exists($fullFile) ) {
+                throw new FileNotFoundException($fullFile);
+            }
+
+            $storageFile = PathUtil::getFull('storage'.DS.'cache'.DS.'otp'.DS.base64_encode($appRoot.DS.$file).'.otp');
+            if($this->useTemplate){
+                $this->tempBag = $storageFile;
+            } else {
+                $this->tempBag = $fullFile;
+            }
+
+
+            if($this->useTemplate && (!file_exists($storageFile) || Bag::config()->get('core.develop'))){
+
+                $helpers = Bag::config()->get('alias.helpers');
+                $helpers = !empty($helpers) ? $helpers : [];
+
+                $this->parser->replaceTemplate($fullFile, $storageFile, [
+                    'useClasses' => array_merge($helpers, $this->helpers)
+                ]);
+            }
+
+            // Create variable
+            foreach ($variables as $key => $value) {
+                $$key = $value;
+            }
+
+            ob_start();
+
+            require $this->tempBag;
+
+            return ob_get_clean();
+        } catch (Exception $ex) {
+            throw $ex;
         }
-
-        ob_start();
-
-        require $file;
-
-        return ob_get_clean();
-   }
+    }
 }
