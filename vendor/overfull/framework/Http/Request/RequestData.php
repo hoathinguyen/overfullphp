@@ -13,7 +13,7 @@ class RequestData
      * Construct method
      * @param array $data
      */
-    function __construct($data){
+    function __construct($data = []){
         $this->data = $data;
     }
 

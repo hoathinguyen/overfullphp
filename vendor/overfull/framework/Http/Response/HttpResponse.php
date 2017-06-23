@@ -10,12 +10,109 @@ namespace Overfull\Http\Response;
 
 class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
 {
-    protected $attributes = [
-        'format' => '',
-        'contentType' => '',
-        'content' => ''
-    ];
-
+    // Headers
+    protected $headers = [];
+    
+    // Attributes
+    protected $attributes = [];
+    
+    // Format
+    protected $format = '';
+    
+    // Content
+    protected $content = '';
+        
+    /**
+     * Set format
+     * @param string $value
+     * @return $this
+     */
+    public function setFormat($value)
+    {
+        $this->format = $value;
+        return $this;
+    }
+    
+    /**
+     * Get format
+     * @return type
+     */
+    public function getFormat()
+    {
+        return $this->format;
+    }
+    
+    /**
+     * isFormat
+     * @param type $format
+     * @return type
+     */
+    public function isFormat($format)
+    {
+        return $this->format == $format;
+    }
+    
+    /**
+     * setContent
+     * @param type $value
+     * @return $this
+     */
+    public function setContent($value)
+    {
+        $this->content = $value;
+        
+        return $this;
+    }
+    
+    /**
+     * getContent
+     * @return type
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+    
+    /**
+     * setHeader
+     * @param type $name
+     * @param type $value
+     * @return $this
+     */
+    public function setHeader($name, $value)
+    {
+        if(is_array($name))
+        {
+            foreach ($name as $key => $val){
+                $this->headers[$key] = $val;
+            }
+        }
+        else {
+            $this->headers[$name] = $value;
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * getHeaders
+     * @return type
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+    
+    /**
+     * getHeader
+     * @param type $name
+     * @return type
+     */
+    public function getHeader($name)
+    {
+        return isset($this->headers[$name]) ? $this->headers[$name] : null;
+    }
+    
     /**
     * Set method
     * This method will handle when set data for this response object
@@ -63,18 +160,31 @@ class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
      */
     public function send()
     {
-        // Set header
-        $this->header('Content-Type', $this->contentType);
+        if(!$this->getHeader('Content-Type'))
+        {
+            $this->setHeader('Content-Type', Constant::CONTENT_TYPE_HTML);
+        }
 
-        switch ($this->format) {
+        if($this->isFormat(''))
+        {
+            $this->setFormat(Constant::FORMAT_TEXT);
+        }
+
+        // Set header
+        foreach ($this->getHeaders() as $key => $value)
+        {
+            $this->applyHeader($key, $value);
+        }
+
+        switch ($this->getFormat()) {
             // Text format
             case Constant::FORMAT_TEXT:
-                echo $this->content;
+                echo $this->getContent();
                 break;
             case Constant::FORMAT_FILE:
-                $this->header("Content-Length", strlen($this->content));
-                $this->header("Content-Disposition", "attachment; filename=$this->fileName");
-                echo $this->content;
+                $this->applyHeader("Content-Length", strlen($this->getContent()));
+                $this->applyHeader("Content-Disposition", "attachment; filename=$this->fileName");
+                echo $this->getContent();
                 break;
             default:
                 break;
@@ -89,7 +199,7 @@ class HttpResponse extends \Overfull\Http\Foundation\BaseResponse
      * @param type $value
      * @return $this
      */
-    public function header($name, $value)
+    public function applyHeader($name, $value)
     {
         header("$name: $value");
         return $this;

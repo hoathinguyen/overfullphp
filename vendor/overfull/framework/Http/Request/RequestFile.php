@@ -22,7 +22,7 @@ class RequestFile
      * Get file name method
      * return string
      */
-    public function fileName(){
+    public function getFileName(){
         return $this->data['name'];
     }
 
@@ -30,8 +30,19 @@ class RequestFile
      * Get file name method
      * return string
      */
-    public function realPath(){
+    public function getRealPath(){
         return $this->data['tmp_name'];
+    }
+    
+    /**
+     * Get extension method
+     * @return type
+     */
+    public function getExtension()
+    {
+        $arr = explode(".", $this->getFileName());
+        
+        return end($arr);
     }
 
     /**

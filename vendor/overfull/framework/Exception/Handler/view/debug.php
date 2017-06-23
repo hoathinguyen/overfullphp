@@ -8,10 +8,10 @@
 		<?php echo $title; ?>
 	</div>
 	<div style="padding: 10px; border: 1px solid #ddd">
-		<b>Message:</b> <?php echo $message; ?>
+		<b>Message:</b> <?php echo isset($message) ? $message : ""; ?>
 		<?php if($isShowDetail === true) {?>
-		<br/><b>File:</b> <?php echo $file; ?>
-		<br/><b>Line:</b> <?php echo $line; ?>
+		<br/><b>File:</b> <?php echo isset($file) ? $file : ""; ?>
+		<br/><b>Line:</b> <?php echo isset($line) ? $line : ""; ?>
 		<?php } ?>
 	</div>
 	<?php if($isShowDetail === true && $listStack) {?>

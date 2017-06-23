@@ -71,34 +71,30 @@ class ExceptionHandler extends \Overfull\Foundation\Base\BaseObject
     {
         $handler = Bag::config()->get('core.error-handler');
         $isShowDetail = Bag::config()->get('core.error-display');
-        
+
+        ob_get_clean();
         if($handler && !Bag::error()->isHasLastError()){
-            ob_clean();
-            
             Bag::error()->set(compact('code','message','file','line','title','listStack'));
-            
             Bag::route()->clearAttributes();
                     
             foreach($handler as $key => $value){
                 Bag::route()->{$key} = $value;
             }
             
-            if(!Bag::route()->method){
-                Bag::route()->method = 'error'.$code;
+            if(!Bag::route()->action){
+                Bag::route()->action = 'error'.$code;
             }
             
             // Run pattern
             Bag::pattern()->run();
-
+                        
             // return result
             Bag::response()->setStatusCode($code)->send();
             exit();
         }else{
+            //dd(1);
             $isShowDetail = Bag::config()->get('core.error-display');
-            
-            ob_clean();
-            ob_start();
-            
+            //ob_start();
             require ROOT.DS.'vendor'.DS.'overfull'.DS.'framework'.DS.'Exception'.DS.'Handler'.DS.'view'.DS.'debug.php';
             
             Bag::response()->content = ob_get_clean();

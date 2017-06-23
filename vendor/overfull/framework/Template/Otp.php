@@ -15,11 +15,22 @@ use Bag;
 
 abstract class Otp
 {
+    // Area name
     protected $currentAreaName = '';
+    
+    // Areas
     protected $areas = [];
+    
+    // Content path
     protected $contentPath = null;
+    
+    // Append file
     protected $appendFile = null;
+    
+    // Use template
     protected $useTemplate = true;
+    
+    // Parser
     protected $parser = null;
     
     /**
@@ -47,22 +58,22 @@ abstract class Otp
      */
     protected function render($file, $variables = [])
     {        
-        if(!Bag::response()->contentType){
-            Bag::response()->contentType = Constant::CONTENT_TYPE_HTML;
+        if(!Bag::response()->getHeader('Content-Type')){
+            Bag::response()->setHeader('Content-Type', Constant::CONTENT_TYPE_HTML);
         }
 
-        if(!Bag::response()->format){
-            Bag::response()->format = Constant::FORMAT_TEXT;
+        if(Bag::response()->isFormat('')){
+            Bag::response()->setFormat(Constant::FORMAT_TEXT);
         }
         
         // Check if the file is array
         if(is_array($file)){
             $this->variables = $file;
-            Bag::response()->content = $this->recursive($this->file, $this->variables);
+            Bag::response()->setContent($this->recursive($this->file, $this->variables));
         }
         else{
             $this->variables = $variables;
-            Bag::response()->content = $this->recursive($file, $this->variables);
+            Bag::response()->setContent($this->recursive($file, $this->variables));
         }
         
         return $this;
@@ -77,18 +88,18 @@ abstract class Otp
      */
     protected function redirect($gift)
     {   
-        if(!Bag::response()->contentType){
-            Bag::response()->contentType = Constant::CONTENT_TYPE_HTML;
+        if(!Bag::response()->getHeader('Content-Type')){
+            Bag::response()->setHeader('Content-Type', Constant::CONTENT_TYPE_HTML);
         }
         
-        if(!Bag::response()->format){
-            Bag::response()->format = Constant::FORMAT_TEXT;
+        if(Bag::response()->isFormat('')){
+            Bag::response()->setFormat(Constant::FORMAT_TEXT);
         }
         
         $html = '<!DOCTYPE html>
                         <html><head><meta charset="utf-8"><title>'.\Bag::config()->get('core.otp-redirect-title').'</title><meta http-equiv="refresh" content="0; url='.UrlUtil::to($gift).'" /></head><body></body></html>';
 
-        Bag::response()->content = $html;
+        Bag::response()->setContent($html);
         return $this;
     }
 
@@ -101,14 +112,15 @@ abstract class Otp
      */
     protected function json($gift)
     {
-        if(!Bag::response()->contentType){
-            Bag::response()->contentType = Constant::CONTENT_TYPE_JSON;
+        if(!Bag::response()->getHeader('Content-Type')){
+            Bag::response()->setHeader('Content-Type', Constant::CONTENT_TYPE_JSON);
         }
         
-        if(!Bag::response()->format){
-            Bag::response()->format = Constant::FORMAT_TEXT;
+        if(Bag::response()->isFormat('')){
+            Bag::response()->setFormat(Constant::FORMAT_TEXT);
         }
-        Bag::response()->content = json_encode($gift);
+        
+        Bag::response()->setContent(json_encode($gift));
         return $this;
     }
 
@@ -121,15 +133,15 @@ abstract class Otp
      */
     protected function html($gift)
     {
-        if(!Bag::response()->contentType){
-            Bag::response()->contentType = Constant::CONTENT_TYPE_HTML;
+        if(!Bag::response()->getHeader('Content-Type')){
+            Bag::response()->setHeader('Content-Type', Constant::CONTENT_TYPE_HTML);
         }
         
-        if(!Bag::response()->format){
-            Bag::response()->format = Constant::FORMAT_TEXT;
+        if(Bag::response()->isFormat('')){
+            Bag::response()->setFormat(Constant::FORMAT_TEXT);
         }
         
-        Bag::response()->content = $gift;
+        Bag::response()->setContent($gift);
         return $this;
     }
 
@@ -142,15 +154,15 @@ abstract class Otp
      */
     protected function xml($gift)
     {
-        if(!Bag::response()->contentType){
-            Bag::response()->contentType = Constant::CONTENT_TYPE_XML;
+        if(!Bag::response()->getHeader('Content-Type')){
+            Bag::response()->setHeader('Content-Type', Constant::CONTENT_TYPE_XML);
         }
         
-        if(!Bag::response()->format){
-            Bag::response()->format = Constant::FORMAT_TEXT;
+        if(Bag::response()->isFormat('')){
+            Bag::response()->setFormat(Constant::FORMAT_TEXT);
         }
         
-        Bag::response()->content = $gift;
+        Bag::response()->setContent($gift);
         return $this;
     }
 
@@ -163,24 +175,19 @@ abstract class Otp
      */
     protected function file($data)
     {
-        
-        if(Bag::response()->contentType){
-            unset($data['info']['Content-Type']);
-        }
-        
         Bag::response()->fileName = $data['info']['Name'];
         unset($data['info']['Name']);
         
         foreach($data['info'] as $key => $value)
         {
-            Bag::response()->header($key, $value);
+            Bag::response()->setHeader($key, $value);
         }
 
-        if(!Bag::response()->format){
-            Bag::response()->format = Constant::FORMAT_FILE;
+        if(Bag::response()->isFormat('')){
+            Bag::response()->setFormat(Constant::FORMAT_FILE);
         }
-        
-        Bag::response()->content = $data['content'];
+
+        Bag::response()->setContent($data['content']);
         
         return $this;
     }

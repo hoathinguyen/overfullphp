@@ -1,16 +1,16 @@
 <?php
 return [
-    'uses' => 'tests',
+    'uses' => 'default',
 
     'connections' => [
-        'tests' => [
+        'default' => [
             'user' => 'root',
-            'password' => '',
-            'port' => '80',
-            'host' => 'localhost',
-            'type' => 'mysql', //pgsql
-            'dbname' => 'tests',
-            'encoding' => 'utf8'
-        ],
+             'password' => '',
+             'port' => '80',
+             'host' => 'localhost',
+             'type' => 'mysql', //pgsql
+             'dbname' => 'namlimxanh',
+             'encoding' => 'utf8'
+        ]
     ]
 ];

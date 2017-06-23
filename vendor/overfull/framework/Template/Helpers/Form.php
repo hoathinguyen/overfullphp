@@ -168,7 +168,16 @@ class Form extends Helper{
 	 */
 	public static function text($name, $properties = []){
 		$properties['type'] = 'text';
-        return static::input($name, $properties);
+            return static::input($name, $properties);
+	}
+        
+        /**
+	 * input method
+	 * @return string html
+	 */
+	public static function number($name, $properties = []){
+		$properties['type'] = 'number';
+            return static::input($name, $properties);
 	}
 
 	/**

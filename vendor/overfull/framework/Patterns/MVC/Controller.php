@@ -254,8 +254,8 @@ abstract class Controller extends BaseObject implements IController{
 	 */
 	public final function run(){
             $method = Bag::route()->action;
-            $actionPrefix = Bag::config()->get('core.MVC.action-prefix');
-            $firstUC = Bag::config()->get('core.MVC.action-ucfirst');
+            $actionPrefix = Bag::config()->get('mvc.action-prefix');
+            $firstUC = Bag::config()->get('mvc.action-ucfirst');
 
             if($actionPrefix){
                 $__method = $actionPrefix.($firstUC ? ucfirst($method) : $method);
